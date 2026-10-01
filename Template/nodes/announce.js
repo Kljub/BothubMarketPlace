@@ -1,4 +1,4 @@
-// Node plugin.template.announce: sends an embed, {Var.id} is the message ID.
+// Node plugin.plugin_template.announce: sends an embed, {Var.id} is the message ID.
 import { embed } from '../services/messages.js';
 
 /** @type {import('@bothub/sdk').BlockHandler} */

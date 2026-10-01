@@ -1,4 +1,4 @@
-// Node plugin.template.play_sound: plays a sound in the voice channel of the
+// Node plugin.plugin_template.play_sound: plays a sound in the voice channel of the
 // member (or of the node / settings page). Port "no_channel" when there is
 // none (member not in a voice channel, nothing set).
 import { pickChannel, play, SOUNDS } from '../services/voice.js';

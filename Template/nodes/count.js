@@ -1,4 +1,4 @@
-// Node plugin.template.count: counts per server; {Var.user} counts per member.
+// Node plugin.plugin_template.count: counts per server; {Var.user} counts per member.
 
 /** @type {import('@bothub/sdk').BlockHandler} */
 export default async function count(ctx, { config, vars }) {

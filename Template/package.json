@@ -1,5 +1,5 @@
 {
-  "name": "template",
+  "name": "plugin_template",
   "private": true,
   "type": "module",
   "imports": {

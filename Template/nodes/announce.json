@@ -1,10 +1,10 @@
 {
   "category": "action",
-  "labelKey": "plugin.template.node.announce.label",
-  "descriptionKey": "plugin.template.node.announce.description",
+  "labelKey": "plugin.plugin_template.node.announce.label",
+  "descriptionKey": "plugin.plugin_template.node.announce.description",
   "inputs": [{ "name": "in", "type": "flow", "multiple": true }],
   "outputs": [{ "name": "next", "type": "flow" }],
-  "results": [{ "suffix": ".id", "labelKey": "plugin.template.node.announce.result_id" }],
+  "results": [{ "suffix": ".id", "labelKey": "plugin.plugin_template.node.announce.result_id" }],
   "config": {
     "type": "object",
     "additionalProperties": false,

@@ -7,19 +7,21 @@ Version 1.0.0 · developer: BotHub · license: MIT
 ## New plugin from this template
 
 Every plugin of the market is one folder in the repo root, named like its id
-(lowercase, `a-z 0-9 -`). This folder shows every layer; a new plugin takes
-only the layers it needs. Build it with the tools in the BotHub repo:
+`plugin_<name>` (lowercase, `a-z 0-9 _`). This folder shows every layer; a
+new plugin takes only the layers it needs. Build it with the tools in the
+BotHub repo:
 
 ```
 cd Bothub/sdk/market
 npm install
-npm run create -- my-plugin --features nodes,commands,storage   # or --features all, --list
+npm run create -- weather --features nodes,commands,storage   # -> plugin_weather/ (or --features all, --list)
 ```
 
-The new folder `my-plugin/` lands next to `Template/`, with ids, texts
-(`plugin.my-plugin.*`) and tests already renamed. Copying `Template/` by hand
-also works: rename the folder, then replace `template` in `bothub.json`,
-`package.json`, `lang/*.json`, `commands/*.json` and `nodes/*.json`.
+The new folder `plugin_weather/` lands next to `Template/`, with ids, texts
+(`plugin.plugin_weather.*`) and tests already renamed. Copying `Template/` by
+hand also works: rename the folder to the new id, then replace
+`plugin_template` in `bothub.json`, `package.json`, `lang/*.json`,
+`commands/*.json` and `nodes/*.json`.
 
 ## Structure
 
@@ -68,11 +70,11 @@ Create under Admin → API / Secrets and share with the plugin (Admin → Plugin
 npm test                         # in this folder: the plugin tests
 
 # in Bothub/sdk/market (tools of the BotHub repo):
-npm run validate -- template
-npm run pack -- template          # dist/template-<version>.zip + SHA-256
+npm run validate -- plugin_template
+npm run pack -- plugin_template          # dist/plugin_template-<version>.zip + SHA-256
 npm run index                    # index.json of the market repo
 ```
 
-Publish: GitHub Release `template-<version>` of the market repo with the zip as asset, then commit index.json.
+Publish: GitHub Release `plugin_template-<version>` of the market repo with the zip as asset, then commit index.json.
 
 Raise `version` in `bothub.json` for every release.

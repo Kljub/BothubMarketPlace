@@ -1,12 +1,12 @@
 {
   "category": "action",
-  "labelKey": "plugin.template.node.hello.label",
-  "descriptionKey": "plugin.template.node.hello.description",
+  "labelKey": "plugin.plugin_template.node.hello.label",
+  "descriptionKey": "plugin.plugin_template.node.hello.description",
   "inputs": [{ "name": "in", "type": "flow", "multiple": true }],
   "outputs": [{ "name": "next", "type": "flow" }],
   "results": [
-    { "suffix": "", "labelKey": "plugin.template.node.hello.result" },
-    { "suffix": ".length", "labelKey": "plugin.template.node.hello.result_length" }
+    { "suffix": "", "labelKey": "plugin.plugin_template.node.hello.result" },
+    { "suffix": ".length", "labelKey": "plugin.plugin_template.node.hello.result_length" }
   ],
   "config": {
     "type": "object",

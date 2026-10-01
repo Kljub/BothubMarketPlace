@@ -1,4 +1,4 @@
-// Node plugin.template.reply_for: finds the reply configured on the settings
+// Node plugin.plugin_template.reply_for: finds the reply configured on the settings
 // page (dashboard/settings.json, list "replies") for a text. Port "none"
 // when no trigger matches.
 import { setting } from '../services/util.js';

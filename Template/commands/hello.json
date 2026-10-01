@@ -20,7 +20,7 @@
       },
       {
         "id": "hello",
-        "type": "plugin.template.hello",
+        "type": "plugin.plugin_template.hello",
         "typeVersion": 1,
         "config": { "name": "{option_name}", "variable": "greeting" },
         "position": { "x": 440, "y": 240 }

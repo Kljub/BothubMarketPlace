@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "template",
+  "id": "plugin_template",
   "name": "Template",
   "version": "1.0.0",
   "description": "Plugin template with every layer: commands, events, services (storage, messages, tasks, API, voice), nodes and a dashboard page.",

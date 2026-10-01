@@ -6,7 +6,7 @@ import plugin from '../index.js';
 const CHANNEL = '900000000000000002';
 
 test('announce: sends one embed and returns its ID', async () => {
-  const ctx = createTestContext({ id: 'template', permissions: ['discord.messages.send'] });
+  const ctx = createTestContext({ id: 'plugin_template', permissions: ['discord.messages.send'] });
   const out = await runBlock(plugin, 'announce', ctx, { config: { channel: CHANNEL, title: 'News', text: 'Hello', color: '#ff0000' } });
   assert.equal(ctx.sent.length, 1);
   assert.equal(ctx.sent[0].channelId, CHANNEL);
@@ -15,7 +15,7 @@ test('announce: sends one embed and returns its ID', async () => {
 });
 
 test('announce: a bad channel ID and the send limit are errors', async () => {
-  const ctx = createTestContext({ id: 'template', permissions: ['discord.messages.send'] });
+  const ctx = createTestContext({ id: 'plugin_template', permissions: ['discord.messages.send'] });
   await assert.rejects(runBlock(plugin, 'announce', ctx, { config: { channel: 'general', text: 'x' } }), { message: 'sdk.discord.bad_channel' });
   for (let i = 0; i < 5; i++) await runBlock(plugin, 'announce', ctx, { config: { channel: CHANNEL, text: String(i) } });
   await assert.rejects(runBlock(plugin, 'announce', ctx, { config: { channel: CHANNEL, text: 'six' } }), { message: 'sdk.discord.rate_limited' });

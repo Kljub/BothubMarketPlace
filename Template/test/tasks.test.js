@@ -7,12 +7,12 @@ const CHANNEL = '900000000000000002';
 const permissions = ['scheduler', 'storage', 'discord.messages.send'];
 
 test('daily_report: counts runs, posts only with a channel', async () => {
-  const quiet = createTestContext({ id: 'template', permissions });
+  const quiet = createTestContext({ id: 'plugin_template', permissions });
   await runTask(plugin, 'daily_report', quiet);
   assert.equal(quiet.sent.length, 0);
   assert.equal(quiet.store.get('report:runs'), '1');
 
-  const ctx = createTestContext({ id: 'template', permissions, config: { report_channel: { id: CHANNEL, guild: '1' } } });
+  const ctx = createTestContext({ id: 'plugin_template', permissions, config: { report_channel: { id: CHANNEL, guild: '1' } } });
   await runTask(plugin, 'daily_report', ctx);
   await runTask(plugin, 'daily_report', ctx);
   assert.equal(ctx.sent.length, 2);
@@ -21,7 +21,7 @@ test('daily_report: counts runs, posts only with a channel', async () => {
 
 test('cleanup: keeps the last 30 days', async () => {
   const days = Array.from({ length: 40 }, (_, i) => `d${i}`);
-  const ctx = createTestContext({ id: 'template', permissions, storage: { 'report:history': JSON.stringify(days) } });
+  const ctx = createTestContext({ id: 'plugin_template', permissions, storage: { 'report:history': JSON.stringify(days) } });
   await runTask(plugin, 'cleanup', ctx);
   assert.deepEqual(JSON.parse(ctx.store.get('report:history')), days.slice(-30));
 });

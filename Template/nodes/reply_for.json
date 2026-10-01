@@ -1,13 +1,13 @@
 {
   "category": "action",
-  "labelKey": "plugin.template.node.reply_for.label",
-  "descriptionKey": "plugin.template.node.reply_for.description",
+  "labelKey": "plugin.plugin_template.node.reply_for.label",
+  "descriptionKey": "plugin.plugin_template.node.reply_for.description",
   "inputs": [{ "name": "in", "type": "flow", "multiple": true }],
   "outputs": [
     { "name": "next", "type": "flow" },
     { "name": "none", "type": "flow" }
   ],
-  "results": [{ "suffix": "", "labelKey": "plugin.template.node.reply_for.result" }],
+  "results": [{ "suffix": "", "labelKey": "plugin.plugin_template.node.reply_for.result" }],
   "config": {
     "type": "object",
     "additionalProperties": false,

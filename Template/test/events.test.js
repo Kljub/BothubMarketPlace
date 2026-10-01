@@ -6,7 +6,7 @@ import plugin from '../index.js';
 const GUILD = '900000000000000001';
 const CHANNEL = '900000000000000002';
 const joined = { 'server.id': GUILD, 'server.name': 'Test', 'server.members': 42, 'user.id': '7', 'user.name': 'Ann', 'user.mention': '<@7>', 'user.bot': false };
-const ctxWith = (config) => createTestContext({ id: 'template', permissions: ['discord.events', 'discord.messages.send'], config });
+const ctxWith = (config) => createTestContext({ id: 'plugin_template', permissions: ['discord.events', 'discord.messages.send'], config });
 
 test('guildMemberAdd: welcome text in the configured channel', async () => {
   const ctx = ctxWith({ welcome_channel: { id: CHANNEL, guild: GUILD }, welcome_text: 'Hi {user} on {server} (#{count})' });

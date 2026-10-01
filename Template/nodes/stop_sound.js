@@ -1,4 +1,4 @@
-// Node plugin.template.stop_sound: stops playing; leaves unless "stay connected".
+// Node plugin.plugin_template.stop_sound: stops playing; leaves unless "stay connected".
 import { stop } from '../services/voice.js';
 
 /** @type {import('@bothub/sdk').BlockHandler} */

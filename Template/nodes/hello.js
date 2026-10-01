@@ -1,4 +1,4 @@
-// Node plugin.template.hello (definition: nodes/hello.json).
+// Node plugin.plugin_template.hello (definition: nodes/hello.json).
 // A node handler gets
 //   config: the node's settings in the builder, placeholders already filled
 //   vars:   the run's variables ({user.id} -> vars['user.id'])

@@ -1,4 +1,4 @@
-// Node plugin.template.api_get: GET <endpoint><path>?<query>, optionally one
+// Node plugin.plugin_template.api_get: GET <endpoint><path>?<query>, optionally one
 // field of the JSON answer. Port "failed" on HTTP errors (status >= 400).
 import { get, parseQuery, pick } from '../services/api.js';
 

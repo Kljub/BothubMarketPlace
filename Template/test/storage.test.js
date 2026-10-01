@@ -4,7 +4,7 @@ import { createTestContext, runBlock } from '#sdk-testing';
 import plugin from '../index.js';
 import { readJson, writeJson } from '../services/storage.js';
 
-const ctxWith = (permissions = ['storage']) => createTestContext({ id: 'template', permissions });
+const ctxWith = (permissions = ['storage']) => createTestContext({ id: 'plugin_template', permissions });
 
 test('count: per server and per member', async () => {
   const ctx = ctxWith();

@@ -1,15 +1,15 @@
 {
   "category": "action",
-  "labelKey": "plugin.template.node.api_get.label",
-  "descriptionKey": "plugin.template.node.api_get.description",
+  "labelKey": "plugin.plugin_template.node.api_get.label",
+  "descriptionKey": "plugin.plugin_template.node.api_get.description",
   "inputs": [{ "name": "in", "type": "flow", "multiple": true }],
   "outputs": [
     { "name": "next", "type": "flow" },
     { "name": "failed", "type": "flow" }
   ],
   "results": [
-    { "suffix": "", "labelKey": "plugin.template.node.api_get.result" },
-    { "suffix": ".status", "labelKey": "plugin.template.node.api_get.result_status" }
+    { "suffix": "", "labelKey": "plugin.plugin_template.node.api_get.result" },
+    { "suffix": ".status", "labelKey": "plugin.plugin_template.node.api_get.result_status" }
   ],
   "config": {
     "type": "object",

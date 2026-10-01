@@ -5,11 +5,11 @@ import plugin from '../index.js';
 import { ENDPOINT, pick } from '../services/api.js';
 
 // The fake checks the key against the manifest "endpoints", like the bot.
-const manifest = { id: 'template', endpoints: [ENDPOINT] };
+const manifest = { id: 'plugin_template', endpoints: [ENDPOINT] };
 
 // A fake API server: the test decides what the endpoint answers.
 function ctxWith(server) {
-  return createTestContext({ id: 'template', manifest, permissions: ['http.endpoints'], endpoints: server ? { [ENDPOINT]: server } : {} });
+  return createTestContext({ id: 'plugin_template', manifest, permissions: ['http.endpoints'], endpoints: server ? { [ENDPOINT]: server } : {} });
 }
 
 test('api_get: path, query and a field of the JSON answer', async () => {
