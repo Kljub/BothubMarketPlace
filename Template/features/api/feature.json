@@ -1,8 +1,0 @@
-{
-  "title": "External API service",
-  "description": "Calls an external API through a global API endpoint (services/api.js, Admin -> API / Secrets). The bot adds the API key; the plugin never sees it. The admin shares the endpoint with the plugin.",
-  "needs": [],
-  "permissions": ["http.endpoints"],
-  "endpoints": ["__ENDPOINT__"],
-  "nodes": ["api_get"]
-}

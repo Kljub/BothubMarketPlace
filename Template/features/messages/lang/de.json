@@ -1,5 +1,0 @@
-{
-  "plugin.__ID__.node.announce.label": "Ankündigen",
-  "plugin.__ID__.node.announce.description": "Sendet ein Embed in einen Kanal.",
-  "plugin.__ID__.node.announce.result_id": "Nachrichten-ID"
-}

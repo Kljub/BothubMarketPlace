@@ -1,7 +1,0 @@
-{
-  "title": "Node (builder block)",
-  "description": "A block for the command and event builder: nodes/hello.json describes it, nodes/hello.js runs it (config + variables in, results out).",
-  "needs": [],
-  "permissions": [],
-  "nodes": ["hello"]
-}
