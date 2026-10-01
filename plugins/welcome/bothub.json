@@ -1,0 +1,33 @@
+{
+  "$schema": "../../schema/plugin-manifest.schema.json",
+  "schemaVersion": 1,
+  "id": "welcome",
+  "name": "Welcome",
+  "version": "1.0.0",
+  "description": "Greets new members in a channel of your choice.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "MIT",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "discord.messages.send",
+      "discord.events"
+    ]
+  },
+  "main": "index.js",
+  "events": [
+    "guildMemberAdd"
+  ],
+  "nodes": [
+    "announce"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

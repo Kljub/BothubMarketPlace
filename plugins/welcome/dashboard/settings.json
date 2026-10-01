@@ -1,0 +1,20 @@
+{
+  "fields": [
+    {
+      "key": "welcome_channel",
+      "type": "channel",
+      "channelTypes": [
+        "text",
+        "announcement"
+      ]
+    },
+    {
+      "key": "welcome_text",
+      "type": "text",
+      "default": "Welcome {user}, you are member #{count}!",
+      "max": 500,
+      "multiline": true,
+      "hint": true
+    }
+  ]
+}

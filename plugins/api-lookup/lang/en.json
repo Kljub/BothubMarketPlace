@@ -1,0 +1,12 @@
+{
+  "plugin.api-lookup.name": "API Lookup",
+  "plugin.api-lookup.description": "Fetches values from an API endpoint the admin set up.",
+  "plugin.api-lookup.node.hello.label": "Say hello",
+  "plugin.api-lookup.node.hello.description": "Builds a greeting for a name.",
+  "plugin.api-lookup.node.hello.result": "Greeting",
+  "plugin.api-lookup.node.hello.result_length": "Length of the greeting",
+  "plugin.api-lookup.node.api_get.label": "Call API",
+  "plugin.api-lookup.node.api_get.description": "Fetches data from the API endpoint EXAMPLE_API (set up by the admin).",
+  "plugin.api-lookup.node.api_get.result": "Value",
+  "plugin.api-lookup.node.api_get.result_status": "HTTP status"
+}

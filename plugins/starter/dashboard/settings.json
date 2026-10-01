@@ -1,0 +1,103 @@
+{
+  "fields": [
+    {
+      "key": "greeting",
+      "type": "text",
+      "default": "Welcome {user}!",
+      "max": 200,
+      "required": true,
+      "hint": true
+    },
+    {
+      "key": "style",
+      "type": "select",
+      "options": [
+        "short",
+        "friendly"
+      ],
+      "default": "short"
+    },
+    {
+      "key": "color",
+      "type": "color",
+      "default": "#5865f2"
+    },
+    {
+      "key": "log_channel",
+      "type": "channel",
+      "channelTypes": [
+        "text"
+      ]
+    },
+    {
+      "key": "staff_roles",
+      "type": "roles",
+      "max": 10
+    },
+    {
+      "key": "replies",
+      "type": "list",
+      "max": 20,
+      "titleField": "trigger",
+      "hint": true,
+      "item": [
+        {
+          "key": "trigger",
+          "type": "text",
+          "max": 50,
+          "required": true
+        },
+        {
+          "key": "answer",
+          "type": "text",
+          "max": 500,
+          "multiline": true
+        }
+      ]
+    },
+    {
+      "key": "welcome_channel",
+      "type": "channel",
+      "channelTypes": [
+        "text",
+        "announcement"
+      ]
+    },
+    {
+      "key": "welcome_text",
+      "type": "text",
+      "default": "Welcome {user}, you are member #{count}!",
+      "max": 500,
+      "multiline": true,
+      "hint": true
+    },
+    {
+      "key": "report_channel",
+      "type": "channel",
+      "channelTypes": [
+        "text"
+      ],
+      "hint": true
+    },
+    {
+      "key": "voice_channel",
+      "type": "channel",
+      "channelTypes": [
+        "voice"
+      ],
+      "hint": true
+    },
+    {
+      "key": "volume",
+      "type": "number",
+      "min": 0,
+      "max": 100,
+      "default": 80
+    },
+    {
+      "key": "stay_connected",
+      "type": "bool",
+      "default": false
+    }
+  ]
+}

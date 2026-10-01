@@ -1,0 +1,61 @@
+{
+  "$schema": "../../schema/plugin-manifest.schema.json",
+  "schemaVersion": 1,
+  "id": "starter",
+  "name": "Starter Kit",
+  "version": "1.0.0",
+  "description": "Example of every layer: commands, events, services (storage, messages, tasks, API, voice), nodes and a dashboard page.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "MIT",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "discord.messages.send",
+      "discord.events",
+      "scheduler",
+      "http.endpoints",
+      "discord.voice"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/hello.json"
+  ],
+  "events": [
+    "guildMemberAdd"
+  ],
+  "services": {
+    "tasks": [
+      {
+        "name": "daily_report",
+        "cron": "0 9 * * *"
+      },
+      {
+        "name": "cleanup",
+        "every": "6h"
+      }
+    ],
+    "endpoints": [
+      "EXAMPLE_API"
+    ]
+  },
+  "nodes": [
+    "hello",
+    "reply_for",
+    "count",
+    "announce",
+    "api_get",
+    "play_sound",
+    "stop_sound"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

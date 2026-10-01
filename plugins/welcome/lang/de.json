@@ -1,0 +1,10 @@
+{
+  "plugin.welcome.name": "Welcome",
+  "plugin.welcome.description": "Greets new members in a channel of your choice.",
+  "plugin.welcome.node.announce.label": "Ankündigen",
+  "plugin.welcome.node.announce.description": "Sendet ein Embed in einen Kanal.",
+  "plugin.welcome.node.announce.result_id": "Nachrichten-ID",
+  "plugin.welcome.setting.welcome_channel": "Willkommenskanal",
+  "plugin.welcome.setting.welcome_text": "Willkommensnachricht",
+  "plugin.welcome.setting.welcome_text_hint": "{user} erwähnt das neue Mitglied, {server} ist der Servername, {count} die Mitgliederzahl."
+}

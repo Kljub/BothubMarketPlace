@@ -1,0 +1,35 @@
+{
+  "$schema": "../../schema/plugin-manifest.schema.json",
+  "schemaVersion": 1,
+  "id": "api-lookup",
+  "name": "API Lookup",
+  "version": "1.0.0",
+  "description": "Fetches values from an API endpoint the admin set up.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "MIT",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "http.endpoints"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/hello.json"
+  ],
+  "services": {
+    "endpoints": [
+      "EXAMPLE_API"
+    ]
+  },
+  "nodes": [
+    "hello",
+    "api_get"
+  ],
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}
