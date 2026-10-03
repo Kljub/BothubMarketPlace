@@ -1,0 +1,145 @@
+{
+  "name": "anisearch-tracked",
+  "description": "Shows the tracked anime",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "anisearch-tracked",
+          "description": "Shows the tracked anime"
+        },
+        "position": {
+          "x": 120,
+          "y": 240
+        }
+      },
+      {
+        "id": "list",
+        "type": "plugin.plugin_anisearch.tracked_list",
+        "typeVersion": 1,
+        "config": {
+          "variable": "tl"
+        },
+        "position": {
+          "x": 440,
+          "y": 240
+        }
+      },
+      {
+        "id": "ok",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "embeds": [
+              {
+                "color": "#02a9ff",
+                "title": "🎌 Tracked anime ({tl.count})",
+                "description": "{tl}"
+              }
+            ]
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 760,
+          "y": 240
+        }
+      },
+      {
+        "id": "empty",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "ℹ️ No anime is tracked yet. Add one with /anisearch-track."
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 760,
+          "y": 370
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 120,
+          "y": 760
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 440,
+          "y": 760
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "list",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "list",
+          "port": "next"
+        },
+        "to": {
+          "node": "ok",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "list",
+          "port": "empty"
+        },
+        "to": {
+          "node": "empty",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

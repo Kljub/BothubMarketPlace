@@ -1,0 +1,49 @@
+{
+  "fields": [
+    {
+      "key": "libraries",
+      "type": "text",
+      "max": 200,
+      "required": true,
+      "hint": true
+    },
+    {
+      "key": "linked_role",
+      "type": "role",
+      "hint": true
+    },
+    {
+      "key": "new_content_channel",
+      "type": "channel",
+      "channelTypes": [
+        "text",
+        "announcement"
+      ],
+      "hint": true
+    },
+    {
+      "key": "announce_plays",
+      "type": "bool",
+      "default": false,
+      "hint": true
+    },
+    {
+      "key": "live_channel",
+      "type": "channel",
+      "channelTypes": [
+        "text"
+      ],
+      "showIf": {
+        "announce_plays": [
+          "true"
+        ]
+      }
+    },
+    {
+      "key": "overseerr",
+      "type": "bool",
+      "default": false,
+      "hint": true
+    }
+  ]
+}

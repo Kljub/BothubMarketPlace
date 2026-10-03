@@ -1,0 +1,208 @@
+{
+  "name": "anisearch-anime",
+  "description": "Searches a anime on AniList",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "anisearch-anime",
+          "description": "Searches a anime on AniList"
+        },
+        "position": {
+          "x": 120,
+          "y": 240
+        }
+      },
+      {
+        "id": "option_title",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "title",
+          "description": "Title",
+          "required": true,
+          "variable": "title"
+        },
+        "position": {
+          "x": 120,
+          "y": 110
+        }
+      },
+      {
+        "id": "search",
+        "type": "plugin.plugin_anisearch.search",
+        "typeVersion": 1,
+        "config": {
+          "title": "{option_title}",
+          "media_type": "anime",
+          "variable": "ani"
+        },
+        "position": {
+          "x": 440,
+          "y": 240
+        }
+      },
+      {
+        "id": "found",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "embeds": [
+              {
+                "color": "#02a9ff",
+                "title": "{ani}",
+                "url": "{ani.url}",
+                "description": "{ani.description}",
+                "image_url": "{ani.cover}",
+                "fields": [
+                  {
+                    "name": "Format",
+                    "value": "{ani.format}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Status",
+                    "value": "{ani.status}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Score",
+                    "value": "{ani.score}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Episodes",
+                    "value": "{ani.episodes}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Next episode",
+                    "value": "{ani.next_episode}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Genres",
+                    "value": "{ani.genres}",
+                    "inline": false
+                  }
+                ],
+                "footer": {
+                  "text": "AniList"
+                }
+              }
+            ]
+          },
+          "target": "reply"
+        },
+        "position": {
+          "x": 760,
+          "y": 240
+        }
+      },
+      {
+        "id": "none",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ No anime found for \"{option_title}\"."
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 760,
+          "y": 400
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 120,
+          "y": 760
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 440,
+          "y": 760
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "option_title",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "search",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "search",
+          "port": "found"
+        },
+        "to": {
+          "node": "found",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "search",
+          "port": "not_found"
+        },
+        "to": {
+          "node": "none",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

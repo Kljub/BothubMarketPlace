@@ -1,0 +1,161 @@
+{
+  "name": "plex-libraries",
+  "description": "Lists the Plex libraries and their IDs",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "plex-libraries",
+          "description": "Lists the Plex libraries and their IDs",
+          "permissions": {
+            "allowed_roles": [
+              {
+                "id": "everyone"
+              }
+            ],
+            "banned_roles": [],
+            "required_permissions": [
+              "manage_guild"
+            ],
+            "banned_channels": [],
+            "hide_without_permission": true
+          }
+        },
+        "position": {
+          "x": 120,
+          "y": 240
+        }
+      },
+      {
+        "id": "libs",
+        "type": "plugin.plugin_plex.libraries",
+        "typeVersion": 1,
+        "config": {
+          "variable": "px"
+        },
+        "position": {
+          "x": 440,
+          "y": 240
+        }
+      },
+      {
+        "id": "ok",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "embeds": [
+              {
+                "color": "#e5a00d",
+                "title": "📚 Plex libraries ({px.count})",
+                "description": "{px}",
+                "footer": {
+                  "text": "✅ = shared · put the IDs in the plugin settings"
+                }
+              }
+            ]
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 760,
+          "y": 240
+        }
+      },
+      {
+        "id": "failed",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {px}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 760,
+          "y": 370
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 120,
+          "y": 900
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 440,
+          "y": 900
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "libs",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "libs",
+          "port": "next"
+        },
+        "to": {
+          "node": "ok",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "libs",
+          "port": "failed"
+        },
+        "to": {
+          "node": "failed",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

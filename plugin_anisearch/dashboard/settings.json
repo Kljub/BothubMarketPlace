@@ -1,0 +1,31 @@
+{
+  "fields": [
+    {
+      "key": "channel",
+      "type": "channel",
+      "channelTypes": [
+        "text",
+        "announcement"
+      ],
+      "required": true,
+      "hint": true
+    },
+    {
+      "key": "ping_role",
+      "type": "role",
+      "hint": true
+    },
+    {
+      "key": "announce_text",
+      "type": "text",
+      "default": "Episode **{episode}** of **{title}** is out!",
+      "max": 300,
+      "hint": true
+    },
+    {
+      "key": "color",
+      "type": "color",
+      "default": "#02a9ff"
+    }
+  ]
+}

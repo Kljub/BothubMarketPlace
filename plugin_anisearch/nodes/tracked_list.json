@@ -1,0 +1,42 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_anisearch.node.tracked_list.label",
+  "descriptionKey": "plugin.plugin_anisearch.node.tracked_list.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "empty",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_anisearch.node.tracked_list.result"
+    },
+    {
+      "suffix": ".count",
+      "labelKey": "plugin.plugin_anisearch.node.tracked_list.result_count"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

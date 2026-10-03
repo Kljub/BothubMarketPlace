@@ -1,0 +1,245 @@
+{
+  "name": "plex-request",
+  "description": "Requests a movie or show (Overseerr)",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "plex-request",
+          "description": "Requests a movie or show (Overseerr)"
+        },
+        "position": {
+          "x": 120,
+          "y": 240
+        }
+      },
+      {
+        "id": "option_title",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "title",
+          "description": "Title of the movie or show",
+          "required": true,
+          "variable": "title"
+        },
+        "position": {
+          "x": 120,
+          "y": 110
+        }
+      },
+      {
+        "id": "req",
+        "type": "plugin.plugin_plex.request",
+        "typeVersion": 1,
+        "config": {
+          "title": "{option_title}",
+          "variable": "px"
+        },
+        "position": {
+          "x": 440,
+          "y": 240
+        }
+      },
+      {
+        "id": "ok",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "✅ Request for **{px}** created. You get a DM when it is approved or available."
+          },
+          "target": "reply"
+        },
+        "position": {
+          "x": 760,
+          "y": 240
+        }
+      },
+      {
+        "id": "none",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "🔍 Overseerr found nothing for \"{option_title}\"."
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 760,
+          "y": 370
+        }
+      },
+      {
+        "id": "nolink",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ Link your Plex account first: /plex-link"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 1080,
+          "y": 370
+        }
+      },
+      {
+        "id": "off",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ Overseerr requests are off for this bot."
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 1080,
+          "y": 500
+        }
+      },
+      {
+        "id": "failed",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {px}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 760,
+          "y": 500
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 120,
+          "y": 900
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 440,
+          "y": 900
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "option_title",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "req",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "req",
+          "port": "next"
+        },
+        "to": {
+          "node": "ok",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "req",
+          "port": "not_found"
+        },
+        "to": {
+          "node": "none",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "req",
+          "port": "not_linked"
+        },
+        "to": {
+          "node": "nolink",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "req",
+          "port": "not_configured"
+        },
+        "to": {
+          "node": "off",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "req",
+          "port": "failed"
+        },
+        "to": {
+          "node": "failed",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "name": "plex-nowplaying",
+  "description": "Shows what is playing on Plex",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "plex-nowplaying",
+          "description": "Shows what is playing on Plex"
+        },
+        "position": {
+          "x": 120,
+          "y": 240
+        }
+      },
+      {
+        "id": "np",
+        "type": "plugin.plugin_plex.now_playing",
+        "typeVersion": 1,
+        "config": {
+          "variable": "px"
+        },
+        "position": {
+          "x": 440,
+          "y": 240
+        }
+      },
+      {
+        "id": "ok",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "embeds": [
+              {
+                "color": "#e5a00d",
+                "title": "📺 Now playing ({px.count})",
+                "description": "{px}"
+              }
+            ]
+          },
+          "target": "reply"
+        },
+        "position": {
+          "x": 760,
+          "y": 240
+        }
+      },
+      {
+        "id": "empty",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "📺 Nothing is playing right now."
+          },
+          "target": "reply"
+        },
+        "position": {
+          "x": 760,
+          "y": 370
+        }
+      },
+      {
+        "id": "failed",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {px}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 760,
+          "y": 500
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 120,
+          "y": 900
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 440,
+          "y": 900
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "np",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "np",
+          "port": "next"
+        },
+        "to": {
+          "node": "ok",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "np",
+          "port": "empty"
+        },
+        "to": {
+          "node": "empty",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "np",
+          "port": "failed"
+        },
+        "to": {
+          "node": "failed",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

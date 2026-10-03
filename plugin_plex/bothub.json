@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_plex",
+  "name": "Plex",
+  "version": "1.0.0",
+  "description": "Plex for Discord: library search, now playing, random picks, recommendations, Overseerr requests, account linking with a role, and new-content notices.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "MIT",
+  "icon": "🎬",
+  "category": "social",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "discord.messages.send",
+      "scheduler",
+      "http.endpoints",
+      "http.outbound",
+      "discord.interactions",
+      "discord.roles.manage",
+      "webhooks.inbound"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/link.json",
+    "commands/unlink.json",
+    "commands/status.json",
+    "commands/nowplaying.json",
+    "commands/search.json",
+    "commands/random.json",
+    "commands/recommend.json",
+    "commands/request.json",
+    "commands/libraries.json"
+  ],
+  "services": {
+    "tasks": [
+      {
+        "name": "link_poll",
+        "every": "1m"
+      }
+    ],
+    "endpoints": [
+      "PLEX_API",
+      "OVERSEERR_API"
+    ],
+    "hosts": [
+      "plex.tv"
+    ],
+    "webhooks": [
+      "media",
+      "overseerr"
+    ]
+  },
+  "nodes": [
+    "status",
+    "now_playing",
+    "search",
+    "random",
+    "recommend",
+    "request",
+    "link",
+    "unlink_account",
+    "libraries"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

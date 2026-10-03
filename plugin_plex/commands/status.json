@@ -1,0 +1,182 @@
+{
+  "name": "plex-status",
+  "description": "Shows the state of the Plex server",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "plex-status",
+          "description": "Shows the state of the Plex server"
+        },
+        "position": {
+          "x": 120,
+          "y": 240
+        }
+      },
+      {
+        "id": "status",
+        "type": "plugin.plugin_plex.status",
+        "typeVersion": 1,
+        "config": {
+          "variable": "px"
+        },
+        "position": {
+          "x": 440,
+          "y": 240
+        }
+      },
+      {
+        "id": "online",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "embeds": [
+              {
+                "color": "#2ecc71",
+                "title": "📊 Plex",
+                "fields": [
+                  {
+                    "name": "Connection",
+                    "value": "✅ {px}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Version",
+                    "value": "{px.version}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Playing",
+                    "value": "{px.playing}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Libraries",
+                    "value": "{px.libraries}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Overseerr",
+                    "value": "{px.overseerr}",
+                    "inline": true
+                  },
+                  {
+                    "name": "You",
+                    "value": "{px.linked}",
+                    "inline": false
+                  }
+                ]
+              }
+            ]
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 760,
+          "y": 240
+        }
+      },
+      {
+        "id": "offline",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "embeds": [
+              {
+                "color": "#e74c3c",
+                "title": "📊 Plex",
+                "description": "❌ {px}\n{px.linked}"
+              }
+            ]
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 760,
+          "y": 400
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 120,
+          "y": 900
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 440,
+          "y": 900
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "status",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "status",
+          "port": "online"
+        },
+        "to": {
+          "node": "online",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "status",
+          "port": "offline"
+        },
+        "to": {
+          "node": "offline",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

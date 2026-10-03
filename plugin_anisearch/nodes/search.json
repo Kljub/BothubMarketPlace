@@ -1,0 +1,105 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_anisearch.node.search.label",
+  "descriptionKey": "plugin.plugin_anisearch.node.search.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "found",
+      "type": "flow"
+    },
+    {
+      "name": "not_found",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_anisearch.node.search.result"
+    },
+    {
+      "suffix": ".id",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_id"
+    },
+    {
+      "suffix": ".url",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_url"
+    },
+    {
+      "suffix": ".description",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_description"
+    },
+    {
+      "suffix": ".cover",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_cover"
+    },
+    {
+      "suffix": ".score",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_score"
+    },
+    {
+      "suffix": ".status",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_status"
+    },
+    {
+      "suffix": ".format",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_format"
+    },
+    {
+      "suffix": ".episodes",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_episodes"
+    },
+    {
+      "suffix": ".chapters",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_chapters"
+    },
+    {
+      "suffix": ".volumes",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_volumes"
+    },
+    {
+      "suffix": ".genres",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_genres"
+    },
+    {
+      "suffix": ".year",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_year"
+    },
+    {
+      "suffix": ".next_episode",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_next_episode"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "title": {
+        "type": "string",
+        "maxLength": 200
+      },
+      "media_type": {
+        "type": "string",
+        "enum": [
+          "anime",
+          "manga"
+        ],
+        "default": "anime"
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    },
+    "required": [
+      "title"
+    ]
+  }
+}

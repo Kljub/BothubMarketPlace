@@ -1,0 +1,46 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_plex.node.now_playing.label",
+  "descriptionKey": "plugin.plugin_plex.node.now_playing.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "empty",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_plex.result.main"
+    },
+    {
+      "suffix": ".count",
+      "labelKey": "plugin.plugin_plex.result.count"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

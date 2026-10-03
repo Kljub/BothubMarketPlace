@@ -1,0 +1,178 @@
+{
+  "name": "anisearch-untrack",
+  "description": "Stops announcing an anime",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "anisearch-untrack",
+          "description": "Stops announcing an anime",
+          "permissions": {
+            "allowed_roles": [
+              {
+                "id": "everyone"
+              }
+            ],
+            "banned_roles": [],
+            "required_permissions": [
+              "manage_guild"
+            ],
+            "banned_channels": [],
+            "hide_without_permission": true
+          }
+        },
+        "position": {
+          "x": 120,
+          "y": 240
+        }
+      },
+      {
+        "id": "option_title",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "title",
+          "description": "Title or AniList ID (see /anisearch-tracked)",
+          "required": true,
+          "variable": "title"
+        },
+        "position": {
+          "x": 120,
+          "y": 110
+        }
+      },
+      {
+        "id": "untrack",
+        "type": "plugin.plugin_anisearch.untrack",
+        "typeVersion": 1,
+        "config": {
+          "title": "{option_title}",
+          "variable": "un"
+        },
+        "position": {
+          "x": 440,
+          "y": 240
+        }
+      },
+      {
+        "id": "ok",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "✅ **{un}** is not tracked any more."
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 760,
+          "y": 240
+        }
+      },
+      {
+        "id": "none",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ \"{option_title}\" is not tracked. See /anisearch-tracked."
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 760,
+          "y": 370
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 120,
+          "y": 760
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 440,
+          "y": 760
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "option_title",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "untrack",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "untrack",
+          "port": "next"
+        },
+        "to": {
+          "node": "ok",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "untrack",
+          "port": "not_found"
+        },
+        "to": {
+          "node": "none",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

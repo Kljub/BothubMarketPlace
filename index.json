@@ -1,4 +1,78 @@
 {
   "schemaVersion": 1,
-  "plugins": []
+  "plugins": [
+    {
+      "id": "plugin_anisearch",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_anisearch-1.0.0/plugin_anisearch-1.0.0.zip",
+      "sha256": "1f6d04db1d61cc61f24e387c092760d1d3cf2ee15471e35c39f2ff6efb1e9de3",
+      "size": 16435,
+      "name": "AniSearch",
+      "description": "Anime and manga search on AniList, plus new-episode notices for tracked anime.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "MIT",
+      "icon": "🔎",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "discord.messages.send",
+          "scheduler",
+          "http.outbound"
+        ]
+      },
+      "endpoints": [],
+      "layers": {
+        "commands": 5,
+        "events": 0,
+        "services": 1,
+        "nodes": 4,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
+      "id": "plugin_plex",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_plex-1.0.0/plugin_plex-1.0.0.zip",
+      "sha256": "4ff7d7af319f6a4bf8a1e7e7a89529732c2b540485177b968c994cf2a0d83fe0",
+      "size": 27862,
+      "name": "Plex",
+      "description": "Plex for Discord: library search, now playing, random picks, recommendations, Overseerr requests, account linking with a role, and new-content notices.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "MIT",
+      "icon": "🎬",
+      "category": "social",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "discord.messages.send",
+          "scheduler",
+          "http.endpoints",
+          "http.outbound",
+          "discord.interactions",
+          "discord.roles.manage",
+          "webhooks.inbound"
+        ]
+      },
+      "endpoints": [
+        "PLEX_API",
+        "OVERSEERR_API"
+      ],
+      "layers": {
+        "commands": 9,
+        "events": 0,
+        "services": 3,
+        "nodes": 9,
+        "dashboard": 1
+      },
+      "voice": false
+    }
+  ]
 }

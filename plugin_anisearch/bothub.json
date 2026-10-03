@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_anisearch",
+  "name": "AniSearch",
+  "version": "1.0.0",
+  "description": "Anime and manga search on AniList, plus new-episode notices for tracked anime.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "MIT",
+  "icon": "🔎",
+  "category": "fun",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "discord.messages.send",
+      "scheduler",
+      "http.outbound"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/anime.json",
+    "commands/manga.json",
+    "commands/track.json",
+    "commands/untrack.json",
+    "commands/tracked.json"
+  ],
+  "services": {
+    "tasks": [
+      {
+        "name": "airing_check",
+        "every": "15m"
+      }
+    ],
+    "hosts": [
+      "graphql.anilist.co"
+    ]
+  },
+  "nodes": [
+    "search",
+    "track",
+    "untrack",
+    "tracked_list"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

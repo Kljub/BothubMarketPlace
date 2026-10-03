@@ -1,0 +1,62 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_plex.node.status.label",
+  "descriptionKey": "plugin.plugin_plex.node.status.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "online",
+      "type": "flow"
+    },
+    {
+      "name": "offline",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_plex.result.main"
+    },
+    {
+      "suffix": ".version",
+      "labelKey": "plugin.plugin_plex.result.version"
+    },
+    {
+      "suffix": ".playing",
+      "labelKey": "plugin.plugin_plex.result.playing"
+    },
+    {
+      "suffix": ".libraries",
+      "labelKey": "plugin.plugin_plex.result.libraries"
+    },
+    {
+      "suffix": ".linked",
+      "labelKey": "plugin.plugin_plex.result.linked"
+    },
+    {
+      "suffix": ".overseerr",
+      "labelKey": "plugin.plugin_plex.result.overseerr"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "user": {
+        "type": "string",
+        "maxLength": 40
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

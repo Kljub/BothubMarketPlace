@@ -1,0 +1,275 @@
+{
+  "name": "plex-random",
+  "description": "A random title from Plex",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "plex-random",
+          "description": "A random title from Plex"
+        },
+        "position": {
+          "x": 120,
+          "y": 240
+        }
+      },
+      {
+        "id": "option_library",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "library",
+          "description": "Library ID (empty: any shared one)",
+          "required": false,
+          "variable": "library"
+        },
+        "position": {
+          "x": 120,
+          "y": 110
+        }
+      },
+      {
+        "id": "option_genre",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "genre",
+          "description": "Genre",
+          "required": false,
+          "variable": "genre"
+        },
+        "position": {
+          "x": 410,
+          "y": 110
+        }
+      },
+      {
+        "id": "option_unwatched",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "unwatched",
+          "description": "Only unwatched titles",
+          "required": false,
+          "variable": "unwatched",
+          "choices": "yes\nno"
+        },
+        "position": {
+          "x": 700,
+          "y": 110
+        }
+      },
+      {
+        "id": "random",
+        "type": "plugin.plugin_plex.random",
+        "typeVersion": 1,
+        "config": {
+          "library": "{option_library}",
+          "genre": "{option_genre}",
+          "unwatched": "{option_unwatched}",
+          "variable": "px"
+        },
+        "position": {
+          "x": 440,
+          "y": 240
+        }
+      },
+      {
+        "id": "picked",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "embeds": [
+              {
+                "color": "#e5a00d",
+                "title": "🎲 {px}",
+                "description": "{px.summary}",
+                "fields": [
+                  {
+                    "name": "Year",
+                    "value": "{px.year}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Rating",
+                    "value": "{px.rating}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Duration",
+                    "value": "{px.duration}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Genres",
+                    "value": "{px.genres}",
+                    "inline": false
+                  }
+                ],
+                "footer": {
+                  "text": "Plex · {px.library}"
+                }
+              }
+            ]
+          },
+          "target": "reply"
+        },
+        "position": {
+          "x": 760,
+          "y": 240
+        }
+      },
+      {
+        "id": "empty",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "🎲 Nothing found."
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 760,
+          "y": 370
+        }
+      },
+      {
+        "id": "failed",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {px}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 760,
+          "y": 500
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 120,
+          "y": 900
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 440,
+          "y": 900
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "option_library",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_genre",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_unwatched",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "random",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "random",
+          "port": "next"
+        },
+        "to": {
+          "node": "picked",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "random",
+          "port": "empty"
+        },
+        "to": {
+          "node": "empty",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "random",
+          "port": "failed"
+        },
+        "to": {
+          "node": "failed",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_anisearch.node.untrack.label",
+  "descriptionKey": "plugin.plugin_anisearch.node.untrack.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "not_found",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_anisearch.node.untrack.result"
+    },
+    {
+      "suffix": ".id",
+      "labelKey": "plugin.plugin_anisearch.node.untrack.result_id"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "title": {
+        "type": "string",
+        "maxLength": 200
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    },
+    "required": [
+      "title"
+    ]
+  }
+}
