@@ -36,6 +36,16 @@ const AIRING = `query ($ids: [Int]) {
   }
 }`;
 
+// Episodes airing in a time range (unix seconds), sorted by time; 50 per page.
+const SCHEDULE = `query ($start: Int, $end: Int, $page: Int) {
+  Page(page: $page, perPage: 50) {
+    pageInfo { hasNextPage }
+    airingSchedules(airingAt_greater: $start, airingAt_lesser: $end, sort: TIME) {
+      episode airingAt media { id title { romaji english native } siteUrl isAdult }
+    }
+  }
+}`;
+
 /** A GraphQL call; null when AniList finds nothing (404 / "Not Found"). */
 async function gql(ctx, query, variables) {
   const res = await ctx.http.post(ENDPOINT, { query, variables }, { headers: { Accept: 'application/json' } });
@@ -63,6 +73,40 @@ export async function byId(ctx, id) {
 export async function airing(ctx, ids) {
   const page = (await gql(ctx, AIRING, { ids: ids.slice(0, 50).map(Number) }))?.Page?.media ?? [];
   return new Map(page.map((m) => [m.id, m]));
+}
+
+/** Episodes airing between start and end (unix seconds), at most 3 pages; adult titles left out. */
+export async function schedule(ctx, start, end) {
+  const out = [];
+  for (let page = 1; page <= 3; page++) {
+    const data = (await gql(ctx, SCHEDULE, { start: Math.floor(start) - 1, end: Math.floor(end), page }))?.Page;
+    out.push(...(data?.airingSchedules ?? []).filter((s) => s?.media && !s.media.isAdult));
+    if (!data?.pageInfo?.hasNextPage) break;
+  }
+  return out;
+}
+
+/** Start and end (unix seconds) of the day of `now` in an IANA time zone; unknown zones fall back to UTC. */
+export function dayRange(now, timeZone) {
+  let zone = String(timeZone || 'UTC');
+  try {
+    new Intl.DateTimeFormat('en', { timeZone: zone });
+  } catch {
+    zone = 'UTC';
+  }
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    timeZone: zone, hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit',
+  });
+  // Offset of the zone at a moment (ms): its wall-clock time read as UTC, minus the moment.
+  const offset = (t) => {
+    const p = Object.fromEntries(fmt.formatToParts(new Date(t)).map((x) => [x.type, x.value]));
+    return Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute, +p.second) - Math.floor(t / 1000) * 1000;
+  };
+  // Local midnight as UTC: the wall date at "now", then corrected by the offset at that midnight.
+  const local = (wallMs) => wallMs - offset(wallMs - offset(wallMs));
+  const wall = new Date(now.getTime() + offset(now.getTime()));
+  const midnight = Date.UTC(wall.getUTCFullYear(), wall.getUTCMonth(), wall.getUTCDate());
+  return { start: local(midnight) / 1000, end: local(midnight + 86400000) / 1000, zone };
 }
 
 export function titleOf(media) {

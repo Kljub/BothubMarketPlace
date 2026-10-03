@@ -152,6 +152,23 @@ export interface MessageInfo {
     embeds: number;
     stickers: number;
 }
+/** Who to check with config.checkAccess: an interaction event or IDs. */
+export type AccessSubject = {
+    userId: Id;
+    guildId: Id | null;
+    channelId?: Id | null;
+} | {
+    user: {
+        id: Id;
+    };
+    guildId: Id | null;
+    channelId?: Id | null;
+};
+/** reason: why not allowed (member: not on the server); null when allowed. */
+export interface AccessResult {
+    allowed: boolean;
+    reason: 'role' | 'banned_role' | 'permission' | 'channel' | 'member' | null;
+}
 export interface GuildInfo {
     id: Id;
     name: string;
@@ -187,6 +204,14 @@ export interface PluginContext {
         get(key: string): Json | undefined;
         has(key: string): boolean;
         getAll(): Record<string, Json>;
+        /**
+         * Checks a member against a "permissions" field of the settings page
+         * (allowed/banned roles, required permissions, banned channels), the
+         * same way a command's permissions block works. `who` is an interaction
+         * event or { userId, guildId, channelId }. In DMs always allowed.
+         * Always reads the saved value, so a dashboard change counts at once.
+         */
+        checkAccess(key: string, who: AccessSubject): Async<AccessResult>;
         set(key: string, value: Json): Async<void>;
         delete(key: string): Async<void>;
     };
@@ -224,6 +249,15 @@ export interface PluginContext {
         decrement(key: string, by?: number): Async<number>;
         clear(): Async<void>;
         transaction<T>(fn: () => Async<T>): Async<T>;
+    };
+    readonly globalStorage: {
+        get(key: string): Async<string | null>;
+        set(key: string, value: string): Async<void>;
+        has(key: string): Async<boolean>;
+        delete(key: string): Async<void>;
+        increment(key: string, by?: number): Async<number>;
+        decrement(key: string, by?: number): Async<number>;
+        clear(): Async<void>;
     };
     readonly collection: {
         create(name: string): Async<void>;
@@ -380,14 +414,94 @@ export interface PluginContext {
         showModal(handle: string, modal: Modal): Async<void>;
         respond(handle: string, payload?: Json): Async<void>;
     };
-    /** "discord.emojis.manage": image as base64 (PNG/GIF/WEBP/JPEG, max. 256 KB). */
+    /**
+     * "discord.emojis.read": list / get (mention = the text that shows the emoji in a message).
+     * "discord.emojis.manage": create / delete, image as base64 (PNG/GIF/WEBP/JPEG, max. 256 KB).
+     */
     readonly emoji: {
+        list(guildId: Id): Async<Array<{
+            id: Id;
+            name: string;
+            animated: boolean;
+            available: boolean;
+            url: string;
+            mention: string;
+        }>>;
+        get(guildId: Id, emojiId: Id): Async<{
+            id: Id;
+            name: string;
+            animated: boolean;
+            available: boolean;
+            url: string;
+            mention: string;
+        }>;
         create(guildId: Id, name: string, imageBase64: string, reason?: string): Async<{
             id: Id;
             name: string;
             animated: boolean;
         }>;
         delete(guildId: Id, emojiId: Id, reason?: string): Async<void>;
+    };
+    /**
+     * "discord.audit.read": the server's Discord audit log (newest first, max. 100).
+     * type: AuditLogEvent name, e.g. "MemberBanAdd"; the bot needs "View Audit Log".
+     */
+    readonly audit: {
+        list(guildId: Id, options?: {
+            type?: string;
+            user?: Id;
+            limit?: number;
+            before?: Id;
+        }): Async<Array<{
+            id: Id;
+            action: string;
+            executorId: Id | null;
+            targetId: Id | null;
+            targetType: string;
+            reason: string | null;
+            changes: Array<{
+                key: string;
+                old: string | null;
+                new: string | null;
+            }>;
+            createdAt: string;
+        }>>;
+    };
+    /**
+     * "moderation.cases": cases and notes of the bot's Moderation module. A recorded case
+     * gets the next case number, the DM, the log channel post and the automatic
+     * punishments the module is set up for; null when the module is off.
+     */
+    readonly moderation: {
+        warn(guildId: Id, userId: Id, reason: string, moderatorId?: Id): Async<number | null>;
+        record(guildId: Id, userId: Id, action: 'warn' | 'timeout' | 'untimeout' | 'kick' | 'ban' | 'unban' | 'role_add' | 'role_remove' | 'voice_mute' | 'voice_unmute' | 'voice_deafen' | 'voice_undeafen' | 'voice_kick', reason?: string, duration?: string, moderatorId?: Id): Async<number | null>;
+        history(guildId: Id, userId: Id): Async<Array<{
+            number: number;
+            userId: Id;
+            moderatorId: Id | null;
+            action: string;
+            reason: string;
+            duration: string;
+            auto: boolean;
+            createdAt: string;
+        }>>;
+        getCase(guildId: Id, number: number): Async<{
+            number: number;
+            userId: Id;
+            moderatorId: Id | null;
+            action: string;
+            reason: string;
+            duration: string;
+            auto: boolean;
+            createdAt: string;
+        } | null>;
+        note(guildId: Id, userId: Id, content: string, authorId?: Id): Async<number>;
+        notes(guildId: Id, userId: Id): Async<Array<{
+            id: number;
+            authorId: Id | null;
+            content: string;
+            createdAt: string;
+        }>>;
     };
     /** "economy": balances of the bot's Economy module (the same as /balance). */
     readonly economy: {

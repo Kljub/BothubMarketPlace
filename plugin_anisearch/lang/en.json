@@ -37,5 +37,19 @@
   "plugin.plugin_anisearch.node.tracked_list.label": "Tracked anime",
   "plugin.plugin_anisearch.node.tracked_list.description": "The anime this bot follows, as a list.",
   "plugin.plugin_anisearch.node.tracked_list.result": "List",
-  "plugin.plugin_anisearch.node.tracked_list.result_count": "Count"
+  "plugin.plugin_anisearch.node.tracked_list.result_count": "Count",
+  "plugin.plugin_anisearch.setting.timezone": "Time zone",
+  "plugin.plugin_anisearch.setting.timezone_hint": "IANA name like Europe/Berlin; decides what \"today\" means for /launchtoday.",
+  "plugin.plugin_anisearch.node.airing_today.label": "Airing today",
+  "plugin.plugin_anisearch.node.airing_today.description": "Anime episodes that air today on AniList, as a list with times.",
+  "plugin.plugin_anisearch.node.airing_today.result": "List",
+  "plugin.plugin_anisearch.node.airing_today.result_count": "Count",
+  "plugin.plugin_anisearch.port.already": "Already there",
+  "plugin.plugin_anisearch.port.empty": "Empty",
+  "plugin.plugin_anisearch.port.found": "Found",
+  "plugin.plugin_anisearch.port.full": "Full",
+  "plugin.plugin_anisearch.port.in": "In",
+  "plugin.plugin_anisearch.port.next": "Next",
+  "plugin.plugin_anisearch.port.no_channel": "No channel",
+  "plugin.plugin_anisearch.port.not_found": "Not found"
 }

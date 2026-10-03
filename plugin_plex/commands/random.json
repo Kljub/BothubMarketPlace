@@ -13,8 +13,8 @@
           "description": "A random title from Plex"
         },
         "position": {
-          "x": 120,
-          "y": 240
+          "x": 400,
+          "y": 190
         }
       },
       {
@@ -28,8 +28,8 @@
           "variable": "library"
         },
         "position": {
-          "x": 120,
-          "y": 110
+          "x": -120,
+          "y": 40
         }
       },
       {
@@ -43,8 +43,8 @@
           "variable": "genre"
         },
         "position": {
-          "x": 410,
-          "y": 110
+          "x": 400,
+          "y": 40
         }
       },
       {
@@ -59,8 +59,8 @@
           "choices": "yes\nno"
         },
         "position": {
-          "x": 700,
-          "y": 110
+          "x": 920,
+          "y": 40
         }
       },
       {
@@ -74,8 +74,8 @@
           "variable": "px"
         },
         "position": {
-          "x": 440,
-          "y": 240
+          "x": 400,
+          "y": 340
         }
       },
       {
@@ -121,8 +121,8 @@
           "target": "reply"
         },
         "position": {
-          "x": 760,
-          "y": 240
+          "x": -120,
+          "y": 490
         }
       },
       {
@@ -138,8 +138,8 @@
           "ephemeral": true
         },
         "position": {
-          "x": 760,
-          "y": 370
+          "x": 400,
+          "y": 490
         }
       },
       {
@@ -155,8 +155,8 @@
           "ephemeral": true
         },
         "position": {
-          "x": 760,
-          "y": 500
+          "x": 920,
+          "y": 490
         }
       },
       {
@@ -167,8 +167,8 @@
           "variable": "error"
         },
         "position": {
-          "x": 120,
-          "y": 900
+          "x": 1560,
+          "y": 190
         }
       },
       {
@@ -184,8 +184,8 @@
           "ephemeral": true
         },
         "position": {
-          "x": 440,
-          "y": 900
+          "x": 1560,
+          "y": 340
         }
       }
     ],

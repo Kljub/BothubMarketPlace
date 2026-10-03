@@ -1,24 +1,28 @@
 // Logic of the Plex nodes (plugin.plugin_plex.<name>); nodes/<name>.js hand it to the SDK, nodes/<name>.json defines it.
-import { account, startLink, unlink } from './accounts.js';
-import { allowedLibraries, errorText, itemResults, overseerr, plex, randomItem, searchLibraries, sections, sessions } from './plex.js';
+import { account, startLink, tokenOf, unlink } from './accounts.js';
+import { allowedLibraries, errorText, history, itemResults, overseerr, randomItem, searchLibraries, sections, servers, sessions, showRef } from './plex.js';
 import { readJson, writeJson } from './storage.js';
+import * as watch from './watchlist.js';
 import { setting } from './util.js';
 
 const userOf = (vars, config) => String(config.user || vars['user.id'] || '');
 const guildOf = (vars) => String(vars['server.id'] || '');
 
-/** Plex server state: ports online / offline. */
+/** State of the connected Plex servers: ports online (at least one answers) / offline. */
 export async function status(ctx, { config, vars }) {
-  const id = await plex(ctx, '/identity');
+  const list = await servers(ctx);
   const acc = await account(ctx, userOf(vars, config));
   const linked = acc ? `Linked as ${acc.username}` : 'Not linked (/plex-link)';
-  if (!id.ok) return { port: 'offline', results: { '': errorText(id), '.linked': linked } };
+  const up = list.filter((s) => s.ok);
+  const lines = list.map((s) => `${s.ok ? '🟢' : '🔴'} ${s.name}${s.ok ? ` · ${s.version}` : ` · ${errorText(s)}`}`).join('\n');
+  if (!up.length) return { port: 'offline', results: { '': errorText(list[0]), '.linked': linked, '.servers': lines } };
   const s = await sessions(ctx);
   return {
     port: 'online',
     results: {
-      '': 'Online', '.version': String(id.json?.MediaContainer?.version ?? '?'), '.playing': String(s.ok ? s.sessions.length : 0),
+      '': up.length === list.length ? 'Online' : `${up.length}/${list.length} online`, '.version': up[0].version, '.playing': String(s.ok ? s.sessions.length : 0),
       '.libraries': String(allowedLibraries(ctx).length), '.linked': linked, '.overseerr': setting(ctx, 'overseerr', false) ? 'On' : 'Off',
+      '.servers': lines,
     },
   };
 }
@@ -92,7 +96,7 @@ export async function reroll(ctx, ev) {
 export async function recommend(ctx, { config, vars }) {
   const acc = await account(ctx, userOf(vars, config));
   if (!acc) return { port: 'not_linked' };
-  const hist = await plex(ctx, '/status/sessions/history/all', { sort: 'viewedAt:desc', 'X-Plex-Container-Size': '50' });
+  const hist = await history(ctx);
   if (!hist.ok) return { port: 'failed', results: { '': errorText(hist) } };
   const counts = {};
   for (const h of hist.json?.MediaContainer?.Metadata ?? []) {
@@ -146,11 +150,51 @@ export async function unlink_account(ctx, { config, vars }) {
   return { results: { '': acc.username } };
 }
 
-/** The Plex libraries with their IDs (for the settings page): ports next / failed. */
+/** The Plex libraries of every server with their IDs (for the settings page): ports next / failed. */
 export async function libraries(ctx) {
   const res = await sections(ctx);
   if (!res.ok) return { port: 'failed', results: { '': errorText(res) } };
   const allowed = allowedLibraries(ctx);
-  const lines = res.sections.map((s) => `${allowed.includes(s.id) ? '✅' : '➖'} **${s.title}** (${s.type}) · ID \`${s.id}\``);
+  const many = res.servers > 1;
+  const lines = res.sections.map((s) => `${allowed.includes(s.id) ? '✅' : '➖'} **${s.title}** (${s.type})${many ? ` · ${s.serverName}` : ''} · ID \`${showRef(s.id)}\``);
   return { results: { '': lines.join('\n').slice(0, 4000) || '—', '.count': String(res.sections.length) } };
+}
+
+const watchError = (res) => (res.error === 'not_linked' ? 'not_linked' : 'failed');
+const watchText = (res) => (res.error?.startsWith('http_') ? `Plex answered with HTTP ${res.error.slice(5)}.` : 'Plex could not be reached.');
+
+/** The member's watchlist: ports next / empty / not_linked / failed. */
+export async function watchlist(ctx, { config, vars }) {
+  const res = await watch.list(ctx, userOf(vars, config));
+  if (res.error) return { port: watchError(res), results: { '': watchText(res) } };
+  if (!res.items.length) return { port: 'empty', results: { '.count': '0' } };
+  const lines = res.items.slice(0, 40).map((i) => `${i.type === 'show' ? '📺' : '🎬'} **${i.title}**${i.year ? ` (${i.year})` : ''}`);
+  if (res.items.length > 40) lines.push(`… +${res.items.length - 40}`);
+  return { results: { '': lines.join('\n').slice(0, 4000), '.count': String(res.items.length) } };
+}
+
+/** Adds the first Plex Discover hit for a title: ports added / not_found / not_linked / failed. */
+export async function watchlist_add(ctx, { config, vars }) {
+  const title = String(config.title ?? '').trim();
+  if (!title) return { port: 'not_found' };
+  const found = await watch.find(ctx, userOf(vars, config), title);
+  if (found.error === 'not_found') return { port: 'not_found' };
+  if (found.error) return { port: watchError(found), results: { '': watchText(found) } };
+  const done = await watch.change(ctx, found.token, found.item.key, true);
+  if (done.error) return { port: watchError(done), results: { '': watchText(done) } };
+  return { port: 'added', results: { '': found.item.title, '.year': found.item.year || '—' } };
+}
+
+/** Removes a title from the watchlist (matched by name): ports removed / not_listed / not_linked / failed. */
+export async function watchlist_remove(ctx, { config, vars }) {
+  const userId = userOf(vars, config);
+  const title = String(config.title ?? '').trim().toLowerCase();
+  const res = await watch.list(ctx, userId);
+  if (res.error) return { port: watchError(res), results: { '': watchText(res) } };
+  const hit = res.items.find((i) => i.title.toLowerCase() === title) ?? res.items.find((i) => title && i.title.toLowerCase().includes(title));
+  if (!hit) return { port: 'not_listed' };
+  const token = await tokenOf(ctx, userId);
+  const done = await watch.change(ctx, token, hit.key, false);
+  if (done.error) return { port: watchError(done), results: { '': watchText(done) } };
+  return { port: 'removed', results: { '': hit.title, '.year': hit.year || '—' } };
 }

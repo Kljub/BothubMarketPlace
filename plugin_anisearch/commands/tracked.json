@@ -13,8 +13,8 @@
           "description": "Shows the tracked anime"
         },
         "position": {
-          "x": 120,
-          "y": 240
+          "x": 400,
+          "y": 40
         }
       },
       {
@@ -25,8 +25,8 @@
           "variable": "tl"
         },
         "position": {
-          "x": 440,
-          "y": 240
+          "x": 400,
+          "y": 190
         }
       },
       {
@@ -48,8 +48,8 @@
           "ephemeral": true
         },
         "position": {
-          "x": 760,
-          "y": 240
+          "x": 140,
+          "y": 340
         }
       },
       {
@@ -65,8 +65,8 @@
           "ephemeral": true
         },
         "position": {
-          "x": 760,
-          "y": 370
+          "x": 660,
+          "y": 340
         }
       },
       {
@@ -77,8 +77,8 @@
           "variable": "error"
         },
         "position": {
-          "x": 120,
-          "y": 760
+          "x": 1300,
+          "y": 40
         }
       },
       {
@@ -94,8 +94,8 @@
           "ephemeral": true
         },
         "position": {
-          "x": 440,
-          "y": 760
+          "x": 1300,
+          "y": 190
         }
       }
     ],

@@ -24,12 +24,21 @@ const CALLS = {
     'logger.debug': null, 'logger.info': null, 'logger.warn': null, 'logger.error': null, 'logger.success': null,
     'storage.get': 'storage', 'storage.set': 'storage', 'storage.has': 'storage', 'storage.delete': 'storage',
     'storage.increment': 'storage', 'storage.decrement': 'storage', 'storage.clear': 'storage',
+    'globalStorage.get': 'storage.global', 'globalStorage.set': 'storage.global', 'globalStorage.has': 'storage.global',
+    'globalStorage.delete': 'storage.global', 'globalStorage.increment': 'storage.global', 'globalStorage.decrement': 'storage.global',
+    'globalStorage.clear': 'storage.global',
+    'emoji.list': 'discord.emojis.read', 'emoji.get': 'discord.emojis.read',
+    'audit.list': 'discord.audit.read',
+    'member.voiceMute': 'discord.voice.mute', 'member.voiceDeafen': 'discord.voice.mute',
+    'member.voiceDisconnect': 'discord.voice.move', 'member.voiceMove': 'discord.voice.move',
+    'moderation.warn': 'modules.moderation.cases', 'moderation.record': 'modules.moderation.cases', 'moderation.history': 'modules.moderation.cases',
+    'moderation.getCase': 'modules.moderation.cases', 'moderation.note': 'modules.moderation.cases', 'moderation.notes': 'modules.moderation.cases',
     'guild.get': 'discord.guilds.read', 'guild.list': 'discord.guilds.read',
     'module.get': 'modules.read', 'module.getId': 'modules.read', 'module.getName': 'modules.read',
     'module.isEnabled': 'modules.read', 'module.getConfig': 'modules.read', 'module.list': 'modules.read',
     'message.send': 'discord.messages.send',
-    'voice.join': 'discord.voice', 'voice.leave': 'discord.voice', 'voice.play': 'discord.voice',
-    'voice.stop': 'discord.voice', 'voice.state': 'discord.voice',
+    'voice.join': 'discord.voice.connect', 'voice.leave': 'discord.voice.connect', 'voice.play': 'discord.voice.speak',
+    'voice.stop': 'discord.voice.speak', 'voice.state': 'discord.voice.connect',
     'http.endpoint': 'http.endpoints',
     'http.get': 'http.outbound', 'http.post': 'http.outbound', 'http.put': 'http.outbound', 'http.patch': 'http.outbound', 'http.delete': 'http.outbound',
     'message.dm': 'discord.messages.send',
@@ -38,18 +47,21 @@ const CALLS = {
     'channel.get': 'discord.channels.read', 'channel.list': 'discord.channels.read',
     'role.get': 'discord.roles.read', 'role.list': 'discord.roles.read',
     'message.get': 'discord.messages.read',
-    'message.edit': 'discord.messages.manage', 'message.delete': 'discord.messages.manage', 'message.pin': 'discord.messages.manage',
-    'message.unpin': 'discord.messages.manage', 'message.react': 'discord.messages.manage',
-    'member.addRole': 'discord.members.manage', 'member.removeRole': 'discord.members.manage', 'member.timeout': 'discord.members.manage',
-    'member.kick': 'discord.members.manage', 'member.ban': 'discord.members.manage', 'member.unban': 'discord.members.manage', 'member.setNickname': 'discord.members.manage',
-    'channel.create': 'discord.channels.manage', 'channel.edit': 'discord.channels.manage', 'channel.delete': 'discord.channels.manage', 'channel.setPermissions': 'discord.channels.manage',
-    'role.create': 'discord.roles.manage', 'role.edit': 'discord.roles.manage', 'role.delete': 'discord.roles.manage',
-    'role.addToMember': 'discord.roles.manage', 'role.removeFromMember': 'discord.roles.manage',
+    'message.edit': 'discord.messages.edit', 'message.delete': 'discord.messages.edit', 'message.pin': 'discord.messages.pin',
+    'message.unpin': 'discord.messages.pin', 'message.react': 'discord.messages.react',
+    'member.addRole': 'discord.roles.assign', 'member.removeRole': 'discord.roles.assign', 'member.timeout': 'discord.members.timeout',
+    'member.kick': 'discord.members.kick', 'member.ban': 'discord.members.ban', 'member.unban': 'discord.members.ban', 'member.setNickname': 'discord.members.nicknames',
+    'channel.create': 'discord.channels.write', 'channel.edit': 'discord.channels.write', 'channel.delete': 'discord.channels.write', 'channel.setPermissions': 'discord.channels.permissions',
+    'role.create': 'discord.roles.write', 'role.edit': 'discord.roles.write', 'role.delete': 'discord.roles.write',
+    'role.addToMember': 'discord.roles.assign', 'role.removeFromMember': 'discord.roles.assign',
     'emoji.create': 'discord.emojis.manage', 'emoji.delete': 'discord.emojis.manage',
-    'interaction.reply': 'discord.interactions', 'interaction.editReply': 'discord.interactions', 'interaction.deferReply': 'discord.interactions',
-    'interaction.followUp': 'discord.interactions', 'interaction.update': 'discord.interactions', 'interaction.showModal': 'discord.interactions',
-    'economy.get': 'economy', 'economy.add': 'economy', 'economy.remove': 'economy', 'economy.transfer': 'economy', 'economy.leaderboard': 'economy',
+    'interaction.reply': 'discord.interactions.reply', 'interaction.editReply': 'discord.interactions.reply', 'interaction.deferReply': 'discord.interactions.reply',
+    'interaction.followUp': 'discord.interactions.reply', 'interaction.update': 'discord.interactions.reply', 'interaction.showModal': 'discord.modals',
+    'economy.get': 'modules.economy.balance.read', 'economy.add': 'modules.economy.balance.write', 'economy.remove': 'modules.economy.balance.write', 'economy.transfer': 'modules.economy.balance.write', 'economy.leaderboard': 'modules.economy.balance.read',
 };
+// Old coarse permission keys and their finer replacements (shared/sdk-permissions.json "replaced"):
+// options.permissions may still name an old key, like a manifest.
+const REPLACED = { "discord.members.manage": ["discord.members.nicknames", "discord.roles.assign", "discord.members.timeout", "discord.members.kick", "discord.members.ban"], "discord.messages.manage": ["discord.messages.edit", "discord.messages.pin", "discord.messages.react"], "discord.channels.manage": ["discord.channels.write", "discord.channels.permissions"], "discord.roles.manage": ["discord.roles.write", "discord.roles.assign"], "discord.voice": ["discord.voice.connect", "discord.voice.speak"], "discord.voice.moderate": ["discord.voice.mute", "discord.voice.move"], "economy": ["modules.economy.balance.read", "modules.economy.balance.write"], "discord.interactions": ["discord.interactions.reply", "discord.modals"], "dashboard.ui": ["dashboard.read", "dashboard.settings", "dashboard.pages"], "discord.events": ["discord.events.messages", "discord.events.members", "discord.events.server", "discord.events.voice", "discord.events.interactions"], "economy.read": ["modules.economy.balance.read"], "economy.write": ["modules.economy.balance.write"], "economy.transactions": ["modules.economy.transactions"], "economy.settings": ["modules.economy.settings"], "moderation.cases": ["modules.moderation.cases"] };
 // Areas and methods that exist in the SDK but the fake (and the bot) do not
 // answer yet: they reject with "sdk.call.not_available".
 const PLANNED_AREAS = new Set([
@@ -60,11 +72,13 @@ const PLANNED_CALLS = new Set([
     'storage.transaction', 'config.set', 'config.delete', 'utils.validate', 'interaction.respond',
 ]);
 /** Discord calls the fake answers through options.discord (default: recorded, empty answer). */
-const DISCORD_AREAS = new Set(['guild', 'member', 'channel', 'role', 'emoji']);
+const DISCORD_AREAS = new Set(['guild', 'member', 'channel', 'role', 'emoji', 'audit', 'moderation']);
 // Host limits (shared/sdk-permissions.json "limits").
 const STORAGE_KEYS = 1000;
 const STORAGE_VALUE_BYTES = 16384;
 const STORAGE_TOTAL_BYTES = 1048576;
+const GLOBAL_STORAGE_KEYS = 10000;
+const GLOBAL_STORAGE_TOTAL_BYTES = 10485760;
 const STORAGE_KEY = /^[\x20-\x7e]{1,128}$/;
 const SEND_MAX = 5;
 const SEND_WINDOW_MS = 5000;
@@ -81,9 +95,10 @@ export function createTestContext(options = {}) {
     const id = options.id ?? 'test-plugin';
     const version = options.version ?? '1.0.0';
     const botId = options.botId ?? 1;
-    const permissions = new Set(options.permissions ?? []);
+    const permissions = new Set((options.permissions ?? []).flatMap((p) => REPLACED[p] ?? [p]));
     const config = structuredClone(options.config ?? {});
     const store = new Map(Object.entries(options.storage ?? {}));
+    const globalStore = new Map(Object.entries(options.globalStorage ?? {}));
     const sent = [];
     const logs = [];
     const calls = [];
@@ -105,7 +120,9 @@ export function createTestContext(options = {}) {
             throw new SdkCallError(PLANNED_CALLS.has(name) || PLANNED_AREAS.has(area) ? 'sdk.call.not_available' : 'sdk.call.unknown');
         }
         const perm = CALLS[name];
-        if (perm && !permissions.has(perm))
+        // module.*: modules.read (every module) or modules.<key>.read (one module, checked in the call).
+        const oneModule = perm === 'modules.read' && [...permissions].some((p) => /^modules\.[a-z0-9-]+\.read$/.test(p));
+        if (perm && !permissions.has(perm) && !oneModule)
             throw new SdkCallError('sdk.call.denied');
     };
     const key = (k) => {
@@ -113,45 +130,56 @@ export function createTestContext(options = {}) {
             throw new SdkCallError('sdk.storage.bad_key');
         return k;
     };
-    const put = (k, value) => {
-        const name = key(k);
-        if (typeof value !== 'string')
-            throw new SdkCallError('sdk.storage.bad_value');
-        const size = bytes(value);
-        if (size > STORAGE_VALUE_BYTES)
-            throw new SdkCallError('sdk.storage.value_too_big');
-        if (!store.has(name) && store.size >= STORAGE_KEYS)
-            throw new SdkCallError('sdk.storage.too_many_keys');
-        let total = 0;
-        for (const [n, v] of store)
-            if (n !== name)
-                total += bytes(v); // host counts values only
-        if (total + size > STORAGE_TOTAL_BYTES)
-            throw new SdkCallError('sdk.storage.full');
-        store.set(name, value);
+    // One key-value space with its quotas, like the host: ctx.storage (per bot) and ctx.globalStorage.
+    const space = (map, maxKeys, maxBytes) => {
+        const put = (k, value) => {
+            const name = key(k);
+            if (typeof value !== 'string')
+                throw new SdkCallError('sdk.storage.bad_value');
+            const size = bytes(value);
+            if (size > STORAGE_VALUE_BYTES)
+                throw new SdkCallError('sdk.storage.value_too_big');
+            if (!map.has(name) && map.size >= maxKeys)
+                throw new SdkCallError('sdk.storage.too_many_keys');
+            let total = 0;
+            for (const [n, v] of map)
+                if (n !== name)
+                    total += bytes(v); // host counts values only
+            if (total + size > maxBytes)
+                throw new SdkCallError('sdk.storage.full');
+            map.set(name, value);
+        };
+        const add = (k, by) => {
+            const step = Number(by);
+            if (!Number.isFinite(step))
+                throw new SdkCallError('sdk.storage.bad_value');
+            const current = Number(map.get(key(k)) ?? '0');
+            if (!Number.isFinite(current))
+                throw new SdkCallError('sdk.storage.not_a_number');
+            const next = current + step;
+            put(k, String(next));
+            return next;
+        };
+        return {
+            get: async (k) => map.get(key(k)) ?? null,
+            set: async (k, v) => { put(k, v); },
+            has: async (k) => map.has(key(k)),
+            delete: async (k) => { map.delete(key(k)); },
+            increment: async (k, by = 1) => add(k, by),
+            decrement: async (k, by = 1) => add(k, -Number(by)),
+            clear: async () => { map.clear(); },
+        };
     };
-    const add = (k, by) => {
-        const step = Number(by);
-        if (!Number.isFinite(step))
-            throw new SdkCallError('sdk.storage.bad_value');
-        const current = Number(store.get(key(k)) ?? '0');
-        if (!Number.isFinite(current))
-            throw new SdkCallError('sdk.storage.not_a_number');
-        const next = current + step;
-        put(k, String(next));
-        return next;
+    const mayRead = (key) => permissions.has('modules.read') || permissions.has(`modules.${key}.read`);
+    const readable = (key) => {
+        if (!mayRead(key))
+            throw new SdkCallError('sdk.call.denied');
+        return key;
     };
     const impl = {
         logger: Object.fromEntries(['debug', 'info', 'warn', 'error', 'success'].map((level) => [level, async (text) => { logs.push({ level, text: String(text) }); }])),
-        storage: {
-            get: async (k) => store.get(key(k)) ?? null,
-            set: async (k, v) => { put(k, v); },
-            has: async (k) => store.has(key(k)),
-            delete: async (k) => { store.delete(key(k)); },
-            increment: async (k, by = 1) => add(k, by),
-            decrement: async (k, by = 1) => add(k, -Number(by)),
-            clear: async () => { store.clear(); },
-        },
+        storage: space(store, STORAGE_KEYS, STORAGE_TOTAL_BYTES),
+        globalStorage: space(globalStore, GLOBAL_STORAGE_KEYS, GLOBAL_STORAGE_TOTAL_BYTES),
         guild: {
             get: async (guildId) => {
                 const g = (options.guilds ?? []).find((x) => x.id === guildId);
@@ -162,12 +190,12 @@ export function createTestContext(options = {}) {
             list: async () => (options.guilds ?? []).map((g) => ({ ...g })),
         },
         module: {
-            get: async (key) => mod(key),
-            getId: async (key) => mod(key).id,
-            getName: async (key) => mod(key).name,
-            isEnabled: async (key) => mod(key).enabled,
-            getConfig: async (key) => structuredClone(mod(key).config),
-            list: async () => (options.modules ?? []).map((m) => structuredClone(m)),
+            get: async (key) => mod(readable(key)),
+            getId: async (key) => mod(readable(key)).id,
+            getName: async (key) => mod(readable(key)).name,
+            isEnabled: async (key) => mod(readable(key)).enabled,
+            getConfig: async (key) => structuredClone(mod(readable(key)).config),
+            list: async () => (options.modules ?? []).filter((m) => mayRead(m.id)).map((m) => structuredClone(m)),
         },
         voice: {
             join: async (guildId, channelId) => {
@@ -388,6 +416,36 @@ export function createTestContext(options = {}) {
             getAll: () => structuredClone(config),
             set: async () => { throw new SdkCallError('sdk.call.not_available'); },
             delete: async () => { throw new SdkCallError('sdk.call.not_available'); },
+            // Like the bot: the "permissions" field, checked like a command's permissions block.
+            checkAccess: async (key, who) => {
+                const field = options.settings?.fields.find((f) => f.key === key && f.type === 'permissions');
+                if (!field)
+                    throw new SdkCallError('sdk.config.not_permissions');
+                const userId = typeof who?.userId === 'string' ? who.userId : who?.user?.id;
+                const guildId = who?.guildId ?? null;
+                const channelId = who?.channelId ?? null;
+                if (guildId === null)
+                    return { allowed: true, reason: null };
+                if (typeof userId !== 'string' || !SNOWFLAKE.test(userId) || typeof guildId !== 'string' || !SNOWFLAKE.test(guildId))
+                    throw new SdkCallError('sdk.config.bad_member');
+                const m = options.members?.[userId];
+                if (!m)
+                    return { allowed: false, reason: 'member' };
+                const b = ((key in config ? config[key] : field.default) ?? { allowed_roles: [{ id: 'everyone' }] });
+                const inGuild = (r) => !r.guild || r.guild === guildId;
+                const has = (r) => r.id === 'everyone' || (m.roles ?? []).includes(r.id);
+                const deny = (reason) => ({ allowed: false, reason });
+                if ((b.banned_channels ?? []).some((c) => inGuild(c) && c.id === channelId))
+                    return deny('channel');
+                if ((b.banned_roles ?? []).some((r) => inGuild(r) && r.id !== 'everyone' && has(r)))
+                    return deny('banned_role');
+                const allowed = (b.allowed_roles ?? []).filter(inGuild);
+                if (allowed.length && !allowed.some(has))
+                    return deny('role');
+                if ((b.required_permissions ?? []).some((p) => !(m.permissions ?? []).includes(p)))
+                    return deny('permission');
+                return { allowed: true, reason: null };
+            },
         },
         utils: {
             uuid: () => crypto.randomUUID(),
@@ -421,7 +479,7 @@ export function createTestContext(options = {}) {
         }
         return areas.get(name);
     };
-    return new Proxy({ botId, sent, logs, store, calls, played, requests, web: webRequests, actions, answers, balances }, {
+    return new Proxy({ botId, sent, logs, store, globalStore, calls, played, requests, web: webRequests, actions, answers, balances }, {
         get: (target, prop) => {
             if (typeof prop !== 'string')
                 return undefined;

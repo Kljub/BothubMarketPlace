@@ -13,10 +13,11 @@
     "permissions": [
       "storage",
       "discord.messages.send",
-      "discord.events",
+      "discord.events.members",
       "scheduler",
       "http.endpoints",
-      "discord.voice"
+      "discord.voice.connect",
+      "discord.voice.speak"
     ]
   },
   "main": "index.js",

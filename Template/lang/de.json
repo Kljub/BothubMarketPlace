@@ -44,5 +44,10 @@
   "plugin.plugin_template.node.play_sound.description": "Betritt einen Sprachkanal und spielt einen Sound des Plugins ab.",
   "plugin.plugin_template.node.play_sound.result": "Sound-Datei",
   "plugin.plugin_template.node.stop_sound.label": "Sound stoppen",
-  "plugin.plugin_template.node.stop_sound.description": "Stoppt den Sound und verlässt den Sprachkanal."
+  "plugin.plugin_template.node.stop_sound.description": "Stoppt den Sound und verlässt den Sprachkanal.",
+  "plugin.plugin_template.port.failed": "Fehlgeschlagen",
+  "plugin.plugin_template.port.in": "Eingang",
+  "plugin.plugin_template.port.next": "Weiter",
+  "plugin.plugin_template.port.no_channel": "Kein Channel",
+  "plugin.plugin_template.port.none": "Keiner"
 }

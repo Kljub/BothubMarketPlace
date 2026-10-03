@@ -91,3 +91,40 @@ test('airing_check: announces the aired episode once, with the settings text and
   assert.equal(ctx.sent.length, 1, 'no double announcement');
   assert.equal(ctx.web.at(-1).json.variables.ids.length, 1, 'one request for all tracked anime');
 });
+
+test('airing_today: episodes of the day in the time zone, Discord timestamps, adult titles left out', async () => {
+  const seen = [];
+  const web = {
+    'graphql.anilist.co': ({ json }) => {
+      seen.push(json.variables);
+      return { json: { data: { Page: { pageInfo: { hasNextPage: false }, airingSchedules: [
+        { episode: 5, airingAt: 1759500000, media: { ...FRIEREN, isAdult: false } },
+        { episode: 1, airingAt: 1759510000, media: { id: 9, title: { romaji: 'Hidden' }, siteUrl: 'https://anilist.co/anime/9', isAdult: true } },
+      ] } } } };
+    },
+  };
+  const ctx = createTestContext({ id: 'plugin_anisearch', permissions, web, config: { timezone: 'Europe/Berlin' } });
+  const out = await runBlock(plugin, 'airing_today', ctx, { config: {} });
+  assert.equal(out.port, 'next');
+  assert.equal(out.results['.count'], '1');
+  assert.equal(out.results[''], "<t:1759500000:t> [Frieren: Beyond Journey's End](https://anilist.co/anime/154587) · Ep. 5");
+  // One request for one local day (23 to 25 hours, DST included).
+  assert.ok(seen.length === 1 && seen[0].end - seen[0].start >= 23 * 3600 && seen[0].end - seen[0].start <= 25 * 3600 + 1);
+
+  const empty = createTestContext({ id: 'plugin_anisearch', permissions, web: { 'graphql.anilist.co': () => ({ json: { data: { Page: { pageInfo: { hasNextPage: false }, airingSchedules: [] } } } }) } });
+  assert.equal((await runBlock(plugin, 'airing_today', empty, { config: {} })).port, 'empty');
+});
+
+test('dayRange: local midnight to midnight, unknown zone = UTC', async () => {
+  const { dayRange } = await import('../services/anilist.js');
+  // 2026-10-03 21:30 UTC is 23:30 in Berlin (UTC+2): the Berlin day starts 2026-10-02 22:00 UTC.
+  const berlin = dayRange(new Date(Date.UTC(2026, 9, 3, 21, 30)), 'Europe/Berlin');
+  assert.equal(berlin.start, Date.UTC(2026, 9, 2, 22) / 1000);
+  assert.equal(berlin.end, Date.UTC(2026, 9, 3, 22) / 1000);
+  // 2026-10-25: DST ends in Berlin, the day has 25 hours.
+  const dst = dayRange(new Date(Date.UTC(2026, 9, 25, 12)), 'Europe/Berlin');
+  assert.equal(dst.end - dst.start, 25 * 3600);
+  const bad = dayRange(new Date(Date.UTC(2026, 9, 3, 21, 30)), 'Mars/Base');
+  assert.equal(bad.zone, 'UTC');
+  assert.equal(bad.start, Date.UTC(2026, 9, 3) / 1000);
+});

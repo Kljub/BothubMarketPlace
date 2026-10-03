@@ -13,8 +13,8 @@
           "description": "A recommendation from your watch history"
         },
         "position": {
-          "x": 120,
-          "y": 240
+          "x": 400,
+          "y": 40
         }
       },
       {
@@ -25,8 +25,8 @@
           "variable": "px"
         },
         "position": {
-          "x": 440,
-          "y": 240
+          "x": 400,
+          "y": 190
         }
       },
       {
@@ -72,8 +72,8 @@
           "target": "reply"
         },
         "position": {
-          "x": 760,
-          "y": 240
+          "x": -380,
+          "y": 340
         }
       },
       {
@@ -89,8 +89,8 @@
           "ephemeral": true
         },
         "position": {
-          "x": 760,
-          "y": 370
+          "x": 140,
+          "y": 340
         }
       },
       {
@@ -106,8 +106,8 @@
           "ephemeral": true
         },
         "position": {
-          "x": 1080,
-          "y": 370
+          "x": 660,
+          "y": 340
         }
       },
       {
@@ -123,8 +123,8 @@
           "ephemeral": true
         },
         "position": {
-          "x": 760,
-          "y": 500
+          "x": 1180,
+          "y": 340
         }
       },
       {
@@ -135,8 +135,8 @@
           "variable": "error"
         },
         "position": {
-          "x": 120,
-          "y": 900
+          "x": 1820,
+          "y": 40
         }
       },
       {
@@ -152,8 +152,8 @@
           "ephemeral": true
         },
         "position": {
-          "x": 440,
-          "y": 900
+          "x": 1820,
+          "y": 190
         }
       }
     ],

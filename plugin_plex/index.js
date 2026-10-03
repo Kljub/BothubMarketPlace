@@ -10,13 +10,17 @@ import request from './nodes/request.js';
 import link from './nodes/link.js';
 import unlinkAccount from './nodes/unlink_account.js';
 import libraries from './nodes/libraries.js';
+import watchlist from './nodes/watchlist.js';
+import watchlistAdd from './nodes/watchlist_add.js';
+import watchlistRemove from './nodes/watchlist_remove.js';
 import { reroll } from './services/blocks.js';
 import { tasks } from './services/tasks.js';
 import { webhooks } from './services/webhooks.js';
 
 /** @type {import('@bothub/sdk').PluginDefinition} */
 export default {
-  blocks: { status, now_playing: nowPlaying, search, random, recommend, request, link, unlink_account: unlinkAccount, libraries },
+  blocks: { status, now_playing: nowPlaying, search, random, recommend, request, link, unlink_account: unlinkAccount, libraries,
+    watchlist, watchlist_add: watchlistAdd, watchlist_remove: watchlistRemove },
   components: { reroll },
   tasks,
   webhooks,

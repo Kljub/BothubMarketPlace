@@ -6,7 +6,14 @@
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_anisearch-1.0.0/plugin_anisearch-1.0.0.zip",
       "sha256": "6f81fa9343dc7638eff930b40933cde02de462cd76d4ea5df0a563d3c29bbd16",
-      "size": 16429,
+      "size": 16429
+    },
+    {
+      "id": "plugin_anisearch",
+      "version": "1.1.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_anisearch-1.1.0/plugin_anisearch-1.1.0.zip",
+      "sha256": "572013a1b2e8545b324182b1dff0d148b98480db9b184c3a3f2e2f5045d5678c",
+      "size": 19740,
       "name": "AniSearch",
       "description": "Anime and manga search on AniList, plus new-episode notices for tracked anime.",
       "developer": {
@@ -26,10 +33,10 @@
       },
       "endpoints": [],
       "layers": {
-        "commands": 5,
+        "commands": 6,
         "events": 0,
         "services": 1,
-        "nodes": 4,
+        "nodes": 5,
         "dashboard": 1
       },
       "voice": false
@@ -39,7 +46,14 @@
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_plex-1.0.0/plugin_plex-1.0.0.zip",
       "sha256": "f1282b60c93192b3a96196c2467220da14aeed55dc02a48ed375eb20e8f4a2e6",
-      "size": 27856,
+      "size": 27856
+    },
+    {
+      "id": "plugin_plex",
+      "version": "1.2.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_plex-1.2.0/plugin_plex-1.2.0.zip",
+      "sha256": "6d4a06b9ff357fdccb9e197083ed549cb7749dd5758020164c7dc60528da1ccf",
+      "size": 37237,
       "name": "Plex",
       "description": "Plex for Discord: library search, now playing, random picks, recommendations, Overseerr requests, account linking with a role, and new-content notices.",
       "developer": {
@@ -52,24 +66,29 @@
         "version": 1,
         "permissions": [
           "storage",
+          "storage.global",
           "discord.messages.send",
           "scheduler",
           "http.endpoints",
           "http.outbound",
-          "discord.interactions",
-          "discord.roles.manage",
+          "discord.interactions.reply",
+          "discord.roles.assign",
           "webhooks.inbound"
         ]
       },
       "endpoints": [
         "PLEX_API",
+        "PLEX_API_2",
+        "PLEX_API_3",
+        "PLEX_API_4",
+        "PLEX_API_5",
         "OVERSEERR_API"
       ],
       "layers": {
-        "commands": 9,
+        "commands": 12,
         "events": 0,
-        "services": 3,
-        "nodes": 9,
+        "services": 7,
+        "nodes": 12,
         "dashboard": 1
       },
       "voice": false

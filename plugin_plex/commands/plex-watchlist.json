@@ -1,6 +1,6 @@
 {
-  "name": "anisearch-track",
-  "description": "Announces new episodes of an anime",
+  "name": "plex-watchlist",
+  "description": "Shows your Plex watchlist",
   "graph": {
     "schemaVersion": 1,
     "nodes": [
@@ -9,36 +9,8 @@
         "type": "trigger.slash",
         "typeVersion": 1,
         "config": {
-          "command_name": "anisearch-track",
-          "description": "Announces new episodes of an anime",
-          "permissions": {
-            "allowed_roles": [
-              {
-                "id": "everyone"
-              }
-            ],
-            "banned_roles": [],
-            "required_permissions": [
-              "manage_guild"
-            ],
-            "banned_channels": [],
-            "hide_without_permission": true
-          }
-        },
-        "position": {
-          "x": 400,
-          "y": 190
-        }
-      },
-      {
-        "id": "option_title",
-        "type": "option.text",
-        "typeVersion": 1,
-        "config": {
-          "name": "title",
-          "description": "Title",
-          "required": true,
-          "variable": "title"
+          "command_name": "plex-watchlist",
+          "description": "Shows your Plex watchlist"
         },
         "position": {
           "x": 400,
@@ -46,100 +18,89 @@
         }
       },
       {
-        "id": "track",
-        "type": "plugin.plugin_anisearch.track",
+        "id": "wl",
+        "type": "plugin.plugin_plex.watchlist",
         "typeVersion": 1,
         "config": {
-          "title": "{option_title}",
-          "variable": "tr"
+          "variable": "wl"
         },
         "position": {
           "x": 400,
+          "y": 190
+        }
+      },
+      {
+        "id": "list",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "embeds": [
+              {
+                "color": "#e5a00d",
+                "title": "📋 Your watchlist ({wl.count})",
+                "description": "{wl}"
+              }
+            ]
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": -380,
           "y": 340
         }
       },
       {
-        "id": "ok",
+        "id": "empty",
         "type": "action.send_message",
         "typeVersion": 1,
         "config": {
           "message": {
             "mode": "normal",
-            "content": "✅ Tracking **{tr}**: new episodes are posted in {tr.channel}."
-          },
-          "target": "reply"
-        },
-        "position": {
-          "x": -640,
-          "y": 490
-        }
-      },
-      {
-        "id": "already",
-        "type": "action.send_message",
-        "typeVersion": 1,
-        "config": {
-          "message": {
-            "mode": "normal",
-            "content": "ℹ️ **{tr}** is tracked already."
+            "content": "📋 Your watchlist is empty. Add something with /plex-watchlist-add."
           },
           "target": "reply",
           "ephemeral": true
         },
         "position": {
-          "x": -120,
-          "y": 490
+          "x": 140,
+          "y": 340
         }
       },
       {
-        "id": "none",
+        "id": "not_linked",
         "type": "action.send_message",
         "typeVersion": 1,
         "config": {
           "message": {
             "mode": "normal",
-            "content": "❌ No anime found for \"{option_title}\"."
+            "content": "ℹ️ Link your Plex account first with /plex-link (linked before? Run /plex-link again so BotHub may edit your watchlist)."
           },
           "target": "reply",
           "ephemeral": true
         },
         "position": {
-          "x": 400,
-          "y": 490
+          "x": 660,
+          "y": 340
         }
       },
       {
-        "id": "nochan",
+        "id": "failed",
         "type": "action.send_message",
         "typeVersion": 1,
         "config": {
           "message": {
             "mode": "normal",
-            "content": "❌ Set the announcement channel on the plugin page first."
+            "content": "❌ {wl}"
           },
           "target": "reply",
           "ephemeral": true
         },
         "position": {
-          "x": 920,
-          "y": 490
-        }
-      },
-      {
-        "id": "full",
-        "type": "action.send_message",
-        "typeVersion": 1,
-        "config": {
-          "message": {
-            "mode": "normal",
-            "content": "❌ 50 anime are tracked already. Remove one with /anisearch-untrack."
-          },
-          "target": "reply",
-          "ephemeral": true
-        },
-        "position": {
-          "x": 1440,
-          "y": 490
+          "x": 1180,
+          "y": 340
         }
       },
       {
@@ -150,8 +111,8 @@
           "variable": "error"
         },
         "position": {
-          "x": 2080,
-          "y": 190
+          "x": 1820,
+          "y": 40
         }
       },
       {
@@ -167,79 +128,59 @@
           "ephemeral": true
         },
         "position": {
-          "x": 2080,
-          "y": 340
+          "x": 1820,
+          "y": 190
         }
       }
     ],
     "edges": [
       {
         "from": {
-          "node": "option_title",
-          "port": "option"
-        },
-        "to": {
-          "node": "trigger",
-          "port": "options"
-        }
-      },
-      {
-        "from": {
           "node": "trigger",
           "port": "next"
         },
         "to": {
-          "node": "track",
+          "node": "wl",
           "port": "in"
         }
       },
       {
         "from": {
-          "node": "track",
+          "node": "wl",
           "port": "next"
         },
         "to": {
-          "node": "ok",
+          "node": "list",
           "port": "in"
         }
       },
       {
         "from": {
-          "node": "track",
-          "port": "already"
+          "node": "wl",
+          "port": "empty"
         },
         "to": {
-          "node": "already",
+          "node": "empty",
           "port": "in"
         }
       },
       {
         "from": {
-          "node": "track",
-          "port": "not_found"
+          "node": "wl",
+          "port": "not_linked"
         },
         "to": {
-          "node": "none",
+          "node": "not_linked",
           "port": "in"
         }
       },
       {
         "from": {
-          "node": "track",
-          "port": "no_channel"
+          "node": "wl",
+          "port": "failed"
         },
         "to": {
-          "node": "nochan",
-          "port": "in"
-        }
-      },
-      {
-        "from": {
-          "node": "track",
-          "port": "full"
-        },
-        "to": {
-          "node": "full",
+          "node": "failed",
           "port": "in"
         }
       },

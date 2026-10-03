@@ -1,4 +1,4 @@
-// Service "voice" ("discord.voice"). The plugin plays files of its own
+// Service "voice" ("discord.voice.connect", "discord.voice.speak"). The plugin plays files of its own
 // folder, never URLs; the core streams them into Discord:
 //   ctx.voice.join(guildId, channelId)        connects (one player per server)
 //   ctx.voice.play(guildId, 'sounds/x.ogg', { volume: 0..1 })

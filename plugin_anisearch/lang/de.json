@@ -37,5 +37,19 @@
   "plugin.plugin_anisearch.node.tracked_list.label": "Verfolgte Anime",
   "plugin.plugin_anisearch.node.tracked_list.description": "Die Anime, die dieser Bot verfolgt, als Liste.",
   "plugin.plugin_anisearch.node.tracked_list.result": "Liste",
-  "plugin.plugin_anisearch.node.tracked_list.result_count": "Anzahl"
+  "plugin.plugin_anisearch.node.tracked_list.result_count": "Anzahl",
+  "plugin.plugin_anisearch.setting.timezone": "Zeitzone",
+  "plugin.plugin_anisearch.setting.timezone_hint": "IANA-Name wie Europe/Berlin; legt fest, was \"heute\" für /launchtoday heißt.",
+  "plugin.plugin_anisearch.node.airing_today.label": "Heute neue Folgen",
+  "plugin.plugin_anisearch.node.airing_today.description": "Anime-Folgen, die heute laufen (AniList), als Liste mit Uhrzeiten.",
+  "plugin.plugin_anisearch.node.airing_today.result": "Liste",
+  "plugin.plugin_anisearch.node.airing_today.result_count": "Anzahl",
+  "plugin.plugin_anisearch.port.already": "Schon vorhanden",
+  "plugin.plugin_anisearch.port.empty": "Leer",
+  "plugin.plugin_anisearch.port.found": "Gefunden",
+  "plugin.plugin_anisearch.port.full": "Voll",
+  "plugin.plugin_anisearch.port.in": "Eingang",
+  "plugin.plugin_anisearch.port.next": "Weiter",
+  "plugin.plugin_anisearch.port.no_channel": "Kein Channel",
+  "plugin.plugin_anisearch.port.not_found": "Nicht gefunden"
 }

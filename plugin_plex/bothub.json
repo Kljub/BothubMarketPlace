@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "plugin_plex",
   "name": "Plex",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Plex for Discord: library search, now playing, random picks, recommendations, Overseerr requests, account linking with a role, and new-content notices.",
   "developer": {
     "name": "BotHub"
@@ -14,12 +14,13 @@
     "version": 1,
     "permissions": [
       "storage",
+      "storage.global",
       "discord.messages.send",
       "scheduler",
       "http.endpoints",
       "http.outbound",
-      "discord.interactions",
-      "discord.roles.manage",
+      "discord.interactions.reply",
+      "discord.roles.assign",
       "webhooks.inbound"
     ]
   },
@@ -33,7 +34,10 @@
     "commands/random.json",
     "commands/recommend.json",
     "commands/request.json",
-    "commands/libraries.json"
+    "commands/libraries.json",
+    "commands/plex-watchlist.json",
+    "commands/plex-watchlist-add.json",
+    "commands/plex-watchlist-remove.json"
   ],
   "services": {
     "tasks": [
@@ -44,10 +48,22 @@
     ],
     "endpoints": [
       "PLEX_API",
+      "PLEX_API_2",
+      "PLEX_API_3",
+      "PLEX_API_4",
+      "PLEX_API_5",
       "OVERSEERR_API"
     ],
+    "connect": {
+      "PLEX_API": "plex",
+      "PLEX_API_2": "plex",
+      "PLEX_API_3": "plex",
+      "PLEX_API_4": "plex",
+      "PLEX_API_5": "plex"
+    },
     "hosts": [
-      "plex.tv"
+      "plex.tv",
+      "discover.provider.plex.tv"
     ],
     "webhooks": [
       "media",
@@ -63,7 +79,10 @@
     "request",
     "link",
     "unlink_account",
-    "libraries"
+    "libraries",
+    "watchlist",
+    "watchlist_add",
+    "watchlist_remove"
   ],
   "dashboard": {
     "settings": "dashboard/settings.json"

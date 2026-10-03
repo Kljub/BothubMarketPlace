@@ -1,0 +1,46 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_anisearch.node.airing_today.label",
+  "descriptionKey": "plugin.plugin_anisearch.node.airing_today.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "empty",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_anisearch.node.airing_today.result"
+    },
+    {
+      "suffix": ".count",
+      "labelKey": "plugin.plugin_anisearch.node.airing_today.result_count"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "timezone": {
+        "type": "string",
+        "maxLength": 64
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

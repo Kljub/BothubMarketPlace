@@ -8,7 +8,7 @@ const GUILD = '200000000000000001';
 const ROLE = '700000000000000007';
 const NEWS = '900000000000000002';
 const LIVE = '900000000000000003';
-const permissions = ['storage', 'discord.messages.send', 'scheduler', 'http.endpoints', 'http.outbound', 'discord.interactions', 'discord.roles.manage', 'webhooks.inbound'];
+const permissions = ['storage', 'storage.global', 'discord.messages.send', 'scheduler', 'http.endpoints', 'http.outbound', 'discord.interactions.reply', 'discord.roles.assign', 'webhooks.inbound'];
 const vars = { 'user.id': USER, 'server.id': GUILD };
 
 const MOVIES = [
@@ -22,6 +22,7 @@ function servers(log = []) {
     PLEX_API: ({ path, query }) => {
       log.push(path);
       if (path === '/identity') return { json: { MediaContainer: { version: '1.40.0' } } };
+      if (path === '/') return { json: { MediaContainer: { friendlyName: 'Home', machineIdentifier: 'm1', version: '1.40.0' } } };
       if (path === '/status/sessions') return { json: { MediaContainer: { Metadata: [{ title: 'Arrival', year: 2016, librarySectionID: 1, User: { title: 'ann' }, Player: { state: 'playing' } }, { title: 'Hidden', librarySectionID: 9 }] } } };
       if (path === '/library/sections') return { json: { MediaContainer: { Directory: [{ key: '1', title: 'Movies', type: 'movie' }, { key: '9', title: 'Private', type: 'movie' }] } } };
       if (path === '/library/sections/1/all' && query.title) return { json: { MediaContainer: { Metadata: MOVIES.filter((m) => m.title.toLowerCase().includes(query.title.toLowerCase())) } } };
@@ -165,4 +166,83 @@ test('Plex webhook: new titles and playbacks of linked members, shared libraries
   assert.deepEqual(posts.map((p) => p.channelId), [NEWS, LIVE]);
   assert.equal(posts[0].message.embeds[0].title, '🆕 Dune (2021)');
   assert.match(posts[1].message.embeds[0].description, new RegExp(`<@${USER}> is watching \\*\\*Dune\\*\\*`));
+});
+
+// A second server (slot PLEX_API_2): its libraries are "2:<id>".
+test('several Plex servers: search, libraries and webhooks per server', async () => {
+  const log = [];
+  const second = ({ path, query }) => {
+    log.push(`2 ${path}`);
+    if (path === '/') return { json: { MediaContainer: { friendlyName: 'Family', machineIdentifier: 'm2', version: '1.41.0' } } };
+    if (path === '/library/sections') return { json: { MediaContainer: { Directory: [{ key: '3', title: 'Anime', type: 'show' }] } } };
+    if (path === '/library/sections/3/all') return { json: { MediaContainer: { Metadata: [{ ratingKey: '5', title: 'Frieren', year: 2023, librarySectionID: 3 }] } } };
+    if (path === '/status/sessions') return { json: { MediaContainer: { Metadata: [{ title: 'Frieren', librarySectionID: 3, User: { title: 'bob' }, Player: { state: 'playing' } }] } } };
+    return { status: 404 };
+  };
+  const ctx = createTestContext({
+    id: 'plugin_plex', permissions, endpoints: { ...servers(log), PLEX_API_2: second }, web: plexTv(),
+    manifest: { endpoints: ['PLEX_API', 'PLEX_API_2', 'PLEX_API_3', 'OVERSEERR_API'] },
+    config: { libraries: '1, 2:3', new_content_channel: { id: NEWS, guild: GUILD } },
+  });
+  const found = await runBlock(plugin, 'search', ctx, { config: { title: 'frieren' } });
+  assert.equal(found.port, 'found');
+  assert.equal(found.results['.key'], '2:5');
+
+  const libs = await runBlock(plugin, 'libraries', ctx);
+  assert.match(libs.results[''], /Anime\*\* \(show\) · Family · ID `2:3`/);
+  assert.match(libs.results[''], /Movies\*\* \(movie\) · Home · ID `1`/);
+
+  const st = await runBlock(plugin, 'status', ctx, { vars });
+  assert.equal(st.port, 'online');
+  assert.equal(st.results['.playing'], '2', 'sessions of both servers');
+  assert.match(st.results['.servers'], /Home[\s\S]*Family/);
+
+  // Library 3 exists on both servers: only the second one is shared.
+  await runWebhook(plugin, 'media', ctx, { event: 'library.new', Server: { uuid: 'm1' }, Metadata: { title: 'Wrong', librarySectionID: 3 } });
+  await runWebhook(plugin, 'media', ctx, { event: 'library.new', Server: { uuid: 'm2' }, Metadata: { title: 'Frieren 2', librarySectionID: 3 } });
+  assert.deepEqual(ctx.sent.map((m) => m.message.embeds[0].title), ['🆕 Frieren 2']);
+});
+
+test('watchlist: list, add and remove with the member token from /plex-link', async () => {
+  const pin = { confirmed: false };
+  const listed = [{ ratingKey: 'w1', title: 'Heat', year: 1995, type: 'movie' }];
+  const calls = [];
+  const web = {
+    ...plexTv(pin),
+    'discover.provider.plex.tv': ({ method, url, headers }) => {
+      calls.push(`${method} ${url.replace('https://discover.provider.plex.tv', '')}`);
+      if (headers['X-Plex-Token'] !== 'secret-user-token') return { status: 401 };
+      if (url.includes('/library/sections/watchlist/all')) return { json: { MediaContainer: { Metadata: listed } } };
+      if (url.includes('/library/search')) return { json: { MediaContainer: { SearchResults: [{ SearchResult: [{ Metadata: { ratingKey: 'm9', title: 'The Matrix', year: 1999, type: 'movie' } }] }] } } };
+      if (url.includes('/actions/addToWatchlist?ratingKey=m9')) { listed.push({ ratingKey: 'm9', title: 'The Matrix', year: 1999, type: 'movie' }); return { json: {} }; }
+      if (url.includes('/actions/removeFromWatchlist?ratingKey=w1')) { listed.splice(0, 1); return { json: {} }; }
+      return { status: 404 };
+    },
+  };
+  const ctx = createTestContext({ id: 'plugin_plex', permissions, endpoints: servers(), web, manifest: { endpoints: ['PLEX_API', 'OVERSEERR_API'] }, config: { libraries: '1' } });
+  assert.equal((await runBlock(plugin, 'watchlist', ctx, { vars })).port, 'not_linked');
+  await linked(ctx, pin);
+  assert.equal(ctx.globalStore.get(`tok:${USER}`), 'secret-user-token', 'token kept in the global storage');
+
+  const list = await runBlock(plugin, 'watchlist', ctx, { vars });
+  assert.equal(list.results['.count'], '1');
+  assert.match(list.results[''], /Heat\*\* \(1995\)/);
+  const added = await runBlock(plugin, 'watchlist_add', ctx, { vars, config: { title: 'the matrix' } });
+  assert.deepEqual([added.port, added.results['']], ['added', 'The Matrix']);
+  const removed = await runBlock(plugin, 'watchlist_remove', ctx, { vars, config: { title: 'heat' } });
+  assert.deepEqual([removed.port, removed.results['']], ['removed', 'Heat']);
+  assert.equal((await runBlock(plugin, 'watchlist_remove', ctx, { vars, config: { title: 'nope' } })).port, 'not_listed');
+  assert.ok(calls.some((c) => c.startsWith('PUT /actions/addToWatchlist')));
+
+  await runBlock(plugin, 'unlink_account', ctx, { vars });
+  assert.equal(ctx.globalStore.get(`tok:${USER}`), undefined, '/plex-unlink deletes the token');
+});
+
+test('links made before 1.2.0 (per bot) move to the global storage', async () => {
+  const ctx = createTestContext({ id: 'plugin_plex', permissions, endpoints: servers(), web: plexTv(), config: { libraries: '1' },
+    storage: { [`acc:${USER}`]: JSON.stringify({ username: 'ann', uuid: 'u-1' }), 'plexname:ann': USER } });
+  const st = await runBlock(plugin, 'status', ctx, { vars });
+  assert.equal(st.results['.linked'], 'Linked as ann');
+  assert.ok(ctx.globalStore.has(`acc:${USER}`) && !ctx.store.has(`acc:${USER}`));
+  assert.equal((await runBlock(plugin, 'watchlist', ctx, { vars })).port, 'not_linked', 'no token yet: link again');
 });

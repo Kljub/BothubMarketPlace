@@ -26,6 +26,13 @@
       "key": "color",
       "type": "color",
       "default": "#02a9ff"
+    },
+    {
+      "key": "timezone",
+      "type": "text",
+      "default": "Europe/Berlin",
+      "max": 64,
+      "hint": true
     }
   ]
 }

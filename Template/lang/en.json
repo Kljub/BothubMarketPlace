@@ -44,5 +44,10 @@
   "plugin.plugin_template.node.play_sound.description": "Joins a voice channel and plays a sound of the plugin.",
   "plugin.plugin_template.node.play_sound.result": "Sound file",
   "plugin.plugin_template.node.stop_sound.label": "Stop sound",
-  "plugin.plugin_template.node.stop_sound.description": "Stops the sound and leaves the voice channel."
+  "plugin.plugin_template.node.stop_sound.description": "Stops the sound and leaves the voice channel.",
+  "plugin.plugin_template.port.failed": "Failed",
+  "plugin.plugin_template.port.in": "In",
+  "plugin.plugin_template.port.next": "Next",
+  "plugin.plugin_template.port.no_channel": "No channel",
+  "plugin.plugin_template.port.none": "None"
 }

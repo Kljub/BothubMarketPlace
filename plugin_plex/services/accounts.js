@@ -1,9 +1,24 @@
-// Service "accounts": Discord user <-> Plex account (ctx.storage) and the
-// plex.tv PIN login (https://plex.tv, "http.outbound", services.hosts).
+// Service "accounts": Discord user <-> Plex account and the plex.tv PIN
+// login (https://plex.tv, "http.outbound", services.hosts).
+// Links hold for every bot of the instance (ctx.globalStorage, permission
+// "storage.global"):
 //   acc:<discordId>      {username, uuid, email, linkedAt}
 //   plexname:<lower>     discordId   (webhook "media.play" -> member)
+//   tok:<discordId>      the member's plex.tv token (watchlist); deleted by /plex-unlink
+// Per bot (ctx.storage):
 //   pin:<discordId>      {id, code, guild, expires}  (pending link, 15 min)
+// Links made before 1.2.0 live in ctx.storage; they move over when read.
 import { readJson, writeJson } from './storage.js';
+
+const gRead = async (ctx, key) => {
+  const raw = await ctx.globalStorage.get(key);
+  if (raw === null) return null;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+};
 
 const PLEX_TV = 'https://plex.tv/api/v2';
 const PIN_TTL_MS = 15 * 60_000;
@@ -18,10 +33,25 @@ const plexHeaders = (ctx, token) => ({
   ...(token ? { 'X-Plex-Token': token } : {}),
 });
 
-export const account = (ctx, userId) => readJson(ctx, `acc:${userId}`, null);
+/** The member's Plex account, or null; an old per-bot link is moved to the global storage. */
+export async function account(ctx, userId) {
+  const acc = await gRead(ctx, `acc:${userId}`);
+  if (acc) return acc;
+  const old = await readJson(ctx, `acc:${userId}`, null);
+  if (!old) return null;
+  await ctx.globalStorage.set(`acc:${userId}`, JSON.stringify(old));
+  await ctx.globalStorage.set(`plexname:${String(old.username).toLowerCase().slice(0, 100)}`, String(userId));
+  await ctx.storage.delete(`acc:${userId}`);
+  await ctx.storage.delete(`plexname:${String(old.username).toLowerCase().slice(0, 100)}`);
+  return old;
+}
+
+/** The member's plex.tv token (links from before 1.2.0 have none: link again). */
+export const tokenOf = (ctx, userId) => ctx.globalStorage.get(`tok:${userId}`);
 
 export async function byPlexName(ctx, name) {
-  const id = await ctx.storage.get(`plexname:${String(name).toLowerCase().slice(0, 100)}`);
+  const key = `plexname:${String(name).toLowerCase().slice(0, 100)}`;
+  const id = (await ctx.globalStorage.get(key)) ?? (await ctx.storage.get(key));
   return id ? { userId: id, account: await account(ctx, id) } : null;
 }
 
@@ -67,10 +97,11 @@ export async function pollLinks(ctx) {
     const me = await ctx.http.get(`${PLEX_TV}/user`, { headers: plexHeaders(ctx, token) });
     await ctx.storage.delete(`pin:${userId}`);
     if (me.status >= 400 || !me.json?.username) continue;
-    // The member's own plex.tv token is not stored: only who they are.
+    // The member's token is kept for the watchlist only (global storage, removed by /plex-unlink).
     const acc = { username: String(me.json.username), uuid: String(me.json.uuid ?? ''), email: String(me.json.email ?? ''), linkedAt: new Date().toISOString() };
-    await writeJson(ctx, `acc:${userId}`, acc);
-    await ctx.storage.set(`plexname:${acc.username.toLowerCase().slice(0, 100)}`, userId);
+    await ctx.globalStorage.set(`acc:${userId}`, JSON.stringify(acc));
+    await ctx.globalStorage.set(`plexname:${acc.username.toLowerCase().slice(0, 100)}`, userId);
+    await ctx.globalStorage.set(`tok:${userId}`, String(token).slice(0, 200));
     done.push({ userId, guild: pin.guild, account: acc });
   }
   await writeJson(ctx, 'pins', keep);
@@ -80,7 +111,8 @@ export async function pollLinks(ctx) {
 export async function unlink(ctx, userId) {
   const acc = await account(ctx, userId);
   if (!acc) return null;
-  await ctx.storage.delete(`acc:${userId}`);
-  await ctx.storage.delete(`plexname:${acc.username.toLowerCase().slice(0, 100)}`);
+  await ctx.globalStorage.delete(`acc:${userId}`);
+  await ctx.globalStorage.delete(`plexname:${acc.username.toLowerCase().slice(0, 100)}`);
+  await ctx.globalStorage.delete(`tok:${userId}`);
   return acc;
 }

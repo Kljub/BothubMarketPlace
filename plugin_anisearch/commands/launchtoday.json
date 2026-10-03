@@ -1,6 +1,6 @@
 {
-  "name": "plex-status",
-  "description": "Shows the state of the Plex server",
+  "name": "launchtoday",
+  "description": "Shows the anime episodes airing today",
   "graph": {
     "schemaVersion": 1,
     "nodes": [
@@ -9,8 +9,8 @@
         "type": "trigger.slash",
         "typeVersion": 1,
         "config": {
-          "command_name": "plex-status",
-          "description": "Shows the state of the Plex server"
+          "command_name": "launchtoday",
+          "description": "Shows the anime episodes airing today"
         },
         "position": {
           "x": 400,
@@ -18,11 +18,11 @@
         }
       },
       {
-        "id": "status",
-        "type": "plugin.plugin_plex.status",
+        "id": "list",
+        "type": "plugin.plugin_anisearch.airing_today",
         "typeVersion": 1,
         "config": {
-          "variable": "px"
+          "variable": "today"
         },
         "position": {
           "x": 400,
@@ -30,7 +30,7 @@
         }
       },
       {
-        "id": "online",
+        "id": "ok",
         "type": "action.send_message",
         "typeVersion": 1,
         "config": {
@@ -38,45 +38,17 @@
             "mode": "normal",
             "embeds": [
               {
-                "color": "#2ecc71",
-                "title": "📊 Plex",
-                "fields": [
-                  {
-                    "name": "Connection",
-                    "value": "✅ {px}",
-                    "inline": true
-                  },
-                  {
-                    "name": "Version",
-                    "value": "{px.version}",
-                    "inline": true
-                  },
-                  {
-                    "name": "Playing",
-                    "value": "{px.playing}",
-                    "inline": true
-                  },
-                  {
-                    "name": "Libraries",
-                    "value": "{px.libraries}",
-                    "inline": true
-                  },
-                  {
-                    "name": "Overseerr",
-                    "value": "{px.overseerr}",
-                    "inline": true
-                  },
-                  {
-                    "name": "You",
-                    "value": "{px.linked}",
-                    "inline": false
-                  }
-                ]
+                "color": "#02a9ff",
+                "title": "📺 Airing today ({today.count})",
+                "description": "{today}",
+                "footer": {
+                  "text": "AniList · times in your local time"
+                }
               }
             ]
           },
           "target": "reply",
-          "ephemeral": true
+          "ephemeral": false
         },
         "position": {
           "x": 140,
@@ -84,19 +56,13 @@
         }
       },
       {
-        "id": "offline",
+        "id": "empty",
         "type": "action.send_message",
         "typeVersion": 1,
         "config": {
           "message": {
             "mode": "normal",
-            "embeds": [
-              {
-                "color": "#e74c3c",
-                "title": "📊 Plex",
-                "description": "❌ {px}\n{px.linked}"
-              }
-            ]
+            "content": "ℹ️ No anime episodes air today."
           },
           "target": "reply",
           "ephemeral": true
@@ -143,27 +109,27 @@
           "port": "next"
         },
         "to": {
-          "node": "status",
+          "node": "list",
           "port": "in"
         }
       },
       {
         "from": {
-          "node": "status",
-          "port": "online"
+          "node": "list",
+          "port": "next"
         },
         "to": {
-          "node": "online",
+          "node": "ok",
           "port": "in"
         }
       },
       {
         "from": {
-          "node": "status",
-          "port": "offline"
+          "node": "list",
+          "port": "empty"
         },
         "to": {
-          "node": "offline",
+          "node": "empty",
           "port": "in"
         }
       },

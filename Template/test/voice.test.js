@@ -9,7 +9,7 @@ const GUILD = '900000000000000001';
 const VOICE = '900000000000000005';
 const sounds = (await readdir(new URL('../sounds/', import.meta.url))).map((f) => `sounds/${f}`);
 const ctxWith = (config) => createTestContext({
-  id: 'plugin_template', permissions: ['discord.voice'], config, sounds,
+  id: 'plugin_template', permissions: ['discord.voice.connect', 'discord.voice.speak'], config, sounds,
   guilds: [{ id: GUILD, name: 'Test', memberCount: 3 }],
 });
 
@@ -34,7 +34,7 @@ test('play_sound: the voice channel of the member wins; an unfilled placeholder 
 });
 
 test('play_sound: another player (e.g. music) is busy -> error', async () => {
-  const ctx = createTestContext({ id: 'plugin_template', permissions: ['discord.voice'], sounds, busyGuilds: [GUILD], guilds: [{ id: GUILD, name: 'Test', memberCount: 3 }] });
+  const ctx = createTestContext({ id: 'plugin_template', permissions: ['discord.voice.connect', 'discord.voice.speak'], sounds, busyGuilds: [GUILD], guilds: [{ id: GUILD, name: 'Test', memberCount: 3 }] });
   await assert.rejects(runBlock(plugin, 'play_sound', ctx, { config: { channel: VOICE }, vars: { 'server.id': GUILD } }), { message: 'sdk.voice.busy' });
 });
 

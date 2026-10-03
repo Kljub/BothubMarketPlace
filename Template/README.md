@@ -41,10 +41,27 @@ Plugin
 
 - `storage`
 - `discord.messages.send`
-- `discord.events`
+- `discord.events.members` (guildMemberAdd)
 - `scheduler`
 - `http.endpoints`
-- `discord.voice`
+- `discord.voice.connect`
+- `discord.voice.speak`
+
+## Texts in your own language
+
+Every text the dashboard shows comes from `lang/<locale>.json` (keys
+`plugin.<id>.*`); missing German texts fall back to English:
+
+| Key | Shown as |
+|---|---|
+| `plugin.<id>.name`, `.description` | name and text in the App Store and on the plugin card |
+| `plugin.<id>.setting.<key>`, `.setting.<key>_hint` | settings page |
+| `plugin.<id>.node.<block>.label`, `.description` | block in the builder (`labelKey` / `descriptionKey` in `nodes/<block>.json`) |
+| `plugin.<id>.port.<port>` | the in/out ports of your blocks (e.g. `port.not_found` = "Nicht gefunden") |
+| `plugin.<id>.result.<…>` | results of a block (`labelKey` in `results`) |
+
+A port without a text of your own falls back to BotHub's text for that
+port name, then to the name itself ("not_found" -> "Not found").
 
 ## API endpoints
 

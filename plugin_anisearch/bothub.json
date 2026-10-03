@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "plugin_anisearch",
   "name": "AniSearch",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Anime and manga search on AniList, plus new-episode notices for tracked anime.",
   "developer": {
     "name": "BotHub"
@@ -25,7 +25,8 @@
     "commands/manga.json",
     "commands/track.json",
     "commands/untrack.json",
-    "commands/tracked.json"
+    "commands/tracked.json",
+    "commands/launchtoday.json"
   ],
   "services": {
     "tasks": [
@@ -42,7 +43,8 @@
     "search",
     "track",
     "untrack",
-    "tracked_list"
+    "tracked_list",
+    "airing_today"
   ],
   "dashboard": {
     "settings": "dashboard/settings.json"

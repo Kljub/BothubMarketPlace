@@ -3,7 +3,7 @@
 //   Plex → Settings → Webhooks          -> "media"
 //   Overseerr → Settings → Notifications → Webhook -> "overseerr"
 import { byPlexName } from './accounts.js';
-import { allowedLibraries } from './plex.js';
+import { allowedLibraries, refOf, serverOf } from './plex.js';
 import { setting } from './util.js';
 
 const COLOR = '#e5a00d';
@@ -13,8 +13,9 @@ export const webhooks = {
   async media(ctx, payload) {
     const event = String(payload?.event ?? '');
     const meta = payload?.Metadata ?? {};
-    const section = String(meta.librarySectionID ?? '');
-    if (!allowedLibraries(ctx).includes(section)) return;
+    // Every server sends its machine identifier: it decides the library reference.
+    const server = await serverOf(ctx, payload?.Server?.uuid);
+    if (!allowedLibraries(ctx).includes(refOf(server, String(meta.librarySectionID ?? '')))) return;
     const title = meta.grandparentTitle ? `${meta.grandparentTitle} – ${meta.title ?? ''}` : String(meta.title ?? 'New');
 
     if (event === 'library.new') {

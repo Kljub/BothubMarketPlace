@@ -29,6 +29,8 @@ export interface TestContextOptions {
     config?: Record<string, Json>;
     /** Start values of ctx.storage. */
     storage?: Record<string, string>;
+    /** Start values of ctx.globalStorage (shared by every bot of the instance). */
+    globalStorage?: Record<string, string>;
     guilds?: TestGuild[];
     modules?: TestModule[];
     manifest?: Record<string, Json>;
@@ -56,6 +58,22 @@ export interface TestContextOptions {
     hosts?: string[];
     /** Start balances of the Economy module: "<guildId>:<userId>" -> coins. */
     balances?: Record<string, number>;
+    /** dashboard/settings.json: its "permissions" fields are what config.checkAccess checks. */
+    settings?: {
+        fields: Array<{
+            key: string;
+            type: string;
+            default?: Json;
+        }>;
+    };
+    /**
+     * Members for config.checkAccess: user ID -> role IDs and Discord
+     * permission names ("manage_messages", …). Users not listed are not on the server.
+     */
+    members?: Record<string, {
+        roles?: string[];
+        permissions?: string[];
+    }>;
 }
 export interface WebRequest {
     method: string;
@@ -107,6 +125,8 @@ export interface TestContext {
     readonly logs: LogLine[];
     /** Current storage content. */
     readonly store: Map<string, string>;
+    /** Current global storage content. */
+    readonly globalStore: Map<string, string>;
     /** Every call in order, e.g. "storage.increment". */
     readonly calls: string[];
     /** Every voice.play call. */
