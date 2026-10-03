@@ -1,0 +1,202 @@
+{
+  "name": "weather",
+  "description": "Shows the current weather for a place",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "weather",
+          "description": "Shows the current weather for a place"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_location",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "location",
+          "description": "City or zip code, e.g. Berlin or 10115",
+          "required": false,
+          "variable": "location"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "weather",
+        "type": "plugin.plugin_weather.current",
+        "typeVersion": 1,
+        "config": {
+          "location": "{option_location}",
+          "variable": "weather"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      },
+      {
+        "id": "ok",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "embeds": [
+              {
+                "color": "{weather.color}",
+                "title": "{weather.emoji} Weather for {weather.place}",
+                "description": "{weather}",
+                "thumbnail_url": "{weather.icon}",
+                "fields": [
+                  {
+                    "name": "🌡️ Temperature",
+                    "value": "{weather.temp} (feels like {weather.feels_like})",
+                    "inline": true
+                  },
+                  {
+                    "name": "💧 Humidity",
+                    "value": "{weather.humidity}",
+                    "inline": true
+                  },
+                  {
+                    "name": "💨 Wind",
+                    "value": "{weather.wind}",
+                    "inline": true
+                  },
+                  {
+                    "name": "🌅 Sunrise",
+                    "value": "{weather.sunrise}",
+                    "inline": true
+                  },
+                  {
+                    "name": "🌇 Sunset",
+                    "value": "{weather.sunset}",
+                    "inline": true
+                  }
+                ],
+                "footer": {
+                  "text": "Data from OpenWeatherMap"
+                }
+              }
+            ]
+          },
+          "target": "reply",
+          "ephemeral": false
+        },
+        "position": {
+          "x": 140,
+          "y": 340
+        }
+      },
+      {
+        "id": "not_found",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❓ Place **{weather.place}** not found. Tip: the city name in English, \"city,country\" (Paris,FR) or a zip code."
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 660,
+          "y": 340
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 1000,
+          "y": 40
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 1000,
+          "y": 190
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_location",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "weather",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "weather",
+          "port": "next"
+        },
+        "to": {
+          "node": "ok",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "weather",
+          "port": "not_found"
+        },
+        "to": {
+          "node": "not_found",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

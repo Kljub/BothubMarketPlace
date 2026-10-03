@@ -1,0 +1,82 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_weather.node.current.label",
+  "descriptionKey": "plugin.plugin_weather.node.current.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "not_found",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_weather.node.current.result"
+    },
+    {
+      "suffix": ".place",
+      "labelKey": "plugin.plugin_weather.node.current.result_place"
+    },
+    {
+      "suffix": ".emoji",
+      "labelKey": "plugin.plugin_weather.node.current.result_emoji"
+    },
+    {
+      "suffix": ".temp",
+      "labelKey": "plugin.plugin_weather.node.current.result_temp"
+    },
+    {
+      "suffix": ".feels_like",
+      "labelKey": "plugin.plugin_weather.node.current.result_feels_like"
+    },
+    {
+      "suffix": ".humidity",
+      "labelKey": "plugin.plugin_weather.node.current.result_humidity"
+    },
+    {
+      "suffix": ".wind",
+      "labelKey": "plugin.plugin_weather.node.current.result_wind"
+    },
+    {
+      "suffix": ".sunrise",
+      "labelKey": "plugin.plugin_weather.node.current.result_sunrise"
+    },
+    {
+      "suffix": ".sunset",
+      "labelKey": "plugin.plugin_weather.node.current.result_sunset"
+    },
+    {
+      "suffix": ".icon",
+      "labelKey": "plugin.plugin_weather.node.current.result_icon"
+    },
+    {
+      "suffix": ".color",
+      "labelKey": "plugin.plugin_weather.node.current.result_color"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "location": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "fields": [
+    {
+      "key": "default_location",
+      "type": "text",
+      "max": 100,
+      "hint": true
+    },
+    {
+      "key": "units",
+      "type": "select",
+      "options": [
+        "metric",
+        "imperial"
+      ],
+      "default": "metric"
+    },
+    {
+      "key": "language",
+      "type": "select",
+      "options": [
+        "en",
+        "de",
+        "es",
+        "fr",
+        "ru"
+      ],
+      "default": "en",
+      "hint": true
+    },
+    {
+      "key": "color",
+      "type": "color",
+      "default": "#5865f2"
+    }
+  ]
+}

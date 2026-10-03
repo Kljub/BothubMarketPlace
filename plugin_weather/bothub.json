@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_weather",
+  "name": "Weather",
+  "version": "1.0.0",
+  "description": "Current weather for any place with /weather, from OpenWeatherMap.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "MIT",
+  "icon": "🌤️",
+  "category": "utility",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "secrets.read",
+      "http.outbound"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/weather.json"
+  ],
+  "services": {
+    "secrets": [
+      "WEATHER_API_KEY"
+    ],
+    "hosts": [
+      "api.openweathermap.org"
+    ]
+  },
+  "nodes": [
+    "current"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

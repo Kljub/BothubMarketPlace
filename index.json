@@ -92,6 +92,39 @@
         "dashboard": 1
       },
       "voice": false
+    },
+    {
+      "id": "plugin_weather",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_weather-1.0.0/plugin_weather-1.0.0.zip",
+      "sha256": "180005924b3fd319cfc32bdfadd53bb1fdef0a8e28bbbe9580cde8c190060631",
+      "size": 7532,
+      "name": "Weather",
+      "description": "Current weather for any place with /weather, from OpenWeatherMap.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "MIT",
+      "icon": "🌤️",
+      "category": "utility",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "secrets.read",
+          "http.outbound"
+        ]
+      },
+      "secrets": [
+        "WEATHER_API_KEY"
+      ],
+      "layers": {
+        "commands": 1,
+        "events": 0,
+        "services": 1,
+        "nodes": 1,
+        "dashboard": 1
+      },
+      "voice": false
     }
   ]
 }
