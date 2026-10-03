@@ -5,8 +5,8 @@
       "id": "plugin_anisearch",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_anisearch-1.0.0/plugin_anisearch-1.0.0.zip",
-      "sha256": "1f6d04db1d61cc61f24e387c092760d1d3cf2ee15471e35c39f2ff6efb1e9de3",
-      "size": 16435,
+      "sha256": "6f81fa9343dc7638eff930b40933cde02de462cd76d4ea5df0a563d3c29bbd16",
+      "size": 16429,
       "name": "AniSearch",
       "description": "Anime and manga search on AniList, plus new-episode notices for tracked anime.",
       "developer": {
@@ -38,8 +38,8 @@
       "id": "plugin_plex",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_plex-1.0.0/plugin_plex-1.0.0.zip",
-      "sha256": "4ff7d7af319f6a4bf8a1e7e7a89529732c2b540485177b968c994cf2a0d83fe0",
-      "size": 27862,
+      "sha256": "f1282b60c93192b3a96196c2467220da14aeed55dc02a48ed375eb20e8f4a2e6",
+      "size": 27856,
       "name": "Plex",
       "description": "Plex for Discord: library search, now playing, random picks, recommendations, Overseerr requests, account linking with a role, and new-content notices.",
       "developer": {
