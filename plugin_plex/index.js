@@ -15,6 +15,7 @@ import watchlistAdd from './nodes/watchlist_add.js';
 import watchlistRemove from './nodes/watchlist_remove.js';
 import { reroll } from './services/blocks.js';
 import { tasks } from './services/tasks.js';
+import { refreshLibraryOptions } from './services/plex.js';
 import { webhooks } from './services/webhooks.js';
 
 /** @type {import('@bothub/sdk').PluginDefinition} */
@@ -24,4 +25,8 @@ export default {
   components: { reroll },
   tasks,
   webhooks,
+  // The library dropdown of the settings is filled when the bot starts.
+  async onEnable(ctx) {
+    await refreshLibraryOptions(ctx).catch((err) => ctx.logger.warn(`library list: ${err?.message ?? err}`));
+  },
 };

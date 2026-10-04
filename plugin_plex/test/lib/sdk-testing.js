@@ -118,6 +118,8 @@ export function createTestContext(options = {}) {
     const botId = options.botId ?? 1;
     const permissions = new Set((options.permissions ?? []).flatMap((p) => REPLACED[p] ?? [p]));
     const config = structuredClone(options.config ?? {});
+    const fieldOptions = {};
+    const options_settings = () => options.settings?.fields ?? [];
     const store = new Map(Object.entries(options.storage ?? {}));
     const globalStore = new Map(Object.entries(options.globalStorage ?? {}));
     const sent = [];
@@ -618,6 +620,21 @@ export function createTestContext(options = {}) {
                     if (!now.has(name))
                         fileStore.delete(name);
             },
+            setOptions: async (key, options) => {
+                calls.push('config.setOptions');
+                const field = options_settings().find((f) => f.key === key);
+                if (!field)
+                    throw new SdkCallError('sdk.config.unknown_key');
+                if (field.type !== 'choices' || field.dynamic !== true)
+                    throw new SdkCallError('sdk.config.not_dynamic');
+                if (!Array.isArray(options) || options.length > 200)
+                    throw new SdkCallError('sdk.config.bad_options');
+                const list = options.map((o) => (typeof o === 'string' ? { value: o, label: o } : { value: o?.value, label: o?.label ?? o?.value }));
+                if (list.some((o) => typeof o.value !== 'string' || o.value === '' || o.value.length > 100 || typeof o.label !== 'string' || o.label.length > 100))
+                    throw new SdkCallError('sdk.config.bad_options');
+                fieldOptions[key] = list;
+                return list.length;
+            },
             delete: async (key) => {
                 calls.push('config.delete');
                 const field = options.settings?.fields.find((f) => f.key === key);
@@ -691,7 +708,7 @@ export function createTestContext(options = {}) {
         }
         return areas.get(name);
     };
-    return new Proxy({ botId, sent, logs, store, globalStore, calls, played, requests, web: webRequests, actions, answers, balances, fileStore, settingsNow: config }, {
+    return new Proxy({ botId, sent, logs, store, globalStore, calls, played, requests, web: webRequests, actions, answers, balances, fileStore, settingsNow: config, fieldOptions }, {
         get: (target, prop) => {
             if (typeof prop !== 'string')
                 return undefined;

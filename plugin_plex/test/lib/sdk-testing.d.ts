@@ -68,6 +68,7 @@ export interface TestContextOptions {
             key: string;
             type: string;
             default?: Json;
+            dynamic?: boolean;
             item?: Array<{
                 key: string;
                 type: string;
@@ -194,6 +195,11 @@ export interface TestContext {
     readonly fileStore: Map<string, string>;
     /** Current settings (config.set changes them). */
     readonly settingsNow: Record<string, Json>;
+    /** Options set with config.setOptions, per field. */
+    readonly fieldOptions: Record<string, {
+        value: string;
+        label: string;
+    }[]>;
     [area: string]: unknown;
 }
 export declare function createTestContext(options?: TestContextOptions): TestContext;

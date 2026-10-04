@@ -82,10 +82,11 @@ export function errorText(res) {
   return 'The server could not be reached.';
 }
 
-/** Libraries the bot owner shared (settings "libraries": "5, 2:3"), normalized to "n:id"; [] = none. */
+/** Libraries the bot owner shared (settings "libraries": ["1:5", "2:3"], older text "5, 2:3"), normalized to "n:id"; [] = none. */
 export function allowedLibraries(ctx) {
   const out = [];
-  for (const part of String(setting(ctx, 'libraries', '')).split(/[\s,]+/)) {
+  const raw = setting(ctx, 'libraries', []);
+  for (const part of Array.isArray(raw) ? raw : String(raw ?? '').split(/[\s,]+/)) {
     const ref = parseRef(part);
     if (ref && !out.includes(refOf(ref.server, ref.id))) out.push(refOf(ref.server, ref.id));
   }
@@ -216,4 +217,15 @@ export async function serverOf(ctx, machine) {
   const found = (await servers(ctx)).find((s) => s.machine === machine)?.server ?? 1;
   await ctx.storage.set(key, String(found));
   return found;
+}
+
+/**
+ * Options of the settings field "libraries": every library of the connected
+ * servers as "Server:Library" (ctx.config.setOptions). Keeps the old list
+ * when no server answers.
+ */
+export async function refreshLibraryOptions(ctx) {
+  const res = await sections(ctx);
+  if (!res.ok || !res.sections.length) return 0;
+  return ctx.config.setOptions('libraries', res.sections.slice(0, 200).map((s) => ({ value: s.id, label: `${s.serverName}:${s.title}`.slice(0, 100) })));
 }

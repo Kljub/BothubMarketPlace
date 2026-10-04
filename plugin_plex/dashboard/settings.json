@@ -2,8 +2,9 @@
   "fields": [
     {
       "key": "libraries",
-      "type": "text",
-      "max": 200,
+      "type": "choices",
+      "dynamic": true,
+      "max": 50,
       "required": true,
       "hint": true
     },

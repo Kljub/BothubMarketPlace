@@ -38,7 +38,7 @@
   "plugin.plugin_plex.node.libraries.label": "Plex libraries",
   "plugin.plugin_plex.node.libraries.description": "All libraries with their IDs.",
   "plugin.plugin_plex.setting.libraries": "Shared libraries",
-  "plugin.plugin_plex.setting.libraries_hint": "Library IDs, comma separated (see /plex-libraries). Libraries of a second server: 2:ID (third: 3:ID …). Only these are searched and shown.",
+  "plugin.plugin_plex.setting.libraries_hint": "Pick the libraries the bot may search and show. The list shows every library of your connected Plex servers as \"Server:Library\"; it updates when the bot starts and every 30 minutes.",
   "plugin.plugin_plex.setting.linked_role": "Role for linked members",
   "plugin.plugin_plex.setting.linked_role_hint": "Given after /plex-link, taken away by /plex-unlink. Must be below the bot's role.",
   "plugin.plugin_plex.setting.new_content_channel": "New content channel",

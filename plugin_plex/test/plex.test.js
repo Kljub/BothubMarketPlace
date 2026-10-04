@@ -202,8 +202,14 @@ test('several Plex servers: search, libraries and webhooks per server', async ()
   const ctx = createTestContext({
     id: 'plugin_plex', permissions, secrets: { ...SECRETS, PLEX_URL_2: PLEX2, PLEX_TOKEN_2: 'plex-token-2' }, web: { ...plexTv(), ...serverWeb(log, second) },
     manifest: MANIFEST,
-    config: { libraries: '1, 2:3', new_content_channel: { id: NEWS, guild: GUILD } },
+    config: { libraries: ['1:1', '2:3'], new_content_channel: { id: NEWS, guild: GUILD } },
+    settings: { fields: [{ key: 'libraries', type: 'choices', dynamic: true }] },
   });
+  // The settings dropdown: every library as "Server:Library".
+  await plugin.onEnable(ctx);
+  // Every library is offered, also ones not picked yet (Private).
+  assert.deepEqual(ctx.fieldOptions.libraries.map((o) => o.label), ['Home:Movies', 'Home:Private', 'Family:Anime']);
+  assert.equal(ctx.fieldOptions.libraries.find((o) => o.label === 'Family:Anime').value, '2:3');
   const found = await runBlock(plugin, 'search', ctx, { config: { title: 'frieren' } });
   assert.equal(found.port, 'found');
   assert.equal(found.results['.key'], '2:5');
