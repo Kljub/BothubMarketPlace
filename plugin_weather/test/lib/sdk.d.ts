@@ -170,6 +170,12 @@ export interface MessageInfo {
     embeds: number;
     stickers: number;
 }
+/** A file of the plugin files: name = content hash + extension (e.g. "3f2a9c0d1b7e4a55.png"). */
+export interface StoredFile {
+    name: string;
+    mime: 'image/png' | 'image/gif' | 'image/webp' | 'image/jpeg';
+    size: number;
+}
 /** Who to check with config.checkAccess: an interaction event or IDs. */
 export type AccessSubject = {
     userId: Id;
@@ -217,7 +223,7 @@ export interface PluginContext {
         getManifest(): Record<string, Json>;
     };
     readonly logger: Record<'debug' | 'info' | 'warn' | 'error' | 'success', (text: string) => Async<void>>;
-    /** Plugin settings saved on the dashboard; set/delete are planned. */
+    /** Plugin settings of this bot: saved on the dashboard (defaults for fields nobody saved). A dashboard save counts at once. */
     readonly config: {
         get(key: string): Json | undefined;
         has(key: string): boolean;
@@ -230,7 +236,16 @@ export interface PluginContext {
          * Always reads the saved value, so a dashboard change counts at once.
          */
         checkAccess(key: string, who: AccessSubject): Async<AccessResult>;
+        /**
+         * Changes one field of the settings page (e.g. a list entry added by a
+         * command); the dashboard shows it. The value is checked like a
+         * dashboard save: sdk.config.unknown_key, sdk.config.bad_value. Access
+         * rules ("permissions") and messages stay with the dashboard
+         * (sdk.config.not_settable). List entries get an "_id". Images the
+         * settings no longer name are deleted from the plugin files.
+         */
         set(key: string, value: Json): Async<void>;
+        /** Back to the field's default. */
         delete(key: string): Async<void>;
     };
     readonly utils: {
@@ -400,6 +415,13 @@ export interface PluginContext {
     };
     readonly message: {
         get(channelId: Id, messageId: Id): Async<MessageInfo>;
+        /**
+         * "discord.messages.files": posts an image of the plugin files as an
+         * attachment, with an optional message. In an embed, image_url or
+         * thumbnail_url "attachment" shows the file there. Max. 5 messages per 5 s
+         * (shared with send).
+         */
+        sendFile(channelId: Id, fileName: string, message?: Message | string): Async<Id>;
         /** "discord.messages.send": returns the message ID. No pings, max. 5 per 5 s. */
         send(channelId: Id, message: Message | string): Async<Id>;
         /** "discord.messages.send": direct message to a user; returns the message ID. */
@@ -626,6 +648,18 @@ export interface PluginContext {
     readonly secrets: {
         get(name: string): Async<string | null>;
         has(name: string): Async<boolean>;
+    };
+    readonly files: {
+        list(): Async<StoredFile[]>;
+        /** The file with its content (base64), null when unknown. */
+        get(name: string): Async<(StoredFile & {
+            data: string;
+        }) | null>;
+        /** Stores an image (base64; max. about 48 KB per call, bigger ones via fromDiscord). Same picture = same name. */
+        put(base64: string): Async<StoredFile>;
+        /** Stores a Discord attachment (cdn.discordapp.com / media.discordapp.net), e.g. a command's attachment option. */
+        fromDiscord(url: string): Async<StoredFile>;
+        delete(name: string): Async<boolean>;
     };
 }
 /** What a builder block of the plugin gets: its config and the run's variables. */

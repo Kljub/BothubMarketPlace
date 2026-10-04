@@ -22,7 +22,10 @@ test('reply_for: port "none" without match or before the page was saved', async 
   assert.equal((await runBlock(plugin, 'reply_for', empty, { config: { text: 'rules' } })).port, 'none');
 });
 
-test('settings are read-only for the plugin', async () => {
-  const ctx = createTestContext({ id: 'plugin_template', config: { greeting: 'x' } });
-  await assert.rejects(ctx.config.set('greeting', 'y'), { message: 'sdk.call.not_available' });
+test('config.set: only fields of the settings page', async () => {
+  const settings = { fields: [{ key: 'greeting', type: 'text' }] };
+  const ctx = createTestContext({ id: 'plugin_template', config: { greeting: 'x' }, settings });
+  await ctx.config.set('greeting', 'y');
+  assert.equal(ctx.config.get('greeting'), 'y');
+  await assert.rejects(ctx.config.set('nope', 1), { message: 'sdk.config.unknown_key' });
 });

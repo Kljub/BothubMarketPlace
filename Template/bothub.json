@@ -15,7 +15,7 @@
       "discord.messages.send",
       "discord.events.members",
       "scheduler",
-      "http.endpoints",
+      "secrets.use",
       "discord.voice.connect",
       "discord.voice.speak"
     ]
@@ -38,8 +38,9 @@
         "every": "6h"
       }
     ],
-    "endpoints": [
-      "EXAMPLE_API"
+    "secrets": [
+      "EXAMPLE_URL",
+      "EXAMPLE_KEY"
     ]
   },
   "nodes": [

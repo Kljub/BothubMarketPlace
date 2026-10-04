@@ -1,10 +1,11 @@
-// Service "plex": the Plex servers and Overseerr through the admin's API
-// endpoints (Admin -> API / Secrets, shared with this plugin):
-//   PLEX_API, PLEX_API_2 … PLEX_API_5
+// Service "plex": the Plex servers and Overseerr through the admin's
+// secrets (Admin -> API / Secrets, shared with this plugin), sent with
+// ctx.http.secret:
+//   PLEX_URL + PLEX_TOKEN, PLEX_URL_2 + PLEX_TOKEN_2 … _5
 //                  up to five Plex servers ("Sign in with Plex" on the App
-//                  Store page fills the next free one): base URL, secret =
-//                  Plex token, header X-Plex-Token (scheme "plain")
-//   OVERSEERR_API  base URL incl. /api/v1, secret = API key, header X-Api-Key
+//                  Store page fills the next free one): server address and
+//                  Plex token (header X-Plex-Token)
+//   OVERSEERR_URL + OVERSEERR_KEY  address incl. /api/v1, API key (header X-Api-Key)
 // Library and item references carry the server: "2:5" is library 5 of
 // server 2; a bare "5" means server 1 (settings from before 1.1.0 stay valid).
 // The bot adds the secret; the plugin never sees it (so no poster URLs with
@@ -13,8 +14,8 @@ import { setting } from './util.js';
 
 const JSON_HEADERS = { Accept: 'application/json' };
 
-/** Endpoint keys of the server slots 1..5. */
-export const SERVERS = ['PLEX_API', 'PLEX_API_2', 'PLEX_API_3', 'PLEX_API_4', 'PLEX_API_5'];
+/** Secrets of the server slots 1..5: address and token. */
+export const SERVERS = [1, 2, 3, 4, 5].map((n) => (n === 1 ? { url: 'PLEX_URL', token: 'PLEX_TOKEN' } : { url: `PLEX_URL_${n}`, token: `PLEX_TOKEN_${n}` }));
 
 /** "5" -> {server: 1, id: "5"}, "2:5" -> {server: 2, id: "5"}; null when malformed. */
 export function parseRef(ref) {
@@ -31,7 +32,8 @@ export const showRef = (ref) => (String(ref).startsWith('1:') ? String(ref).slic
 /** A Plex call to one server (1..5); { ok, status, json } or { ok: false, error }. */
 export async function plex(ctx, path, query, server = 1) {
   try {
-    const res = await ctx.http.endpoint(SERVERS[server - 1] ?? SERVERS[0], { path, query, headers: JSON_HEADERS });
+    const slot = SERVERS[server - 1] ?? SERVERS[0];
+    const res = await ctx.http.secret({ url: slot.url, path, query, headers: JSON_HEADERS, auth: { secret: slot.token, header: 'X-Plex-Token', format: 'plain' } });
     if (res.status === 401 || res.status === 403) return { ok: false, error: 'unauthorized', status: res.status };
     if (res.status >= 400) return { ok: false, error: `http_${res.status}`, status: res.status };
     return { ok: true, status: res.status, json: res.json };
@@ -42,7 +44,7 @@ export async function plex(ctx, path, query, server = 1) {
 
 export async function overseerr(ctx, method, path, { query, json } = {}) {
   try {
-    const res = await ctx.http.endpoint('OVERSEERR_API', { method, path, query, json, headers: JSON_HEADERS });
+    const res = await ctx.http.secret({ url: 'OVERSEERR_URL', method, path, query, json, headers: JSON_HEADERS, auth: { secret: 'OVERSEERR_KEY', header: 'X-Api-Key', format: 'plain' } });
     if (res.status >= 400) return { ok: false, error: `http_${res.status}`, status: res.status };
     return { ok: true, status: res.status, json: res.json ?? {} };
   } catch (err) {
@@ -50,13 +52,13 @@ export async function overseerr(ctx, method, path, { query, json } = {}) {
   }
 }
 
-/** A slot the admin has not connected: the endpoint is missing or not shared. */
+/** A slot the admin has not connected: its secrets are missing or not shared. */
 const notConnected = (res) => !res.ok && /not_shared|not_found|unknown/.test(String(res.error));
 
 /**
  * The connected servers: [{ server, ok, name, machine, version, error }].
- * Slots without an endpoint are left out; slot 1 is always listed so a
- * missing PLEX_API still gives a readable error.
+ * Slots without secrets are left out; slot 1 is always listed so a
+ * missing PLEX_URL still gives a readable error.
  */
 export async function servers(ctx) {
   const out = [];
@@ -72,8 +74,9 @@ export async function servers(ctx) {
 /** Human text for a failed call. */
 export function errorText(res) {
   const e = String(res?.error ?? '');
-  if (e === 'unauthorized') return 'Plex refused the token (check PLEX_API under Admin → API / Secrets).';
-  if (e === 'sdk.http.not_shared') return 'The API endpoint is not shared with this plugin (Admin → Plugins).';
+  if (e === 'unauthorized') return 'Plex refused the token (check PLEX_TOKEN under Admin → API / Secrets, or sign in with Plex again).';
+  if (e === 'sdk.secret.not_shared') return 'The Plex secrets are not set up or not shared with this plugin (App Store → Plex: Sign in with Plex).';
+  if (e === 'sdk.secret.not_a_url') return 'The secret with the server address does not hold a URL (e.g. http://192.168.1.10:32400).';
   if (e.includes('timeout')) return 'The server did not answer in time.';
   if (e.startsWith('http_')) return `The server answered with HTTP ${e.slice(5)}.`;
   return 'The server could not be reached.';

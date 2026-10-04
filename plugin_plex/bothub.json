@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "plugin_plex",
   "name": "Plex",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Plex for Discord: library search, now playing, random picks, recommendations, Overseerr requests, account linking with a role, and new-content notices.",
   "developer": {
     "name": "BotHub"
@@ -17,7 +17,7 @@
       "storage.global",
       "discord.messages.send",
       "scheduler",
-      "http.endpoints",
+      "secrets.use",
       "http.outbound",
       "discord.interactions.reply",
       "discord.roles.assign",
@@ -46,20 +46,26 @@
         "every": "1m"
       }
     ],
-    "endpoints": [
-      "PLEX_API",
-      "PLEX_API_2",
-      "PLEX_API_3",
-      "PLEX_API_4",
-      "PLEX_API_5",
-      "OVERSEERR_API"
+    "secrets": [
+      "PLEX_URL",
+      "PLEX_TOKEN",
+      "PLEX_URL_2",
+      "PLEX_TOKEN_2",
+      "PLEX_URL_3",
+      "PLEX_TOKEN_3",
+      "PLEX_URL_4",
+      "PLEX_TOKEN_4",
+      "PLEX_URL_5",
+      "PLEX_TOKEN_5",
+      "OVERSEERR_URL",
+      "OVERSEERR_KEY"
     ],
     "connect": {
-      "PLEX_API": "plex",
-      "PLEX_API_2": "plex",
-      "PLEX_API_3": "plex",
-      "PLEX_API_4": "plex",
-      "PLEX_API_5": "plex"
+      "PLEX_TOKEN": "plex",
+      "PLEX_TOKEN_2": "plex",
+      "PLEX_TOKEN_3": "plex",
+      "PLEX_TOKEN_4": "plex",
+      "PLEX_TOKEN_5": "plex"
     },
     "hosts": [
       "plex.tv",

@@ -29,16 +29,17 @@ export interface TestContextOptions {
     config?: Record<string, Json>;
     /** Start values of ctx.storage. */
     storage?: Record<string, string>;
+    /**
+     * Secrets the admin shared with the plugin: name -> value. Like on the bot,
+     * a name must also be in the manifest "secrets" (when a manifest is given);
+     * any other name answers null.
+     */
+    secrets?: Record<string, string>;
     /** Start values of ctx.globalStorage (shared by every bot of the instance). */
     globalStorage?: Record<string, string>;
     guilds?: TestGuild[];
     modules?: TestModule[];
     manifest?: Record<string, Json>;
-    /**
-     * API endpoints the admin shared with the plugin: key -> fake server. The
-     * key must also be in the manifest "endpoints" (when a manifest is given).
-     */
-    endpoints?: Record<string, (request: EndpointRequest) => EndpointReply | Promise<EndpointReply>>;
     /** Files of the plugin folder voice.play may use; default: any valid name. */
     sounds?: string[];
     /** Servers where another player (e.g. the music module) plays: voice.play rejects with sdk.voice.busy. */
@@ -58,14 +59,26 @@ export interface TestContextOptions {
     hosts?: string[];
     /** Start balances of the Economy module: "<guildId>:<userId>" -> coins. */
     balances?: Record<string, number>;
-    /** dashboard/settings.json: its "permissions" fields are what config.checkAccess checks. */
+    /**
+     * dashboard/settings.json: its "permissions" fields are what
+     * config.checkAccess checks; config.set takes only its keys.
+     */
     settings?: {
         fields: Array<{
             key: string;
             type: string;
             default?: Json;
+            item?: Array<{
+                key: string;
+                type: string;
+                default?: Json;
+            }>;
         }>;
     };
+    /** Start content of ctx.files: name ("<16 hex>.png") -> base64. */
+    files?: Record<string, string>;
+    /** files.fromDiscord: attachment URL -> base64 content. Other URLs fail like a dead link. */
+    attachments?: Record<string, string>;
     /**
      * Members for config.checkAccess: user ID -> role IDs and Discord
      * permission names ("manage_messages", …). Users not listed are not on the server.
@@ -90,6 +103,21 @@ export interface InteractionAnswer {
     ephemeral?: boolean;
     modal?: Json;
 }
+/** ctx.http.secret request (see the SDK). */
+export interface SecretRequestKit {
+    url: string;
+    path?: string;
+    method?: string;
+    query?: Record<string, string>;
+    json?: Json;
+    headers?: Record<string, string>;
+    auth?: {
+        secret: string;
+        header?: string;
+        format?: 'bearer' | 'plain' | 'query';
+        param?: string;
+    };
+}
 export interface EndpointRequest {
     method: string;
     path: string;
@@ -109,10 +137,12 @@ export interface PlayedSound {
     file: string;
     volume: number;
 }
+/** A sent message; file: the image of message.sendFile. */
 export interface SentMessage {
     channelId: string;
     message: Message | string;
     id: string;
+    file?: string;
 }
 export interface LogLine {
     level: string;
@@ -131,10 +161,8 @@ export interface TestContext {
     readonly calls: string[];
     /** Every voice.play call. */
     readonly played: PlayedSound[];
-    /** Every http.endpoint call, as the fake server got it. */
-    readonly requests: Array<EndpointRequest & {
-        key: string;
-    }>;
+    /** Every http.secret call, as the fake server got it (secret values included, for checks). */
+    readonly requests: WebRequest[];
     /** Every http.get/post/… call. */
     readonly web: WebRequest[];
     /** Discord calls without a fake: name and arguments (e.g. role.addToMember). */
@@ -146,6 +174,10 @@ export interface TestContext {
     readonly answers: InteractionAnswer[];
     /** Economy balances: "<guildId>:<userId>" -> coins. */
     readonly balances: Map<string, number>;
+    /** Current plugin files: name -> base64. */
+    readonly fileStore: Map<string, string>;
+    /** Current settings (config.set changes them). */
+    readonly settingsNow: Record<string, Json>;
     [area: string]: unknown;
 }
 export declare function createTestContext(options?: TestContextOptions): TestContext;

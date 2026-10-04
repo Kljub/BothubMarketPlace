@@ -47,7 +47,7 @@
   "plugin.plugin_plex.setting.announce_plays_hint": "Postet, wenn ein verknüpftes Mitglied etwas startet.",
   "plugin.plugin_plex.setting.live_channel": "Kanal für Wiedergaben",
   "plugin.plugin_plex.setting.overseerr": "Overseerr-Anfragen",
-  "plugin.plugin_plex.setting.overseerr_hint": "Braucht den Endpunkt OVERSEERR_API (Admin → API / Secrets), freigegeben für dieses Plugin.",
+  "plugin.plugin_plex.setting.overseerr_hint": "Braucht die Secrets OVERSEERR_URL (Adresse inkl. /api/v1) und OVERSEERR_KEY (Admin → API / Secrets), freigegeben für dieses Plugin.",
   "plugin.plugin_plex.node.watchlist.label": "Plex-Watchlist",
   "plugin.plugin_plex.node.watchlist.description": "Die Plex-Watchlist des Mitglieds (braucht /plex-link).",
   "plugin.plugin_plex.node.watchlist_add.label": "Zur Watchlist hinzufügen",

@@ -1,7 +1,9 @@
 // Service "owm": current weather from OpenWeatherMap (free API, "Current
-// weather data"). The API key is the admin's secret WEATHER_API_KEY
-// (Admin > API / Secrets, shared with this plugin); it is never stored in
-// the plugin's settings.
+// weather data"). The API key is the admin's secret WEATHER_API_KEY: the
+// install creates it empty ([NULL]) under Admin > API / Secrets, shared with
+// this plugin; the admin pastes the key there. The request goes through
+// ctx.http.secret ("secrets.use"): the bot adds the key, the plugin never
+// sees it, and it is never stored in the plugin's settings.
 import { setting } from './util.js';
 
 export const API = 'https://api.openweathermap.org/data/2.5/weather';
@@ -23,12 +25,20 @@ export class WeatherError extends Error {}
  * Current weather of a place (city, "city,country" or zip code). null when
  * OpenWeatherMap does not know the place.
  */
+export const KEY_SECRET = 'WEATHER_API_KEY';
+export const NOT_SET_UP = 'The weather plugin is not set up yet. An admin pastes the OpenWeatherMap API key into the secret WEATHER_API_KEY under Admin → API / Secrets.';
+
 export async function currentWeather(ctx, place) {
-  const key = await ctx.secrets.get('WEATHER_API_KEY');
-  if (!key) throw new WeatherError('The weather API key is not set up. An admin adds the secret WEATHER_API_KEY under Admin → API / Secrets and shares it with the Weather plugin in the App Store.');
   const units = setting(ctx, 'units', 'metric') === 'imperial' ? 'imperial' : 'metric';
   const lang = String(setting(ctx, 'language', 'en'));
-  const res = await ctx.http.get(API, { query: { q: place, appid: key, units, lang } });
+  let res;
+  try {
+    res = await ctx.http.secret({ url: API, query: { q: place, units, lang }, auth: { secret: KEY_SECRET, format: 'query', param: 'appid' } });
+  } catch (err) {
+    // Empty ([NULL]), missing or not shared: the same answer.
+    if (String(err?.message ?? err).includes('sdk.secret.not_shared')) throw new WeatherError(NOT_SET_UP);
+    throw err;
+  }
   if (res.status === 404) return null;
   if (res.status === 401) throw new WeatherError('OpenWeatherMap refused the API key (new keys need up to 2 hours to work).');
   if (res.status === 429) throw new WeatherError('Too many weather requests right now. Try again in a minute.');

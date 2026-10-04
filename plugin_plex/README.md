@@ -7,8 +7,8 @@ Version 1.2.0 · developer: BotHub · license: MIT
 ## Setup
 
 1. **App Store → Plex → Install.** The install dialog lists the SDKs and sets them to "Allow".
-2. **App Store → Plex → Sign in with Plex** (up to five servers: "Connect another server" fills `PLEX_API_2` … `PLEX_API_5`; libraries of server 2 are `2:<ID>` in the settings). One click: you sign in on plex.tv, BotHub stores the token as secret `PLEX_TOKEN`, finds your Plex server, creates endpoint `PLEX_API` (header `X-Plex-Token`) and shares it with the plugin. Without the button: create them by hand under Admin → API / Secrets (server URL e.g. `http://plex.lan:32400`, auth header `X-Plex-Token`, scheme `<secret>`).
-   - Optional for requests: secret `OVERSEERR_KEY`, endpoint `OVERSEERR_API` = `https://overseerr.example/api/v1`, header `X-Api-Key`, scheme `<secret>`; share it on the plugin's App Store page.
+2. **App Store → Plex → Sign in with Plex** (up to five servers: "Connect another server" fills `PLEX_TOKEN_2`/`PLEX_URL_2` … `_5`; libraries of server 2 are `2:<ID>` in the settings). One click: you sign in on plex.tv, BotHub stores the token as secret `PLEX_TOKEN` and your server address as secret `PLEX_URL`, and shares both with the plugin. Without the button: create both by hand under Admin → API / Secrets (address e.g. `http://192.168.1.10:32400`) and switch them on in the App Store. The plugin never sees them: the bot adds them to each request.
+   - Optional for requests: secrets `OVERSEERR_URL` = `https://overseerr.example/api/v1` and `OVERSEERR_KEY` (API key); share them on the plugin's App Store page.
 3. **Bot → Plugins → Plex**: run `/plex-libraries`, put the IDs of the libraries Discord may see into *Shared libraries*, choose the role and channels.
 4. Webhooks (plugin page shows the URLs): Plex → Settings → Webhooks → `media`; Overseerr → Notifications → Webhook → `overseerr`.
 

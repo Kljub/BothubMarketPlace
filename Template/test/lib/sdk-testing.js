@@ -34,12 +34,14 @@ const CALLS = {
     'moderation.warn': 'modules.moderation.cases', 'moderation.record': 'modules.moderation.cases', 'moderation.history': 'modules.moderation.cases',
     'moderation.getCase': 'modules.moderation.cases', 'moderation.note': 'modules.moderation.cases', 'moderation.notes': 'modules.moderation.cases',
     'guild.get': 'discord.guilds.read', 'guild.list': 'discord.guilds.read',
+    'secrets.get': 'secrets.read', 'secrets.has': 'secrets.read',
     'module.get': 'modules.read', 'module.getId': 'modules.read', 'module.getName': 'modules.read',
     'module.isEnabled': 'modules.read', 'module.getConfig': 'modules.read', 'module.list': 'modules.read',
-    'message.send': 'discord.messages.send',
+    'message.send': 'discord.messages.send', 'message.sendFile': 'discord.messages.files',
+    'files.list': 'storage.files', 'files.get': 'storage.files', 'files.put': 'storage.files', 'files.delete': 'storage.files', 'files.fromDiscord': 'storage.files',
     'voice.join': 'discord.voice.connect', 'voice.leave': 'discord.voice.connect', 'voice.play': 'discord.voice.speak',
     'voice.stop': 'discord.voice.speak', 'voice.state': 'discord.voice.connect',
-    'http.endpoint': 'http.endpoints',
+    'http.secret': 'secrets.use',
     'http.get': 'http.outbound', 'http.post': 'http.outbound', 'http.put': 'http.outbound', 'http.patch': 'http.outbound', 'http.delete': 'http.outbound',
     'message.dm': 'discord.messages.send',
     'guild.getChannels': 'discord.guilds.read', 'guild.getRoles': 'discord.guilds.read', 'guild.getEmojis': 'discord.guilds.read',
@@ -66,10 +68,10 @@ const REPLACED = { "discord.members.manage": ["discord.members.nicknames", "disc
 // answer yet: they reject with "sdk.call.not_available".
 const PLANNED_AREAS = new Set([
     'collection', 'cache', 'scheduler', 'events', 'commands',
-    'permissions', 'plugins', 'dashboard', 'secrets', 'locale', 'rateLimit', 'resources',
+    'permissions', 'plugins', 'dashboard', 'locale', 'rateLimit', 'resources',
 ]);
 const PLANNED_CALLS = new Set([
-    'storage.transaction', 'config.set', 'config.delete', 'utils.validate', 'interaction.respond',
+    'storage.transaction', 'utils.validate', 'interaction.respond',
 ]);
 /** Discord calls the fake answers through options.discord (default: recorded, empty answer). */
 const DISCORD_AREAS = new Set(['guild', 'member', 'channel', 'role', 'emoji', 'audit', 'moderation']);
@@ -89,6 +91,25 @@ const BLOCKED_HEADERS = new Set(['authorization', 'cookie', 'host', 'proxy-autho
 const HTTP_BODY_BYTES = 64 * 1024;
 const HTTP_RESPONSE_BYTES = 1024 * 1024;
 const HTTP_TIMEOUT_MS = 10000;
+// Plugin files (storage.files).
+const FILE_NAME = /^[0-9a-f]{16}\.(png|gif|webp|jpg)$/;
+const FILE_NAMES = /[0-9a-f]{16}\.(?:png|gif|webp|jpg)/g;
+const FILE_MAX_BYTES = 2 * 1024 * 1024;
+const FILE_MAX_COUNT = 100;
+const base64Bytes = (b64) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+const bytesBase64 = (data) => btoa(String.fromCharCode(...data));
+function sniff(b) {
+    const ascii = (from, to) => String.fromCharCode(...b.slice(from, to));
+    if (b.length > 8 && [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a].every((x, i) => b[i] === x))
+        return { mime: 'image/png', ext: 'png' };
+    if (b.length > 6 && /^GIF8[79]a$/.test(ascii(0, 6)))
+        return { mime: 'image/gif', ext: 'gif' };
+    if (b.length > 12 && ascii(0, 4) === 'RIFF' && ascii(8, 12) === 'WEBP')
+        return { mime: 'image/webp', ext: 'webp' };
+    if (b.length > 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff)
+        return { mime: 'image/jpeg', ext: 'jpg' };
+    return null;
+}
 const encoder = new TextEncoder();
 const bytes = (text) => encoder.encode(text).length;
 export function createTestContext(options = {}) {
@@ -110,8 +131,35 @@ export function createTestContext(options = {}) {
     const actions = [];
     const answers = [];
     const balances = new Map(Object.entries(options.balances ?? {}));
+    const fileStore = new Map(Object.entries(options.files ?? {}));
+    const fileOf = (name) => {
+        if (typeof name !== 'string' || !FILE_NAME.test(name) || !fileStore.has(name))
+            return null;
+        const data = fileStore.get(name);
+        return { name, mime: sniff(base64Bytes(data))?.mime ?? 'image/png', size: base64Bytes(data).length, data };
+    };
+    const putFile = async (data) => {
+        if (!data.length || data.length > FILE_MAX_BYTES)
+            throw new SdkCallError('sdk.files.too_big');
+        const type = sniff(data);
+        if (!type)
+            throw new SdkCallError('sdk.files.bad_type');
+        const digest = new Uint8Array(await crypto.subtle.digest('SHA-256', data));
+        const name = `${[...digest.slice(0, 8)].map((b) => b.toString(16).padStart(2, '0')).join('')}.${type.ext}`;
+        if (!fileStore.has(name) && fileStore.size >= FILE_MAX_COUNT)
+            throw new SdkCallError('sdk.files.full');
+        fileStore.set(name, bytesBase64(data));
+        return { name, mime: type.mime, size: data.length };
+    };
     const hosts = options.hosts ?? Object.keys(options.web ?? {});
-    const manifestEndpoints = Array.isArray(options.manifest?.endpoints) ? options.manifest.endpoints : null;
+    const manifestSecrets = Array.isArray(options.manifest?.secrets) ? options.manifest.secrets : null;
+    // Secrets shared with the plugin: name -> value.
+    const secretValues = new Map(Object.entries(options.secrets ?? {}));
+    const secretOf = (name) => {
+        if (typeof name !== 'string' || (manifestSecrets && !manifestSecrets.includes(name)))
+            return null;
+        return secretValues.get(name) ?? null;
+    };
     let nextId = 100000000000000000n;
     const check = (name) => {
         calls.push(name);
@@ -189,6 +237,10 @@ export function createTestContext(options = {}) {
             },
             list: async () => (options.guilds ?? []).map((g) => ({ ...g })),
         },
+        secrets: {
+            get: async (name) => secretOf(name),
+            has: async (name) => secretOf(name) !== null,
+        },
         module: {
             get: async (key) => mod(readable(key)),
             getId: async (key) => mod(readable(key)).id,
@@ -237,51 +289,141 @@ export function createTestContext(options = {}) {
             },
         },
         http: {
-            endpoint: async (key, request = {}) => {
-                const server = options.endpoints?.[key];
-                if (!server || (manifestEndpoints && !manifestEndpoints.includes(key)))
-                    throw new SdkCallError('sdk.http.not_shared');
+            // Like the bot: url = name of an address secret (+ path) or an https URL of
+            // a host of "hosts"; auth puts a secret into a header or URL parameter.
+            // The fake server is options.web[<host of the address>].
+            secret: async (request = {}) => {
                 const method = (request.method ?? 'GET').toUpperCase();
                 if (!HTTP_METHODS.has(method))
                     throw new SdkCallError('sdk.http.bad_method');
-                const path = request.path ?? '/';
-                if (typeof path !== 'string' || !path.startsWith('/') || path.includes('..') || path.includes('//')) {
-                    throw new SdkCallError('sdk.http.bad_path');
+                let u;
+                const name = String(request.url ?? '');
+                if (/^[A-Z][A-Z0-9_]{1,39}$/.test(name)) {
+                    const address = secretOf(name);
+                    if (!address)
+                        throw new SdkCallError('sdk.secret.not_shared');
+                    const path = request.path ?? '';
+                    if (typeof path !== 'string' || (path && !path.startsWith('/')) || path.includes('..') || path.includes('//'))
+                        throw new SdkCallError('sdk.http.bad_path');
+                    try {
+                        u = new URL(address.replace(/\/+$/, '') + path);
+                    }
+                    catch {
+                        throw new SdkCallError('sdk.secret.not_a_url');
+                    }
                 }
+                else {
+                    try {
+                        u = new URL(name);
+                    }
+                    catch {
+                        throw new SdkCallError('sdk.http.bad_url');
+                    }
+                    if (u.protocol !== 'https:')
+                        throw new SdkCallError('sdk.http.bad_url');
+                    if (!hosts.includes(u.hostname))
+                        throw new SdkCallError('sdk.http.host_not_allowed');
+                }
+                for (const [k, v] of Object.entries(request.query ?? {}))
+                    u.searchParams.set(k, String(v));
                 const headers = {};
-                for (const [name, value] of Object.entries(request.headers ?? {})) {
-                    if (BLOCKED_HEADERS.has(name.toLowerCase()))
+                for (const [h, value] of Object.entries(request.headers ?? {})) {
+                    if (BLOCKED_HEADERS.has(h.toLowerCase()))
                         throw new SdkCallError('sdk.http.bad_header');
-                    headers[name] = String(value);
+                    headers[h] = String(value);
+                }
+                if (request.auth) {
+                    const key = secretOf(request.auth.secret);
+                    if (!key)
+                        throw new SdkCallError('sdk.secret.not_shared');
+                    const format = request.auth.format ?? 'bearer';
+                    if (format === 'query')
+                        u.searchParams.set(request.auth.param ?? 'key', key);
+                    else
+                        headers[request.auth.header ?? 'Authorization'] = format === 'bearer' ? `Bearer ${key}` : key;
                 }
                 if (request.json !== undefined && bytes(JSON.stringify(request.json)) > HTTP_BODY_BYTES)
                     throw new SdkCallError('sdk.http.too_big');
-                const req = { method, path, query: { ...(request.query ?? {}) }, json: request.json, headers };
-                requests.push({ key, ...structuredClone(req) });
+                const server = options.web?.[u.hostname];
+                if (!server)
+                    throw new SdkCallError('sdk.http.failed');
+                const req = { method, url: u.toString(), query: Object.fromEntries(u.searchParams), json: request.json, headers };
+                requests.push(structuredClone(req));
                 let timer;
                 const timeout = new Promise((_, reject) => {
                     timer = setTimeout(() => reject(new SdkCallError('sdk.http.timeout')), HTTP_TIMEOUT_MS);
                 });
                 const reply = await Promise.race([Promise.resolve().then(() => server(structuredClone(req))), timeout]).finally(() => clearTimeout(timer));
-                const text = reply.text ?? (reply.json !== undefined ? JSON.stringify(reply.json) : '');
+                const hide = [request.auth ? secretOf(request.auth.secret) : null, /^[A-Z][A-Z0-9_]{1,39}$/.test(name) ? secretOf(name) : null].filter((v) => !!v);
+                const masked = (t) => hide.reduce((acc, v) => (v.length >= 4 ? acc.split(v).join('••••') : acc), t);
+                const text = masked(reply.text ?? (reply.json !== undefined ? JSON.stringify(reply.json) : ''));
                 if (bytes(text) > HTTP_RESPONSE_BYTES)
                     throw new SdkCallError('sdk.http.too_big');
                 let json = null;
                 try {
-                    json = reply.json !== undefined ? structuredClone(reply.json) : JSON.parse(text);
+                    json = JSON.parse(text);
                 }
                 catch {
                     json = null;
                 }
                 const out = {};
-                for (const [name, value] of Object.entries(reply.headers ?? {})) {
-                    if (name.toLowerCase() !== 'set-cookie')
-                        out[name.toLowerCase()] = value;
+                for (const [h, value] of Object.entries(reply.headers ?? {})) {
+                    if (h.toLowerCase() !== 'set-cookie')
+                        out[h.toLowerCase()] = masked(value);
                 }
                 return { status: reply.status ?? 200, headers: out, json, text };
             },
         },
+        files: {
+            list: async () => [...fileStore.keys()].map((n) => { const f = fileOf(n); return { name: f.name, mime: f.mime, size: f.size }; }),
+            get: async (name) => fileOf(name),
+            put: async (data) => {
+                if (typeof data !== 'string' || !/^[A-Za-z0-9+/]+={0,2}$/.test(data))
+                    throw new SdkCallError('sdk.files.bad_type');
+                return putFile(base64Bytes(data));
+            },
+            delete: async (name) => fileStore.delete(String(name)),
+            fromDiscord: async (url) => {
+                let u = null;
+                try {
+                    u = new URL(String(url));
+                }
+                catch {
+                    u = null;
+                }
+                if (!u || u.protocol !== 'https:' || !['cdn.discordapp.com', 'media.discordapp.net'].includes(u.hostname) || !/^\/(ephemeral-)?attachments\//.test(u.pathname))
+                    throw new SdkCallError('sdk.files.bad_url');
+                const data = options.attachments?.[String(url)];
+                if (data === undefined)
+                    throw new SdkCallError('sdk.http.failed');
+                return putFile(base64Bytes(data));
+            },
+        },
         message: {
+            sendFile: async (channelId, name, message) => {
+                const file = fileOf(name);
+                if (!file)
+                    throw new SdkCallError('sdk.files.unknown');
+                if (typeof channelId !== 'string' || !SNOWFLAKE.test(channelId))
+                    throw new SdkCallError('sdk.discord.bad_channel');
+                const now = Date.now();
+                while (sendTimes.length && now - sendTimes[0] > SEND_WINDOW_MS)
+                    sendTimes.shift();
+                if (sendTimes.length >= SEND_MAX)
+                    throw new SdkCallError('sdk.discord.rate_limited');
+                sendTimes.push(now);
+                const msg = structuredClone(message ?? {});
+                if (typeof msg === 'object' && Array.isArray(msg.embeds)) {
+                    for (const e of msg.embeds) {
+                        for (const k of ['image_url', 'thumbnail_url'])
+                            if (e[k] === 'attachment')
+                                e[k] = `attachment://${file.name}`;
+                    }
+                }
+                const msgId = String(nextId++);
+                sent.push({ channelId, message: msg, id: msgId, file: file.name });
+                return msgId;
+            },
             send: async (channelId, message) => {
                 if (typeof channelId !== 'string' || !SNOWFLAKE.test(channelId))
                     throw new SdkCallError('sdk.discord.bad_channel');
@@ -414,8 +556,51 @@ export function createTestContext(options = {}) {
             get: (key) => (key in config ? structuredClone(config[key]) : undefined),
             has: (key) => key in config,
             getAll: () => structuredClone(config),
-            set: async () => { throw new SdkCallError('sdk.call.not_available'); },
-            delete: async () => { throw new SdkCallError('sdk.call.not_available'); },
+            // Like the bot: only fields of the settings page; access rules and messages stay with the dashboard.
+            set: async (key, value) => {
+                calls.push('config.set');
+                const field = options.settings?.fields.find((f) => f.key === key);
+                if (!field)
+                    throw new SdkCallError('sdk.config.unknown_key');
+                if (['permissions', 'message', 'emojis'].includes(field.type))
+                    throw new SdkCallError('sdk.config.not_settable');
+                const before = new Set(JSON.stringify(config).match(FILE_NAMES) ?? []);
+                if (field.type === 'image' && value !== '' && !(typeof value === 'string' && FILE_NAME.test(value)))
+                    throw new SdkCallError('sdk.config.bad_value');
+                if (field.type === 'list') {
+                    if (!Array.isArray(value))
+                        throw new SdkCallError('sdk.config.bad_value');
+                    value = value.map((item) => {
+                        if (!item || typeof item !== 'object' || Array.isArray(item))
+                            throw new SdkCallError('sdk.config.bad_value');
+                        const out = {};
+                        for (const sub of field.item ?? []) {
+                            const v = item[sub.key];
+                            if (sub.type === 'image' && v !== undefined && v !== '' && !(typeof v === 'string' && FILE_NAME.test(v)))
+                                throw new SdkCallError('sdk.config.bad_value');
+                            out[sub.key] = v === undefined ? (sub.default ?? null) : v;
+                        }
+                        const itemId = item._id;
+                        out._id = typeof itemId === 'string' && /^[a-z0-9]{8,16}$/.test(itemId) ? itemId : Math.random().toString(36).slice(2, 14).padEnd(8, '0');
+                        return out;
+                    });
+                }
+                config[key] = structuredClone(value);
+                const now = new Set(JSON.stringify(config).match(FILE_NAMES) ?? []);
+                for (const name of before)
+                    if (!now.has(name))
+                        fileStore.delete(name);
+            },
+            delete: async (key) => {
+                calls.push('config.delete');
+                const field = options.settings?.fields.find((f) => f.key === key);
+                if (!field)
+                    throw new SdkCallError('sdk.config.unknown_key');
+                if (field.default !== undefined)
+                    config[key] = structuredClone(field.default);
+                else
+                    delete config[key];
+            },
             // Like the bot: the "permissions" field, checked like a command's permissions block.
             checkAccess: async (key, who) => {
                 const field = options.settings?.fields.find((f) => f.key === key && f.type === 'permissions');
@@ -479,7 +664,7 @@ export function createTestContext(options = {}) {
         }
         return areas.get(name);
     };
-    return new Proxy({ botId, sent, logs, store, globalStore, calls, played, requests, web: webRequests, actions, answers, balances }, {
+    return new Proxy({ botId, sent, logs, store, globalStore, calls, played, requests, web: webRequests, actions, answers, balances, fileStore, settingsNow: config }, {
         get: (target, prop) => {
             if (typeof prop !== 'string')
                 return undefined;

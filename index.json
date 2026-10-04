@@ -31,12 +31,45 @@
           "http.outbound"
         ]
       },
-      "endpoints": [],
       "layers": {
         "commands": 6,
         "events": 0,
         "services": 1,
         "nodes": 5,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
+      "id": "plugin_emojimanager",
+      "version": "1.1.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_emojimanager-1.1.0/plugin_emojimanager-1.1.0.zip",
+      "sha256": "3d2bfa982fec8e630220556c1301e4bfaa8a570a6394449283c5508c1a8bdd99",
+      "size": 14858,
+      "name": "Emoji Manager",
+      "description": "Members pick an emoji image from a private menu (/emoji-menu show); the bot posts it big in the channel. Images are uploaded on the dashboard or with /emoji-menu add.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "MIT",
+      "icon": "😀",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "storage.files",
+          "discord.messages.send",
+          "discord.messages.files",
+          "discord.interactions.reply",
+          "discord.emojis.read"
+        ]
+      },
+      "layers": {
+        "commands": 3,
+        "events": 0,
+        "services": 0,
+        "nodes": 3,
         "dashboard": 1
       },
       "voice": false
@@ -53,7 +86,14 @@
       "version": "1.2.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_plex-1.2.0/plugin_plex-1.2.0.zip",
       "sha256": "6d4a06b9ff357fdccb9e197083ed549cb7749dd5758020164c7dc60528da1ccf",
-      "size": 37237,
+      "size": 37237
+    },
+    {
+      "id": "plugin_plex",
+      "version": "1.3.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_plex-1.3.0/plugin_plex-1.3.0.zip",
+      "sha256": "d5cf27d36fbd858b2116426405d7747858adf2ae1bd68b94e52e607bf3fbc5e9",
+      "size": 37499,
       "name": "Plex",
       "description": "Plex for Discord: library search, now playing, random picks, recommendations, Overseerr requests, account linking with a role, and new-content notices.",
       "developer": {
@@ -69,25 +109,31 @@
           "storage.global",
           "discord.messages.send",
           "scheduler",
-          "http.endpoints",
+          "secrets.use",
           "http.outbound",
           "discord.interactions.reply",
           "discord.roles.assign",
           "webhooks.inbound"
         ]
       },
-      "endpoints": [
-        "PLEX_API",
-        "PLEX_API_2",
-        "PLEX_API_3",
-        "PLEX_API_4",
-        "PLEX_API_5",
-        "OVERSEERR_API"
+      "secrets": [
+        "PLEX_URL",
+        "PLEX_TOKEN",
+        "PLEX_URL_2",
+        "PLEX_TOKEN_2",
+        "PLEX_URL_3",
+        "PLEX_TOKEN_3",
+        "PLEX_URL_4",
+        "PLEX_TOKEN_4",
+        "PLEX_URL_5",
+        "PLEX_TOKEN_5",
+        "OVERSEERR_URL",
+        "OVERSEERR_KEY"
       ],
       "layers": {
         "commands": 12,
         "events": 0,
-        "services": 7,
+        "services": 13,
         "nodes": 12,
         "dashboard": 1
       },
@@ -98,7 +144,14 @@
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_weather-1.0.0/plugin_weather-1.0.0.zip",
       "sha256": "180005924b3fd319cfc32bdfadd53bb1fdef0a8e28bbbe9580cde8c190060631",
-      "size": 7532,
+      "size": 7532
+    },
+    {
+      "id": "plugin_weather",
+      "version": "1.1.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_weather-1.1.0/plugin_weather-1.1.0.zip",
+      "sha256": "179cb9541a27f304b92773b19397912429a2ebbbb48eaf4091e9e40287685ca5",
+      "size": 7895,
       "name": "Weather",
       "description": "Current weather for any place with /weather, from OpenWeatherMap.",
       "developer": {
@@ -110,8 +163,7 @@
       "sdk": {
         "version": 1,
         "permissions": [
-          "secrets.read",
-          "http.outbound"
+          "secrets.use"
         ]
       },
       "secrets": [

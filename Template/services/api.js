@@ -1,20 +1,40 @@
-// Service "api" ("http.endpoints"). The plugin has no network access of
-// its own. It calls a global API endpoint by name:
-//   ctx.http.endpoint(KEY, { method?, path?, query?, json?, headers? })
+// Service "api" ("secrets.use"). The plugin has no network access of its
+// own. It sends requests with admin secrets it never sees:
+//   ctx.http.secret({ url: URL_SECRET, path?, method?, query?, json?, headers?,
+//                     auth?: { secret, header?, format?: 'bearer'|'plain'|'query', param? } })
 //     -> { status, headers, json (null if not JSON), text }
-// The admin creates the endpoint (base URL + secret) under Admin -> API /
-// Secrets and shares it with this plugin; the bot adds the auth header, so
-// the API key never enters the plugin. Rules: KEY must be in bothub.json
-// "services.endpoints"; path starts with "/", no ".." or "//"; no
+// The admin stores the address (e.g. https://api.example.com/v1) and the API
+// key as secrets under Admin -> API / Secrets and shares both with this
+// plugin in the App Store. Rules: both names must be in bothub.json
+// "services.secrets"; path starts with "/", no ".." or "//"; no
 // Authorization, Cookie or Host headers; request JSON <= 64 KB, answer
-// <= 1 MB, 10 s timeout. Errors: sdk.http.not_shared, sdk.http.bad_path,
-// sdk.http.timeout, sdk.http.too_big.
+// <= 1 MB, 10 s timeout. Errors: sdk.http.bad_path, sdk.http.timeout,
+// sdk.http.too_big; NotSetUp (below) when a secret has no value yet.
+//
+// The install creates every secret of "services.secrets" that does not exist
+// yet, empty ([NULL]) and shared with this plugin; the App Store shows the
+// plugin as "Not set up" until the admin pastes the values. Until then a
+// request fails with sdk.secret.not_shared, which get() turns into NotSetUp.
 
-export const ENDPOINT = 'EXAMPLE_API';
+export const URL_SECRET = 'EXAMPLE_URL';
+export const KEY_SECRET = 'EXAMPLE_KEY';
 
-/** GET <endpoint><path>?<query>; returns the SDK answer. */
-export function get(ctx, path, query = {}) {
-  return ctx.http.endpoint(ENDPOINT, { method: 'GET', path, query });
+/** A secret of the plugin has no value yet (empty [NULL], missing or not shared). */
+export class NotSetUp extends Error {
+  constructor() {
+    super(`Not set up yet: an admin pastes the values of ${URL_SECRET} and ${KEY_SECRET} under Admin → API / Secrets.`);
+    this.missing = [URL_SECRET, KEY_SECRET];
+  }
+}
+
+/** GET <address><path>?<query> with the key as "Authorization: Bearer <key>"; returns the SDK answer. */
+export async function get(ctx, path, query = {}) {
+  try {
+    return await ctx.http.secret({ url: URL_SECRET, method: 'GET', path, query, auth: { secret: KEY_SECRET } });
+  } catch (err) {
+    if (String(err?.message ?? err).includes('sdk.secret.not_shared')) throw new NotSetUp();
+    throw err;
+  }
 }
 
 /** Reads "a.b.0.c" out of a JSON value; undefined when missing. */

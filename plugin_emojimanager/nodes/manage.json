@@ -1,0 +1,82 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_emojimanager.node.manage.label",
+  "descriptionKey": "plugin.plugin_emojimanager.node.manage.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "done",
+      "type": "flow"
+    },
+    {
+      "name": "denied",
+      "type": "flow"
+    },
+    {
+      "name": "exists",
+      "type": "flow"
+    },
+    {
+      "name": "not_found",
+      "type": "flow"
+    },
+    {
+      "name": "full",
+      "type": "flow"
+    },
+    {
+      "name": "bad_name",
+      "type": "flow"
+    },
+    {
+      "name": "bad_image",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_emojimanager.node.manage.result"
+    },
+    {
+      "suffix": ".reason",
+      "labelKey": "plugin.plugin_emojimanager.node.manage.result_reason"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": [
+          "add",
+          "delete"
+        ],
+        "default": "add"
+      },
+      "name": {
+        "type": "string",
+        "maxLength": 40
+      },
+      "image": {
+        "type": "string",
+        "maxLength": 2000
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

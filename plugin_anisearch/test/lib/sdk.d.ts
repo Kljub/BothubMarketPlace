@@ -98,6 +98,24 @@ export interface InteractionEvent {
     /** Modals: field key → text. */
     fields?: Record<string, string>;
 }
+/** A request of ctx.http.secret. */
+export interface SecretRequest {
+    /** Name of the secret with the address (e.g. 'PLEX_URL'), or an https URL of a host in services.hosts. */
+    url: string;
+    /** With an address secret: the path added to it (starts with /). */
+    path?: string;
+    method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+    query?: Record<string, string>;
+    json?: Json;
+    headers?: Record<string, string>;
+    /** The key: secret name, where it goes (default header Authorization, "Bearer <key>"). */
+    auth?: {
+        secret: string;
+        header?: string;
+        format?: 'bearer' | 'plain' | 'query';
+        param?: string;
+    };
+}
 export interface HttpAnswer {
     status: number;
     headers: Record<string, string>;
@@ -544,9 +562,13 @@ export interface PluginContext {
     };
     readonly dashboard: Record<'registerPage' | 'registerSettings' | 'registerComponent' | 'registerMenuItem' | 'getRoute', (definition: Record<string, Json>) => Async<string>>;
     /**
-     * "http.endpoints": an API endpoint the admin shared with this plugin and
-     * that the manifest lists in "endpoints". The bot adds the auth header; the
-     * secret never reaches the plugin. Response max. 1 MB, timeout 10 s.
+     * "secrets.use": http.secret sends a request with admin secrets the plugin
+     * never sees. url is the name of a secret that holds the address (any
+     * address the admin set, also in the home network; path is added), or an
+     * https URL of a host in bothub.json "services.hosts". auth puts a secret
+     * into a header (Bearer <key> or <key>) or a URL parameter. Only names of
+     * "services.secrets" the admin shared; values are masked in the answer.
+     * Response max. 1 MB, timeout 10 s.
      * "http.outbound" (high risk): https to the hosts in bothub.json
      * "services.hosts" only; private addresses are refused; max. 1 MB, 10 s.
      */
@@ -574,13 +596,7 @@ export interface PluginContext {
             headers?: Record<string, string>;
             body?: string;
         }): Async<HttpAnswer>;
-        endpoint(key: string, request?: {
-            method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-            path?: string;
-            query?: Record<string, string>;
-            json?: Json;
-            headers?: Record<string, string>;
-        }): Async<{
+        secret(request: SecretRequest): Async<{
             status: number;
             headers: Record<string, string>;
             json: Json;
@@ -601,6 +617,12 @@ export interface PluginContext {
             file: string | null;
         }>;
     };
+    /**
+     * "secrets.read": a secret of Admin > API / Secrets by its exact name. The
+     * name must be in bothub.json "services.secrets" and the admin must share it
+     * with the plugin; otherwise the answer is null. There is no call that
+     * lists secrets. Read values are masked in the plugin's log lines.
+     */
     readonly secrets: {
         get(name: string): Async<string | null>;
         has(name: string): Async<boolean>;

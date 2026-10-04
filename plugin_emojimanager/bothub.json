@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_emojimanager",
+  "name": "Emoji Manager",
+  "version": "1.1.0",
+  "description": "Members pick an emoji image from a private menu (/emoji-menu show); the bot posts it big in the channel. Images are uploaded on the dashboard or with /emoji-menu add.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "MIT",
+  "icon": "😀",
+  "category": "fun",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "storage.files",
+      "discord.messages.send",
+      "discord.messages.files",
+      "discord.interactions.reply",
+      "discord.emojis.read"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/emoji-menu-show.json",
+    "commands/emoji-menu-add.json",
+    "commands/emoji-menu-delete.json"
+  ],
+  "nodes": [
+    "menu",
+    "send",
+    "manage"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

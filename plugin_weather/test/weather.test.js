@@ -4,7 +4,7 @@ import { createTestContext, runBlock } from '#sdk-testing';
 import plugin from '../index.js';
 import manifest from '../bothub.json' with { type: 'json' };
 
-const permissions = ['secrets.read', 'http.outbound'];
+const permissions = ['secrets.use'];
 const BERLIN = {
   name: 'Berlin', sys: { country: 'DE', sunrise: 1791003600, sunset: 1791045000 }, timezone: 7200,
   weather: [{ main: 'Rain', description: 'light rain', icon: '10d' }],
@@ -50,6 +50,6 @@ test('default place, unknown place, imperial units', async () => {
 
 test('no place, no shared key, refused key: readable errors', async () => {
   await assert.rejects(runBlock(plugin, 'current', ctxWith(), { config: { location: '' } }), /Name a place/);
-  await assert.rejects(runBlock(plugin, 'current', ctxWith({ secrets: {} }), { config: { location: 'Berlin' } }), /WEATHER_API_KEY/);
+  await assert.rejects(runBlock(plugin, 'current', ctxWith({ secrets: {} }), { config: { location: 'Berlin' } }), /not set up yet.*WEATHER_API_KEY/);
   await assert.rejects(runBlock(plugin, 'current', ctxWith({ secrets: { WEATHER_API_KEY: 'wrong' } }), { config: { location: 'Berlin' } }), /refused the API key/);
 });

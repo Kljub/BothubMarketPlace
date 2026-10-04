@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "plugin_weather",
   "name": "Weather",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Current weather for any place with /weather, from OpenWeatherMap.",
   "developer": {
     "name": "BotHub"
@@ -13,8 +13,7 @@
   "sdk": {
     "version": 1,
     "permissions": [
-      "secrets.read",
-      "http.outbound"
+      "secrets.use"
     ]
   },
   "main": "index.js",

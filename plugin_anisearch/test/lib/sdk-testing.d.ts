@@ -29,16 +29,17 @@ export interface TestContextOptions {
     config?: Record<string, Json>;
     /** Start values of ctx.storage. */
     storage?: Record<string, string>;
+    /**
+     * Secrets the admin shared with the plugin: name -> value. Like on the bot,
+     * a name must also be in the manifest "secrets" (when a manifest is given);
+     * any other name answers null.
+     */
+    secrets?: Record<string, string>;
     /** Start values of ctx.globalStorage (shared by every bot of the instance). */
     globalStorage?: Record<string, string>;
     guilds?: TestGuild[];
     modules?: TestModule[];
     manifest?: Record<string, Json>;
-    /**
-     * API endpoints the admin shared with the plugin: key -> fake server. The
-     * key must also be in the manifest "endpoints" (when a manifest is given).
-     */
-    endpoints?: Record<string, (request: EndpointRequest) => EndpointReply | Promise<EndpointReply>>;
     /** Files of the plugin folder voice.play may use; default: any valid name. */
     sounds?: string[];
     /** Servers where another player (e.g. the music module) plays: voice.play rejects with sdk.voice.busy. */
@@ -90,6 +91,21 @@ export interface InteractionAnswer {
     ephemeral?: boolean;
     modal?: Json;
 }
+/** ctx.http.secret request (see the SDK). */
+export interface SecretRequestKit {
+    url: string;
+    path?: string;
+    method?: string;
+    query?: Record<string, string>;
+    json?: Json;
+    headers?: Record<string, string>;
+    auth?: {
+        secret: string;
+        header?: string;
+        format?: 'bearer' | 'plain' | 'query';
+        param?: string;
+    };
+}
 export interface EndpointRequest {
     method: string;
     path: string;
@@ -131,10 +147,8 @@ export interface TestContext {
     readonly calls: string[];
     /** Every voice.play call. */
     readonly played: PlayedSound[];
-    /** Every http.endpoint call, as the fake server got it. */
-    readonly requests: Array<EndpointRequest & {
-        key: string;
-    }>;
+    /** Every http.secret call, as the fake server got it (secret values included, for checks). */
+    readonly requests: WebRequest[];
     /** Every http.get/post/… call. */
     readonly web: WebRequest[];
     /** Discord calls without a fake: name and arguments (e.g. role.addToMember). */

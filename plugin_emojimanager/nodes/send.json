@@ -1,0 +1,58 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_emojimanager.node.send.label",
+  "descriptionKey": "plugin.plugin_emojimanager.node.send.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "not_found",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_emojimanager.node.send.result"
+    },
+    {
+      "suffix": ".image",
+      "labelKey": "plugin.plugin_emojimanager.node.send.result_image"
+    },
+    {
+      "suffix": ".message",
+      "labelKey": "plugin.plugin_emojimanager.node.send.result_message"
+    },
+    {
+      "suffix": ".uses",
+      "labelKey": "plugin.plugin_emojimanager.node.send.result_uses"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "type": "string",
+        "maxLength": 40
+      },
+      "channel": {
+        "type": "string",
+        "maxLength": 200
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

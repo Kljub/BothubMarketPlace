@@ -5,11 +5,13 @@
   "inputs": [{ "name": "in", "type": "flow", "multiple": true }],
   "outputs": [
     { "name": "next", "type": "flow" },
-    { "name": "failed", "type": "flow" }
+    { "name": "failed", "type": "flow" },
+    { "name": "not_set_up", "type": "flow" }
   ],
   "results": [
     { "suffix": "", "labelKey": "plugin.plugin_template.node.api_get.result" },
-    { "suffix": ".status", "labelKey": "plugin.plugin_template.node.api_get.result_status" }
+    { "suffix": ".status", "labelKey": "plugin.plugin_template.node.api_get.result_status" },
+    { "suffix": ".missing", "labelKey": "plugin.plugin_template.node.api_get.result_missing" }
   ],
   "config": {
     "type": "object",

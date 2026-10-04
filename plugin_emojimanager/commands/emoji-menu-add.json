@@ -1,0 +1,138 @@
+{
+  "name": "emoji-menu add",
+  "description": "Adds an emoji with an image",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "emoji-menu add",
+          "description": "Adds an emoji with an image"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_name",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "name",
+          "description": "Name of the emoji (a-z, 0-9, _ and -)",
+          "required": true,
+          "variable": "name"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_image",
+        "type": "option.attachment",
+        "typeVersion": 1,
+        "config": {
+          "name": "image",
+          "description": "The image (PNG, GIF, WEBP or JPEG, max. 2 MB)",
+          "required": true,
+          "variable": "image"
+        },
+        "position": {
+          "x": 120,
+          "y": 190
+        }
+      },
+      {
+        "id": "manage",
+        "type": "plugin.plugin_emojimanager.manage",
+        "typeVersion": 1,
+        "config": {
+          "action": "add",
+          "name": "{option_name}",
+          "image": "{option_image}",
+          "variable": "emoji"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 1000,
+          "y": 40
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 1000,
+          "y": 190
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_name",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_image",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "manage",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

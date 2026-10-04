@@ -1,0 +1,58 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_emojimanager.node.menu.label",
+  "descriptionKey": "plugin.plugin_emojimanager.node.menu.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "sent",
+      "type": "flow"
+    },
+    {
+      "name": "not_found",
+      "type": "flow"
+    },
+    {
+      "name": "empty",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_emojimanager.node.menu.result"
+    },
+    {
+      "suffix": ".count",
+      "labelKey": "plugin.plugin_emojimanager.node.menu.result_count"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "type": "string",
+        "maxLength": 40
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

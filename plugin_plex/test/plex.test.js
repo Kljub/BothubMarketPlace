@@ -8,7 +8,7 @@ const GUILD = '200000000000000001';
 const ROLE = '700000000000000007';
 const NEWS = '900000000000000002';
 const LIVE = '900000000000000003';
-const permissions = ['storage', 'storage.global', 'discord.messages.send', 'scheduler', 'http.endpoints', 'http.outbound', 'discord.interactions.reply', 'discord.roles.assign', 'webhooks.inbound'];
+const permissions = ['storage', 'storage.global', 'discord.messages.send', 'scheduler', 'secrets.use', 'http.outbound', 'discord.interactions.reply', 'discord.roles.assign', 'webhooks.inbound'];
 const vars = { 'user.id': USER, 'server.id': GUILD };
 
 const MOVIES = [
@@ -16,7 +16,7 @@ const MOVIES = [
   { ratingKey: '12', title: 'Heat', year: 1995, summary: 'Cops and robbers.', librarySectionID: 1, Genre: [{ tag: 'Crime' }] },
 ];
 
-/** Fake Plex server (PLEX_API) and Overseerr (OVERSEERR_API). */
+/** Fake Plex server and Overseerr, by handler for { method, path, query, json }. */
 function servers(log = []) {
   return {
     PLEX_API: ({ path, query }) => {
@@ -40,6 +40,24 @@ function servers(log = []) {
   };
 }
 
+// Addresses and keys are admin secrets; the fake servers sit at the hosts of the addresses.
+const PLEX = 'http://plex.local:32400';
+const PLEX2 = 'http://plex2.local:32400';
+const OVERSEERR = 'http://overseerr.local:5055/api/v1';
+const MANIFEST = { id: 'plugin_plex', secrets: ['PLEX_URL', 'PLEX_TOKEN', 'PLEX_URL_2', 'PLEX_TOKEN_2', 'PLEX_URL_3', 'PLEX_TOKEN_3', 'OVERSEERR_URL', 'OVERSEERR_KEY'] };
+const SECRETS = { PLEX_URL: PLEX, PLEX_TOKEN: 'plex-token-1', OVERSEERR_URL: OVERSEERR, OVERSEERR_KEY: 'overseerr-key-1' };
+
+/** A fake server written for { method, path, query, json } behind an address. */
+const at = (base, fn) => (req) => {
+  const u = new URL(req.url);
+  const prefix = new URL(base).pathname.replace(/\/$/, '');
+  return fn({ method: req.method, path: u.pathname.slice(prefix.length) || '/', query: req.query, json: req.json, headers: req.headers });
+};
+function serverWeb(log = [], second) {
+  const s = servers(log);
+  return { 'plex.local': at(PLEX, s.PLEX_API), 'overseerr.local': at(OVERSEERR, s.OVERSEERR_API), ...(second ? { 'plex2.local': at(PLEX2, second) } : {}) };
+}
+
 /** plex.tv: a PIN that is confirmed after the first poll. */
 function plexTv(state = { confirmed: false }) {
   return {
@@ -55,7 +73,7 @@ function plexTv(state = { confirmed: false }) {
 function setup(config = {}, extra = {}) {
   const log = [];
   const ctx = createTestContext({
-    id: 'plugin_plex', permissions, endpoints: servers(log), web: plexTv(extra.pin), manifest: { endpoints: ['PLEX_API', 'OVERSEERR_API'] },
+    id: 'plugin_plex', permissions, secrets: SECRETS, web: { ...plexTv(extra.pin), ...serverWeb(log) }, manifest: MANIFEST,
     config: { libraries: '1', linked_role: { id: ROLE, guild: GUILD }, new_content_channel: { id: NEWS, guild: GUILD }, live_channel: { id: LIVE, guild: GUILD }, announce_plays: true, overseerr: true, ...config },
   });
   return { ctx, log };
@@ -83,7 +101,9 @@ test('search finds in shared libraries, the token never leaves the bot', async (
   assert.equal(hit.port, 'found');
   assert.deepEqual([hit.results[''], hit.results['.duration'], hit.results['.genres']], ['Arrival', '116 min', 'Sci-Fi']);
   assert.equal((await runBlock(plugin, 'search', ctx, { config: { title: 'zzz' } })).port, 'not_found');
-  assert.ok(!JSON.stringify(ctx.requests).includes('X-Plex-Token'));
+  // The bot adds the token to the request; nothing the plugin returns contains it.
+  assert.equal(ctx.requests[0].headers['X-Plex-Token'], 'plex-token-1');
+  assert.ok(!JSON.stringify(hit.results).includes('plex-token-1'));
 });
 
 test('random: answers itself with an "Again" button; the button picks another title', async () => {
@@ -168,7 +188,7 @@ test('Plex webhook: new titles and playbacks of linked members, shared libraries
   assert.match(posts[1].message.embeds[0].description, new RegExp(`<@${USER}> is watching \\*\\*Dune\\*\\*`));
 });
 
-// A second server (slot PLEX_API_2): its libraries are "2:<id>".
+// A second server (secrets PLEX_URL_2 + PLEX_TOKEN_2): its libraries are "2:<id>".
 test('several Plex servers: search, libraries and webhooks per server', async () => {
   const log = [];
   const second = ({ path, query }) => {
@@ -180,8 +200,8 @@ test('several Plex servers: search, libraries and webhooks per server', async ()
     return { status: 404 };
   };
   const ctx = createTestContext({
-    id: 'plugin_plex', permissions, endpoints: { ...servers(log), PLEX_API_2: second }, web: plexTv(),
-    manifest: { endpoints: ['PLEX_API', 'PLEX_API_2', 'PLEX_API_3', 'OVERSEERR_API'] },
+    id: 'plugin_plex', permissions, secrets: { ...SECRETS, PLEX_URL_2: PLEX2, PLEX_TOKEN_2: 'plex-token-2' }, web: { ...plexTv(), ...serverWeb(log, second) },
+    manifest: MANIFEST,
     config: { libraries: '1, 2:3', new_content_channel: { id: NEWS, guild: GUILD } },
   });
   const found = await runBlock(plugin, 'search', ctx, { config: { title: 'frieren' } });
@@ -219,7 +239,7 @@ test('watchlist: list, add and remove with the member token from /plex-link', as
       return { status: 404 };
     },
   };
-  const ctx = createTestContext({ id: 'plugin_plex', permissions, endpoints: servers(), web, manifest: { endpoints: ['PLEX_API', 'OVERSEERR_API'] }, config: { libraries: '1' } });
+  const ctx = createTestContext({ id: 'plugin_plex', permissions, secrets: SECRETS, web: { ...web, ...serverWeb() }, manifest: MANIFEST, config: { libraries: '1' } });
   assert.equal((await runBlock(plugin, 'watchlist', ctx, { vars })).port, 'not_linked');
   await linked(ctx, pin);
   assert.equal(ctx.globalStore.get(`tok:${USER}`), 'secret-user-token', 'token kept in the global storage');
@@ -239,7 +259,7 @@ test('watchlist: list, add and remove with the member token from /plex-link', as
 });
 
 test('links made before 1.2.0 (per bot) move to the global storage', async () => {
-  const ctx = createTestContext({ id: 'plugin_plex', permissions, endpoints: servers(), web: plexTv(), config: { libraries: '1' },
+  const ctx = createTestContext({ id: 'plugin_plex', permissions, secrets: SECRETS, web: { ...plexTv(), ...serverWeb() }, manifest: MANIFEST, config: { libraries: '1' },
     storage: { [`acc:${USER}`]: JSON.stringify({ username: 'ann', uuid: 'u-1' }), 'plexname:ann': USER } });
   const st = await runBlock(plugin, 'status', ctx, { vars });
   assert.equal(st.results['.linked'], 'Linked as ann');

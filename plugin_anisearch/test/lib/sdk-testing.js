@@ -34,12 +34,13 @@ const CALLS = {
     'moderation.warn': 'modules.moderation.cases', 'moderation.record': 'modules.moderation.cases', 'moderation.history': 'modules.moderation.cases',
     'moderation.getCase': 'modules.moderation.cases', 'moderation.note': 'modules.moderation.cases', 'moderation.notes': 'modules.moderation.cases',
     'guild.get': 'discord.guilds.read', 'guild.list': 'discord.guilds.read',
+    'secrets.get': 'secrets.read', 'secrets.has': 'secrets.read',
     'module.get': 'modules.read', 'module.getId': 'modules.read', 'module.getName': 'modules.read',
     'module.isEnabled': 'modules.read', 'module.getConfig': 'modules.read', 'module.list': 'modules.read',
     'message.send': 'discord.messages.send',
     'voice.join': 'discord.voice.connect', 'voice.leave': 'discord.voice.connect', 'voice.play': 'discord.voice.speak',
     'voice.stop': 'discord.voice.speak', 'voice.state': 'discord.voice.connect',
-    'http.endpoint': 'http.endpoints',
+    'http.secret': 'secrets.use',
     'http.get': 'http.outbound', 'http.post': 'http.outbound', 'http.put': 'http.outbound', 'http.patch': 'http.outbound', 'http.delete': 'http.outbound',
     'message.dm': 'discord.messages.send',
     'guild.getChannels': 'discord.guilds.read', 'guild.getRoles': 'discord.guilds.read', 'guild.getEmojis': 'discord.guilds.read',
@@ -66,7 +67,7 @@ const REPLACED = { "discord.members.manage": ["discord.members.nicknames", "disc
 // answer yet: they reject with "sdk.call.not_available".
 const PLANNED_AREAS = new Set([
     'collection', 'cache', 'scheduler', 'events', 'commands',
-    'permissions', 'plugins', 'dashboard', 'secrets', 'locale', 'rateLimit', 'resources',
+    'permissions', 'plugins', 'dashboard', 'locale', 'rateLimit', 'resources',
 ]);
 const PLANNED_CALLS = new Set([
     'storage.transaction', 'config.set', 'config.delete', 'utils.validate', 'interaction.respond',
@@ -111,7 +112,12 @@ export function createTestContext(options = {}) {
     const answers = [];
     const balances = new Map(Object.entries(options.balances ?? {}));
     const hosts = options.hosts ?? Object.keys(options.web ?? {});
-    const manifestEndpoints = Array.isArray(options.manifest?.endpoints) ? options.manifest.endpoints : null;
+    const manifestSecrets = Array.isArray(options.manifest?.secrets) ? options.manifest.secrets : null;
+    const secretOf = (name) => {
+        if (typeof name !== 'string' || (manifestSecrets && !manifestSecrets.includes(name)))
+            return null;
+        return Object.hasOwn(options.secrets ?? {}, name) ? options.secrets[name] : null;
+    };
     let nextId = 100000000000000000n;
     const check = (name) => {
         calls.push(name);
@@ -189,6 +195,10 @@ export function createTestContext(options = {}) {
             },
             list: async () => (options.guilds ?? []).map((g) => ({ ...g })),
         },
+        secrets: {
+            get: async (name) => secretOf(name),
+            has: async (name) => secretOf(name) !== null,
+        },
         module: {
             get: async (key) => mod(readable(key)),
             getId: async (key) => mod(readable(key)).id,
@@ -237,46 +247,87 @@ export function createTestContext(options = {}) {
             },
         },
         http: {
-            endpoint: async (key, request = {}) => {
-                const server = options.endpoints?.[key];
-                if (!server || (manifestEndpoints && !manifestEndpoints.includes(key)))
-                    throw new SdkCallError('sdk.http.not_shared');
+            // Like the bot: url = name of an address secret (+ path) or an https URL of
+            // a host of "hosts"; auth puts a secret into a header or URL parameter.
+            // The fake server is options.web[<host of the address>].
+            secret: async (request = {}) => {
                 const method = (request.method ?? 'GET').toUpperCase();
                 if (!HTTP_METHODS.has(method))
                     throw new SdkCallError('sdk.http.bad_method');
-                const path = request.path ?? '/';
-                if (typeof path !== 'string' || !path.startsWith('/') || path.includes('..') || path.includes('//')) {
-                    throw new SdkCallError('sdk.http.bad_path');
+                let u;
+                const name = String(request.url ?? '');
+                if (/^[A-Z][A-Z0-9_]{1,39}$/.test(name)) {
+                    const address = secretOf(name);
+                    if (!address)
+                        throw new SdkCallError('sdk.secret.not_shared');
+                    const path = request.path ?? '';
+                    if (typeof path !== 'string' || (path && !path.startsWith('/')) || path.includes('..') || path.includes('//'))
+                        throw new SdkCallError('sdk.http.bad_path');
+                    try {
+                        u = new URL(address.replace(/\/+$/, '') + path);
+                    }
+                    catch {
+                        throw new SdkCallError('sdk.secret.not_a_url');
+                    }
                 }
+                else {
+                    try {
+                        u = new URL(name);
+                    }
+                    catch {
+                        throw new SdkCallError('sdk.http.bad_url');
+                    }
+                    if (u.protocol !== 'https:')
+                        throw new SdkCallError('sdk.http.bad_url');
+                    if (!hosts.includes(u.hostname))
+                        throw new SdkCallError('sdk.http.host_not_allowed');
+                }
+                for (const [k, v] of Object.entries(request.query ?? {}))
+                    u.searchParams.set(k, String(v));
                 const headers = {};
-                for (const [name, value] of Object.entries(request.headers ?? {})) {
-                    if (BLOCKED_HEADERS.has(name.toLowerCase()))
+                for (const [h, value] of Object.entries(request.headers ?? {})) {
+                    if (BLOCKED_HEADERS.has(h.toLowerCase()))
                         throw new SdkCallError('sdk.http.bad_header');
-                    headers[name] = String(value);
+                    headers[h] = String(value);
+                }
+                if (request.auth) {
+                    const key = secretOf(request.auth.secret);
+                    if (!key)
+                        throw new SdkCallError('sdk.secret.not_shared');
+                    const format = request.auth.format ?? 'bearer';
+                    if (format === 'query')
+                        u.searchParams.set(request.auth.param ?? 'key', key);
+                    else
+                        headers[request.auth.header ?? 'Authorization'] = format === 'bearer' ? `Bearer ${key}` : key;
                 }
                 if (request.json !== undefined && bytes(JSON.stringify(request.json)) > HTTP_BODY_BYTES)
                     throw new SdkCallError('sdk.http.too_big');
-                const req = { method, path, query: { ...(request.query ?? {}) }, json: request.json, headers };
-                requests.push({ key, ...structuredClone(req) });
+                const server = options.web?.[u.hostname];
+                if (!server)
+                    throw new SdkCallError('sdk.http.failed');
+                const req = { method, url: u.toString(), query: Object.fromEntries(u.searchParams), json: request.json, headers };
+                requests.push(structuredClone(req));
                 let timer;
                 const timeout = new Promise((_, reject) => {
                     timer = setTimeout(() => reject(new SdkCallError('sdk.http.timeout')), HTTP_TIMEOUT_MS);
                 });
                 const reply = await Promise.race([Promise.resolve().then(() => server(structuredClone(req))), timeout]).finally(() => clearTimeout(timer));
-                const text = reply.text ?? (reply.json !== undefined ? JSON.stringify(reply.json) : '');
+                const hide = [request.auth ? secretOf(request.auth.secret) : null, /^[A-Z][A-Z0-9_]{1,39}$/.test(name) ? secretOf(name) : null].filter((v) => !!v);
+                const masked = (t) => hide.reduce((acc, v) => (v.length >= 4 ? acc.split(v).join('••••') : acc), t);
+                const text = masked(reply.text ?? (reply.json !== undefined ? JSON.stringify(reply.json) : ''));
                 if (bytes(text) > HTTP_RESPONSE_BYTES)
                     throw new SdkCallError('sdk.http.too_big');
                 let json = null;
                 try {
-                    json = reply.json !== undefined ? structuredClone(reply.json) : JSON.parse(text);
+                    json = JSON.parse(text);
                 }
                 catch {
                     json = null;
                 }
                 const out = {};
-                for (const [name, value] of Object.entries(reply.headers ?? {})) {
-                    if (name.toLowerCase() !== 'set-cookie')
-                        out[name.toLowerCase()] = value;
+                for (const [h, value] of Object.entries(reply.headers ?? {})) {
+                    if (h.toLowerCase() !== 'set-cookie')
+                        out[h.toLowerCase()] = masked(value);
                 }
                 return { status: reply.status ?? 200, headers: out, json, text };
             },

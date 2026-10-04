@@ -6,12 +6,14 @@ Current weather for any place with `/weather [place]`, from
 ## Setup (admin)
 
 1. Create a free API key at openweathermap.org (new keys need up to 2 hours).
-2. Admin → API / Secrets: add the secret `WEATHER_API_KEY` with the key.
-3. App Store → Weather → Secrets: switch on `WEATHER_API_KEY` for this plugin.
-4. SDK Policies: allow `secrets.read` (and `http.outbound`).
+2. Install the plugin. BotHub creates the secret `WEATHER_API_KEY` empty
+   (`[NULL]`) under Admin → API / Secrets, shared with this plugin; the App
+   Store shows "Not set up" until it has a value.
+3. Admin → API / Secrets → `WEATHER_API_KEY` → "Enter value": paste the key.
 
-The plugin reads only this one secret, by name. It cannot list other
-secrets, and the key is masked in its log.
+SDK permission: only `secrets.use`. The bot adds the key to the request to
+api.openweathermap.org; the plugin never sees it and cannot read or list
+other secrets.
 
 ## Settings (per bot)
 
@@ -26,3 +28,10 @@ Default place, units (°C / °F), language of the description, embed color.
 
 Ported from the v2 Weather plugin 3.0.0: the per-bot API key became an admin
 secret; sunrise and sunset show in each reader's local time.
+
+## Changes
+
+- 1.1.0: requests through `ctx.http.secret` (`secrets.use`) instead of
+  reading the key (`secrets.read` + `http.outbound`); the install creates the
+  empty secret, a clear "not set up" message until it has a value.
+- 1.0.0: port of the v2 Weather plugin 3.0.0.

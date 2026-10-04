@@ -1,0 +1,72 @@
+{
+  "fields": [
+    {
+      "key": "emojis",
+      "type": "list",
+      "max": 50,
+      "hint": true,
+      "titleField": "name",
+      "unique": [
+        "name"
+      ],
+      "item": [
+        {
+          "key": "name",
+          "type": "text",
+          "max": 32,
+          "required": true,
+          "pattern": "^[a-z0-9_-]{1,32}$"
+        },
+        {
+          "key": "file",
+          "type": "image",
+          "hint": true
+        },
+        {
+          "key": "image",
+          "type": "text",
+          "max": 500,
+          "pattern": "^https://\\S+$",
+          "hint": true
+        }
+      ]
+    },
+    {
+      "key": "server_emojis",
+      "type": "bool",
+      "default": true,
+      "hint": true
+    },
+    {
+      "key": "show_sender",
+      "type": "bool",
+      "default": true
+    },
+    {
+      "key": "color",
+      "type": "color",
+      "default": "#2b2d31"
+    },
+    {
+      "key": "managers",
+      "type": "permissions",
+      "hint": true,
+      "lists": [
+        "allowed_roles",
+        "banned_roles",
+        "required_permissions",
+        "banned_channels"
+      ],
+      "default": {
+        "allowed_roles": [
+          {
+            "id": "everyone"
+          }
+        ],
+        "required_permissions": [
+          "manage_guild_expressions"
+        ]
+      }
+    }
+  ]
+}

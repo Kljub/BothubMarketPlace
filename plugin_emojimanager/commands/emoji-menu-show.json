@@ -1,0 +1,165 @@
+{
+  "name": "emoji-menu show",
+  "description": "Opens a private menu to pick an emoji",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "emoji-menu show",
+          "description": "Opens a private menu to pick an emoji"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_name",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "name",
+          "description": "Send this emoji right away (name)",
+          "required": false,
+          "variable": "name"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "menu",
+        "type": "plugin.plugin_emojimanager.menu",
+        "typeVersion": 1,
+        "config": {
+          "name": "{option_name}",
+          "variable": "menu"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      },
+      {
+        "id": "unknown",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❓ No emoji named **{menu}**. Use /emoji-menu show without a name to see them all."
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 140,
+          "y": 340
+        }
+      },
+      {
+        "id": "empty",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "ℹ️ No emojis yet. Add one with /emoji-menu add or on the plugin's settings page."
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 660,
+          "y": 340
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 1000,
+          "y": 40
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 1000,
+          "y": 190
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_name",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "menu",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "menu",
+          "port": "not_found"
+        },
+        "to": {
+          "node": "unknown",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "menu",
+          "port": "empty"
+        },
+        "to": {
+          "node": "empty",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

@@ -29,7 +29,7 @@ hand also works: rename the folder to the new id, then replace
 Plugin
   ├── Commands    commands/   hello.json
   ├── Events      events/     guildMemberAdd
-  ├── Services    services/   task daily_report, task cleanup, API EXAMPLE_API
+  ├── Services    services/   task daily_report, task cleanup, secret EXAMPLE_URL, secret EXAMPLE_KEY
   ├── Nodes       nodes/      hello, reply_for, count, announce, api_get, play_sound, stop_sound
   └── Dashboard   dashboard/  settings page
         │
@@ -43,7 +43,7 @@ Plugin
 - `discord.messages.send`
 - `discord.events.members` (guildMemberAdd)
 - `scheduler`
-- `http.endpoints`
+- `secrets.use`
 - `discord.voice.connect`
 - `discord.voice.speak`
 
@@ -63,11 +63,12 @@ Every text the dashboard shows comes from `lang/<locale>.json` (keys
 A port without a text of your own falls back to BotHub's text for that
 port name, then to the name itself ("not_found" -> "Not found").
 
-## API endpoints
+## Secrets
 
-Create under Admin → API / Secrets and share with the plugin (Admin → Plugins):
+Create under Admin → API / Secrets (the address too) and share them with the plugin in the App Store:
 
-- `EXAMPLE_API`
+- `EXAMPLE_URL`
+- `EXAMPLE_KEY`
 
 ## Built from
 
@@ -78,7 +79,7 @@ Create under Admin → API / Secrets and share with the plugin (Admin → Plugin
 - **Messages service**: Sends text or embeds to a channel (services/messages.js, ctx.message.send; no pings, at most 5 messages per 5 s) and a node "Announce".
 - **Discord events**: Reacts to Discord events without a builder graph: one file per event in events/ (example: welcome message on guildMemberAdd), the channel and text come from the settings page.
 - **Timed tasks service**: Runs code on a schedule (services/tasks.js): "every" (1m, 6h, 1d ...) or "cron" (5 fields, UTC). Example: a daily report into a channel from the settings page.
-- **External API service**: Calls an external API through a global API endpoint (services/api.js, Admin -> API / Secrets). The bot adds the API key; the plugin never sees it. The admin shares the endpoint with the plugin.
+- **External API service**: Calls an external API with ctx.http.secret (services/api.js): address and key are admin secrets (Admin -> API / Secrets), shared with the plugin in the App Store. The bot adds both; the plugin never sees them.
 - **Voice / sounds service**: Plays sound files of the plugin (sounds/*.ogg|mp3|wav, max 2 MB each) in a voice channel: services/voice.js joins, plays, stops, leaves; nodes "Play sound" and "Stop sound". One player per server.
 
 ## Develop

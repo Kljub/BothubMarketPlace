@@ -47,7 +47,7 @@
   "plugin.plugin_plex.setting.announce_plays_hint": "Posts when a linked member starts watching.",
   "plugin.plugin_plex.setting.live_channel": "Playback channel",
   "plugin.plugin_plex.setting.overseerr": "Overseerr requests",
-  "plugin.plugin_plex.setting.overseerr_hint": "Needs the OVERSEERR_API endpoint (Admin → API / Secrets) shared with this plugin.",
+  "plugin.plugin_plex.setting.overseerr_hint": "Needs the secrets OVERSEERR_URL (address incl. /api/v1) and OVERSEERR_KEY (Admin → API / Secrets), shared with this plugin.",
   "plugin.plugin_plex.node.watchlist.label": "Plex watchlist",
   "plugin.plugin_plex.node.watchlist.description": "The member's Plex watchlist (needs /plex-link).",
   "plugin.plugin_plex.node.watchlist_add.label": "Add to watchlist",
