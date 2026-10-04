@@ -1,0 +1,15 @@
+{
+  "fields": [
+    {
+      "key": "volume",
+      "type": "select",
+      "options": [
+        "25",
+        "50",
+        "75",
+        "100"
+      ],
+      "default": "100"
+    }
+  ]
+}

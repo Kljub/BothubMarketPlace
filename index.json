@@ -184,6 +184,42 @@
       "voice": false
     },
     {
+      "id": "plugin_soundboard",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_soundboard-1.0.0/plugin_soundboard-1.0.0.zip",
+      "sha256": "95174b547dc44f31086db756213ad42df655485d1f2e06af85a7013289fe27cb",
+      "size": 14950,
+      "name": "Soundboard",
+      "description": "Sound clips members play in their voice channel: a panel with a button per sound, /soundboard-play, uploads with /soundboard-add.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "MIT",
+      "icon": "🔊",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "storage.files",
+          "scheduler",
+          "discord.voice.connect",
+          "discord.voice.speak",
+          "discord.interactions.reply",
+          "discord.members.read",
+          "discord.guilds.read"
+        ]
+      },
+      "layers": {
+        "commands": 6,
+        "events": 0,
+        "services": 1,
+        "nodes": 6,
+        "dashboard": 1
+      },
+      "voice": true
+    },
+    {
       "id": "plugin_tempattachments",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_tempattachments-1.0.0/plugin_tempattachments-1.0.0.zip",
