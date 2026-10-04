@@ -7,9 +7,9 @@ Version 1.2.0 · developer: BotHub · license: MIT
 ## Setup
 
 1. **App Store → Plex → Install.** The install dialog lists the SDKs and sets them to "Allow".
-2. **App Store → Plex → Sign in with Plex** (up to five servers: "Connect another server" fills `PLEX_TOKEN_2`/`PLEX_URL_2` … `_5`; libraries of server 2 are `2:<ID>` in the settings). One click: you sign in on plex.tv, BotHub stores the token as secret `PLEX_TOKEN` and your server address as secret `PLEX_URL`, and shares both with the plugin. Without the button: create both by hand under Admin → API / Secrets (address e.g. `http://192.168.1.10:32400`) and switch them on in the App Store. The plugin never sees them: the bot adds them to each request.
+2. **App Store → Plex → Sign in with Plex** (up to five servers: "Connect another server" fills `PLEX_TOKEN_2`/`PLEX_URL_2` … `_5`; libraries of server 2 show up as their own entries in the settings). One click: you sign in on plex.tv, BotHub stores the token as secret `PLEX_TOKEN` and your server address as secret `PLEX_URL`, and shares both with the plugin. Without the button: create both by hand under Settings → API / Secrets (address e.g. `http://192.168.1.10:32400`) and switch them on in the App Store. The plugin never sees them: the bot adds them to each request.
    - Optional for requests: secrets `OVERSEERR_URL` = `https://overseerr.example/api/v1` and `OVERSEERR_KEY` (API key); share them on the plugin's App Store page.
-3. **Bot → Plugins → Plex**: run `/plex-libraries`, put the IDs of the libraries Discord may see into *Shared libraries*, choose the role and channels.
+3. **Bot → Plugins → Plex**: pick the libraries Discord may see in *Shared libraries* (a dropdown of every library as "Server:Library", refreshed at bot start and every 30 minutes), choose the role and channels.
 4. Webhooks (plugin page shows the URLs): Plex → Settings → Webhooks → `media`; Overseerr → Notifications → Webhook → `overseerr`.
 
 The server token stays in the bot: the plugin never sees it, so embeds carry no poster links with the token. Members who run /plex-link allow BotHub to edit their watchlist: their own plex.tv token is kept in the plugin's global storage (SDK permission `storage.global`) until /plex-unlink. Links hold for every bot of the instance.
