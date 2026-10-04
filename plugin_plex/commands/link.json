@@ -36,7 +36,7 @@
         "config": {
           "message": {
             "mode": "normal",
-            "content": "🔗 Log in to Plex within 15 minutes: {px}\nThe bot confirms by DM when it is done."
+            "content": "🔗 Open {px} and enter the code **{px.code}** (within 15 minutes).\nThe bot confirms by DM when it is done."
           },
           "target": "reply",
           "ephemeral": true

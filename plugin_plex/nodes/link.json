@@ -23,6 +23,10 @@
     {
       "suffix": "",
       "labelKey": "plugin.plugin_plex.result.main"
+    },
+    {
+      "suffix": ".code",
+      "labelKey": "plugin.plugin_plex.node.link.result_code"
     }
   ],
   "config": {

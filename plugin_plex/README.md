@@ -18,7 +18,7 @@ The server token stays in the bot: the plugin never sees it, so embeds carry no 
 
 | Command | What it does |
 |---|---|
-| `/plex-link` | plex.tv login link (15 min); the bot confirms by DM and gives the linked role |
+| `/plex-link` | A code to enter on plex.tv/link (15 min); the bot confirms by DM and gives the linked role |
 | `/plex-unlink` | Removes the link and the role |
 | `/plex-status` | Connection, version, playbacks, shared libraries, your link |
 | `/plex-nowplaying` | Active playbacks in the shared libraries |

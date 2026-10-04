@@ -131,7 +131,7 @@ test('link: plex.tv login, role and DM after the poll; unlink takes the role', a
   const pin = { confirmed: false };
   const { ctx } = setup({}, { pin });
   const started = await runBlock(plugin, 'link', ctx, { vars });
-  assert.match(started.results[''], /^https:\/\/app\.plex\.tv\/auth#\?clientID=bothub-plex-1&code=ABCD/);
+  assert.deepEqual([started.results[''], started.results['.code']], ['https://plex.tv/link', 'ABCD']);
 
   await runTask(plugin, 'link_poll', ctx);
   assert.equal(ctx.actions.length, 0, 'not confirmed yet');

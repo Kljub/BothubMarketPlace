@@ -55,15 +55,20 @@ export async function byPlexName(ctx, name) {
   return id ? { userId: id, account: await account(ctx, id) } : null;
 }
 
-/** Starts the plex.tv login: returns the URL the member opens. */
+/**
+ * Starts the plex.tv login with a 4-character code the member enters on
+ * plex.tv/link (the login for other devices, like a TV). A "strong" PIN with
+ * the app.plex.tv/auth link fails: plex.tv sees the PIN come from the bot's
+ * server and the login from the member's browser and blocks it as "another
+ * device". Returns { url, code }.
+ */
 export async function startLink(ctx, userId, guildId) {
-  const res = await ctx.http.post(`${PLEX_TV}/pins`, undefined, { headers: { ...plexHeaders(ctx), 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'strong=true' });
+  const res = await ctx.http.post(`${PLEX_TV}/pins`, undefined, { headers: { ...plexHeaders(ctx), 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'strong=false' });
   const pin = res.json;
   if (res.status >= 400 || !pin?.id || !pin?.code) throw new Error(`plex.tv: HTTP ${res.status}`);
   await writeJson(ctx, `pin:${userId}`, { id: pin.id, code: pin.code, guild: guildId, expires: Date.now() + PIN_TTL_MS });
   await addPending(ctx, userId);
-  const q = new URLSearchParams({ clientID: clientId(ctx), code: pin.code, 'context[device][product]': 'BotHub' });
-  return `https://app.plex.tv/auth#?${q.toString()}`;
+  return { url: 'https://plex.tv/link', code: String(pin.code) };
 }
 
 async function pendingList(ctx) {

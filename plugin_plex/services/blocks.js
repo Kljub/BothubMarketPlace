@@ -130,13 +130,13 @@ export async function request(ctx, { config, vars }) {
   return { results: { '': title, '.type': hit.mediaType, '.id': String(made.json?.id ?? '') } };
 }
 
-/** Starts linking a Plex account: results = login URL. Ports next / already. */
+/** Starts linking a Plex account: results = plex.tv/link, .code = the code to enter. Ports next / already. */
 export async function link(ctx, { config, vars }) {
   const userId = userOf(vars, config);
   const acc = await account(ctx, userId);
   if (acc) return { port: 'already', results: { '': acc.username } };
-  const url = await startLink(ctx, userId, guildOf(vars));
-  return { results: { '': url } };
+  const { url, code } = await startLink(ctx, userId, guildOf(vars));
+  return { results: { '': url, '.code': code } };
 }
 
 /** Removes the link (and the linked role): ports next / not_linked. */
