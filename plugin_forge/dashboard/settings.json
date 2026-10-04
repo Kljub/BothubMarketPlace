@@ -1,0 +1,104 @@
+{
+  "fields": [
+    {
+      "key": "checkpoint",
+      "type": "choices",
+      "dynamic": true,
+      "max": 1,
+      "hint": true
+    },
+    {
+      "key": "sampler",
+      "type": "choices",
+      "dynamic": true,
+      "max": 1,
+      "hint": true
+    },
+    {
+      "key": "scheduler",
+      "type": "choices",
+      "dynamic": true,
+      "max": 1
+    },
+    {
+      "key": "negative_prompt",
+      "type": "text",
+      "max": 2000,
+      "multiline": true,
+      "hint": true
+    },
+    {
+      "key": "width",
+      "type": "number",
+      "min": 64,
+      "max": 2000,
+      "default": 1024
+    },
+    {
+      "key": "height",
+      "type": "number",
+      "min": 64,
+      "max": 2000,
+      "default": 1024
+    },
+    {
+      "key": "steps",
+      "type": "number",
+      "min": 1,
+      "max": 150,
+      "default": 25,
+      "hint": true
+    },
+    {
+      "key": "cfg",
+      "type": "text",
+      "max": 5,
+      "pattern": "^([1-9]|[12][0-9]|30)(\\.[0-9])?$",
+      "default": "7",
+      "hint": true
+    },
+    {
+      "key": "upscaler",
+      "type": "choices",
+      "dynamic": true,
+      "max": 1,
+      "hint": true
+    },
+    {
+      "key": "upscale_factor",
+      "type": "select",
+      "options": [
+        "1_5",
+        "2"
+      ],
+      "default": "2"
+    },
+    {
+      "key": "upscale_strength",
+      "type": "text",
+      "max": 4,
+      "pattern": "^(0?\\.[0-9]{1,2}|1(\\.0)?)$",
+      "default": "0.4",
+      "hint": true
+    },
+    {
+      "key": "allow_nsfw",
+      "type": "bool",
+      "default": false,
+      "hint": true
+    },
+    {
+      "key": "per_user_hour",
+      "type": "number",
+      "min": 0,
+      "max": 500,
+      "default": 10,
+      "hint": true
+    },
+    {
+      "key": "color",
+      "type": "color",
+      "default": "#f97316"
+    }
+  ]
+}

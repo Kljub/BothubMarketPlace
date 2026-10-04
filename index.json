@@ -232,6 +232,45 @@
       "voice": false
     },
     {
+      "id": "plugin_forge",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_forge-1.0.0/plugin_forge-1.0.0.zip",
+      "sha256": "119eb4e55dae17427fd35dc378851f8501e6f0e8a09073b459fa6e18d3f303b7",
+      "size": 17244,
+      "name": "Stable Diffusion Forge",
+      "description": "AI images from your own Stable Diffusion WebUI Forge server in Discord: /forge-imagine and /forge-img2img with upscale and regenerate buttons.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "MIT",
+      "icon": "🖌️",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "storage.files",
+          "secrets.use",
+          "scheduler",
+          "discord.interactions.reply",
+          "discord.messages.files",
+          "discord.channels.read"
+        ]
+      },
+      "secrets": [
+        "FORGE_URL",
+        "FORGE_AUTH"
+      ],
+      "layers": {
+        "commands": 2,
+        "events": 0,
+        "services": 3,
+        "nodes": 2,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_minesweeper",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_minesweeper-1.0.0/plugin_minesweeper-1.0.0.zip",
@@ -338,7 +377,14 @@
       "version": "1.5.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_plex-1.5.0/plugin_plex-1.5.0.zip",
       "sha256": "d8e2837205e905d428e7c054b6f42dce2e8ad65e5d8d4155787a4b6531e7f9b8",
-      "size": 38412,
+      "size": 38412
+    },
+    {
+      "id": "plugin_plex",
+      "version": "1.6.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_plex-1.6.0/plugin_plex-1.6.0.zip",
+      "sha256": "86900e393e397ce5c272305972d6043e35cd086cd61a4181ac4c16ef193b9bae",
+      "size": 40258,
       "name": "Plex",
       "description": "Plex for Discord: library search, now playing, random picks, recommendations, Overseerr requests, account linking with a role, and new-content notices.",
       "developer": {
@@ -352,6 +398,7 @@
         "permissions": [
           "storage",
           "storage.global",
+          "storage.files",
           "discord.messages.send",
           "scheduler",
           "secrets.use",

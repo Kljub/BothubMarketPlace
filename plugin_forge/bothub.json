@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_forge",
+  "name": "Stable Diffusion Forge",
+  "version": "1.0.0",
+  "description": "AI images from your own Stable Diffusion WebUI Forge server in Discord: /forge-imagine and /forge-img2img with upscale and regenerate buttons.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "MIT",
+  "icon": "🖌️",
+  "category": "fun",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "storage.files",
+      "secrets.use",
+      "scheduler",
+      "discord.interactions.reply",
+      "discord.messages.files",
+      "discord.channels.read"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/forge-imagine.json",
+    "commands/forge-img2img.json"
+  ],
+  "services": {
+    "tasks": [
+      {
+        "name": "options",
+        "every": "30m"
+      }
+    ],
+    "secrets": [
+      "FORGE_URL",
+      "FORGE_AUTH"
+    ]
+  },
+  "nodes": [
+    "imagine",
+    "img2img"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

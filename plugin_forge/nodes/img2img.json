@@ -1,0 +1,82 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_forge.node.img2img.label",
+  "descriptionKey": "plugin.plugin_forge.node.img2img.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "queued",
+      "type": "flow"
+    },
+    {
+      "name": "limited",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_forge.node.img2img.result"
+    },
+    {
+      "suffix": ".width",
+      "labelKey": "plugin.plugin_forge.node.img2img.result_width"
+    },
+    {
+      "suffix": ".height",
+      "labelKey": "plugin.plugin_forge.node.img2img.result_height"
+    },
+    {
+      "suffix": ".error",
+      "labelKey": "plugin.plugin_forge.node.img2img.result_error"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "image": {
+        "type": "string",
+        "maxLength": 2000
+      },
+      "prompt": {
+        "type": "string",
+        "maxLength": 2000
+      },
+      "negative": {
+        "type": "string",
+        "maxLength": 2000
+      },
+      "steps": {
+        "type": "string",
+        "maxLength": 10
+      },
+      "strength": {
+        "type": "string",
+        "maxLength": 10
+      },
+      "seed": {
+        "type": "string",
+        "maxLength": 20
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

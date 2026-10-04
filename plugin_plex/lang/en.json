@@ -69,5 +69,6 @@
   "plugin.plugin_plex.port.offline": "Offline",
   "plugin.plugin_plex.port.online": "Online",
   "plugin.plugin_plex.port.removed": "Removed",
-  "plugin.plugin_plex.port.replied": "Replied"
+  "plugin.plugin_plex.port.replied": "Replied",
+  "plugin.plugin_plex.node.search.port.replied": "Answered (with poster)"
 }

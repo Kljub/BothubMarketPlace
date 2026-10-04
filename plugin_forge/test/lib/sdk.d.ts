@@ -522,7 +522,7 @@ export interface PluginContext {
      * click/select/modal (InteractionEvent.handle). The token stays in the bot.
      */
     readonly interaction: {
-        /** options.file: a plugin file sent along (storage.files), e.g. privately with ephemeral; embeds with image_url / thumbnail_url 'attachment' show it. */
+        /** options.file: a plugin file sent along (storage.files), e.g. privately with ephemeral. */
         reply(handle: string, message: Message | string, options?: {
             ephemeral?: boolean;
             file?: string;

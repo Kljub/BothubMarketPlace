@@ -16,7 +16,7 @@ The server token stays in the bot: the plugin never sees it, so embeds carry no 
 
 ## Commands
 
-Every command can answer **Public** or **Only me** (plugin page, next to the command); errors are always only for the member. Default: link, status, libraries, watchlist and unlink only for the member, the rest public.
+Every command except /plex-link has the option `visibility`: **Public** (everyone in the channel sees the answer) or **Only me**, chosen per use. Without it the default applies; the bot owner sets it per command on the plugin page (link, status, libraries, watchlist and unlink only for the member, the rest public). Errors are always only for the member.
 
 | Command | What it does |
 |---|---|

@@ -105,7 +105,28 @@ export function mapItem(m, server = 1) {
     genres: (m.Genre ?? []).map((g) => g.tag).filter(Boolean),
     rating: m.audienceRating ?? m.rating ?? null,
     duration: m.duration ? Math.round(m.duration / 60000) : null,
+    // Poster path on the server (an episode shows its show's poster).
+    thumb: String(m.grandparentThumb ?? m.parentThumb ?? m.thumb ?? '').slice(0, 300),
   };
+}
+
+/**
+ * The poster of an item as a plugin file ("storage.files"), scaled by the
+ * Plex photo transcoder; the token stays in the bot. null when there is none
+ * or it cannot be loaded.
+ */
+export async function poster(ctx, item) {
+  if (!item?.thumb || !item.thumb.startsWith('/')) return null;
+  try {
+    const slot = SERVERS[(item.server ?? 1) - 1] ?? SERVERS[0];
+    const res = await ctx.http.secret({
+      url: slot.url, path: '/photo/:/transcode', query: { width: '400', height: '600', minSize: '1', upscale: '1', url: item.thumb },
+      auth: { secret: slot.token, header: 'X-Plex-Token', format: 'plain' }, saveAs: 'file',
+    });
+    return res.file ?? null;
+  } catch {
+    return null;
+  }
 }
 
 /** Block results of one item. */

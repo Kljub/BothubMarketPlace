@@ -1,0 +1,86 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_forge.node.imagine.label",
+  "descriptionKey": "plugin.plugin_forge.node.imagine.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "queued",
+      "type": "flow"
+    },
+    {
+      "name": "limited",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_forge.node.imagine.result"
+    },
+    {
+      "suffix": ".width",
+      "labelKey": "plugin.plugin_forge.node.imagine.result_width"
+    },
+    {
+      "suffix": ".height",
+      "labelKey": "plugin.plugin_forge.node.imagine.result_height"
+    },
+    {
+      "suffix": ".error",
+      "labelKey": "plugin.plugin_forge.node.imagine.result_error"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "prompt": {
+        "type": "string",
+        "maxLength": 2000
+      },
+      "negative": {
+        "type": "string",
+        "maxLength": 2000
+      },
+      "steps": {
+        "type": "string",
+        "maxLength": 10
+      },
+      "cfg": {
+        "type": "string",
+        "maxLength": 10
+      },
+      "width": {
+        "type": "string",
+        "maxLength": 10
+      },
+      "height": {
+        "type": "string",
+        "maxLength": 10
+      },
+      "seed": {
+        "type": "string",
+        "maxLength": 20
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

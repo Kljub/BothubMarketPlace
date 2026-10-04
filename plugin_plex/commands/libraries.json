@@ -24,7 +24,24 @@
             "banned_channels": [],
             "hide_without_permission": true
           },
-          "hide_replies": true
+          "hide_replies": true,
+          "visibility_option": "visibility"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_visibility",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "visibility",
+          "description": "Who sees the answer (empty: the default of the bot)",
+          "required": false,
+          "choices": "Public\nOnly me",
+          "variable": "visibility"
         },
         "position": {
           "x": 400,
@@ -116,6 +133,16 @@
       }
     ],
     "edges": [
+      {
+        "from": {
+          "node": "option_visibility",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
       {
         "from": {
           "node": "trigger",

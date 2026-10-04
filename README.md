@@ -19,10 +19,11 @@ Policies**.
 | 😀 **Emoji Manager** | Emoji menus and emoji uploads | 3 |
 | 🎮 **Minigames** | Dice duels, 5 dice, higher or lower, scratch cards, double or steal, mastermind, hangman, match pairs, lights out, begging, fishing | 11 |
 | 💣 **Minesweeper** | A mine bet on 24 fields with a rising multiplier | `/minesweeper` |
-| 🎬 **Plex** | Plex for Discord: library search, now playing, random picks, Overseerr requests, account linking, new-content notices | 12 |
+| 🎬 **Plex** | Plex for Discord: library search with posters, now playing, random picks, Overseerr requests, account linking, new-content notices | 12 |
 | ✂️ **Rock Paper Scissors** | Against the bot or as a duel, optional bets | `/rps`, `/rps-duel` |
 | 💾 **Server Backup** | Backups of a whole server by command or schedule; restore or clone into another server | `/backup …` |
 | 🔊 **Soundboard** | Sound clips in your voice channel: panel with buttons, uploads in the dashboard | `/soundboard …` |
+| 🖌️ **Stable Diffusion Forge** | Images from your own Forge server: text and image to image, upscale and regenerate buttons, progress, model dropdowns | `/forge-imagine`, `/forge-img2img` |
 | 📎 **Temp Attachments** | Files or texts behind an access button: password, dates, max. uses, roles | `/tempfile-…` |
 | ❌ **Tic Tac Toe** | Against the bot or as a duel, optional bets | `/tictactoe` |
 | 🌤️ **Weather** | Current weather from OpenWeatherMap | `/weather` |
@@ -36,7 +37,7 @@ permissions it needs. Games with bets use the bot's **Economy** module.
 
 1. In BotHub: **Admin → Plugins (App Store)** → pick a plugin → Install.
 2. Switch on the SDK permissions it asks for (Admin → SDK Policies).
-3. API keys (AI Chat, ArcEnCiel, Plex, Weather, …) go into **Settings → API /
+3. API keys and addresses (AI Chat, ArcEnCiel, Forge, Plex, Weather, …) go into **Settings → API /
    Secrets**; every user keeps their own, and a bot uses its owner's keys.
 4. On the bot: **Plugins** → the plugin → settings; its commands are Custom
    Commands you switch on there.

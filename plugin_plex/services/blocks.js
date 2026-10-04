@@ -1,6 +1,6 @@
 // Logic of the Plex nodes (plugin.plugin_plex.<name>); nodes/<name>.js hand it to the SDK, nodes/<name>.json defines it.
 import { account, startLink, tokenOf, unlink } from './accounts.js';
-import { allowedLibraries, errorText, history, itemResults, overseerr, randomItem, searchLibraries, sections, servers, sessions, showRef } from './plex.js';
+import { allowedLibraries, errorText, history, itemResults, overseerr, poster, randomItem, searchLibraries, sections, servers, sessions, showRef } from './plex.js';
 import { readJson, writeJson } from './storage.js';
 import * as watch from './watchlist.js';
 import { setting } from './util.js';
@@ -37,7 +37,7 @@ export async function now_playing(ctx) {
 }
 
 /** First hit for a title in the shared libraries: ports found / not_found / failed. */
-export async function search(ctx, { config }) {
+export async function search(ctx, { config, interaction }) {
   const title = String(config.title ?? '').trim();
   if (!title) return { port: 'not_found' };
   const res = await searchLibraries(ctx, title);
@@ -45,7 +45,27 @@ export async function search(ctx, { config }) {
   const exact = res.items.find((i) => i.title.toLowerCase() === title.toLowerCase());
   const item = exact ?? res.items[0];
   if (!item) return { port: 'not_found' };
-  return { port: 'found', results: { ...itemResults(item), '.more': String(Math.max(0, res.items.length - 1)) } };
+  const results = { ...itemResults(item), '.more': String(Math.max(0, res.items.length - 1)) };
+  // With a command behind the run the node answers itself, with the poster.
+  if (interaction) {
+    const file = await poster(ctx, item);
+    await ctx.interaction.reply(interaction, searchMessage(results, Boolean(file)), file ? { file: file.name } : undefined);
+    if (file) await ctx.files.delete(file.name).catch(() => undefined);
+    return { port: 'replied', results };
+  }
+  return { port: 'found', results };
+}
+
+/** The search answer: details and the poster (when loaded) on the right. */
+export function searchMessage(r, withPoster) {
+  return {
+    embeds: [{
+      color: '#e5a00d', title: `🔍 ${r['']}`, description: r['.summary'],
+      fields: [{ name: 'Year', value: r['.year'], inline: true }, { name: 'Rating', value: r['.rating'], inline: true }, { name: 'Duration', value: r['.duration'], inline: true }, { name: 'Genres', value: r['.genres'] }],
+      footer: `Plex · ${r['.library']}`,
+      ...(withPoster ? { thumbnail_url: 'attachment' } : {}),
+    }],
+  };
 }
 
 /** The embed and the "again" button of a random pick. */

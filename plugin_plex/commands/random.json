@@ -11,11 +11,28 @@
         "config": {
           "command_name": "plex-random",
           "description": "A random title from Plex",
-          "hide_replies": false
+          "hide_replies": false,
+          "visibility_option": "visibility"
         },
         "position": {
           "x": 400,
           "y": 190
+        }
+      },
+      {
+        "id": "option_visibility",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "visibility",
+          "description": "Who sees the answer (empty: the default of the bot)",
+          "required": false,
+          "choices": "Public\nOnly me",
+          "variable": "visibility"
+        },
+        "position": {
+          "x": 1180,
+          "y": 40
         }
       },
       {
@@ -191,6 +208,16 @@
       }
     ],
     "edges": [
+      {
+        "from": {
+          "node": "option_visibility",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
       {
         "from": {
           "node": "option_library",

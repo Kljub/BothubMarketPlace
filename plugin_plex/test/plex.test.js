@@ -8,11 +8,12 @@ const GUILD = '200000000000000001';
 const ROLE = '700000000000000007';
 const NEWS = '900000000000000002';
 const LIVE = '900000000000000003';
-const permissions = ['storage', 'storage.global', 'discord.messages.send', 'scheduler', 'secrets.use', 'http.outbound', 'discord.interactions.reply', 'discord.roles.assign', 'webhooks.inbound'];
+const POSTER = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
+const permissions = ['storage', 'storage.global', 'storage.files', 'discord.messages.send', 'scheduler', 'secrets.use', 'http.outbound', 'discord.interactions.reply', 'discord.roles.assign', 'webhooks.inbound'];
 const vars = { 'user.id': USER, 'server.id': GUILD };
 
 const MOVIES = [
-  { ratingKey: '11', title: 'Arrival', year: 2016, summary: 'Linguist meets aliens.', librarySectionID: 1, Genre: [{ tag: 'Sci-Fi' }], audienceRating: 8.1, duration: 6960000 },
+  { ratingKey: '11', thumb: '/library/metadata/11/thumb/1700', title: 'Arrival', year: 2016, summary: 'Linguist meets aliens.', librarySectionID: 1, Genre: [{ tag: 'Sci-Fi' }], audienceRating: 8.1, duration: 6960000 },
   { ratingKey: '12', title: 'Heat', year: 1995, summary: 'Cops and robbers.', librarySectionID: 1, Genre: [{ tag: 'Crime' }] },
 ];
 
@@ -21,6 +22,7 @@ function servers(log = []) {
   return {
     PLEX_API: ({ path, query }) => {
       log.push(path);
+      if (path === '/photo/:/transcode') return query.url === '/library/metadata/11/thumb/1700' ? { base64: POSTER, headers: { 'content-type': 'image/png' } } : { status: 404 };
       if (path === '/identity') return { json: { MediaContainer: { version: '1.40.0' } } };
       if (path === '/') return { json: { MediaContainer: { friendlyName: 'Home', machineIdentifier: 'm1', version: '1.40.0' } } };
       if (path === '/status/sessions') return { json: { MediaContainer: { Metadata: [{ title: 'Arrival', year: 2016, librarySectionID: 1, User: { title: 'ann' }, Player: { state: 'playing' } }, { title: 'Hidden', librarySectionID: 9 }] } } };
@@ -93,6 +95,19 @@ test('status and now playing only show shared libraries', async () => {
   const np = await runBlock(plugin, 'now_playing', ctx);
   assert.equal(np.results['.count'], '1');
   assert.doesNotMatch(np.results[''], /Hidden/);
+});
+
+test('search as a command: the answer carries the poster, loaded through the bot', async () => {
+  const { ctx } = setup();
+  const hit = await runBlock(plugin, 'search', ctx, { vars, interaction: 'cmd', config: { title: 'arrival' } });
+  assert.equal(hit.port, 'replied');
+  const answer = ctx.answers.at(-1);
+  assert.equal(answer.message.embeds[0].title, '🔍 Arrival');
+  assert.equal(answer.message.embeds[0].thumbnail_url, 'attachment');
+  assert.ok(answer.file, 'the poster goes with the answer');
+  const heat = await runBlock(plugin, 'search', ctx, { vars, interaction: 'cmd2', config: { title: 'heat' } });
+  assert.equal(heat.port, 'replied');
+  assert.equal(ctx.answers.at(-1).message.embeds[0].thumbnail_url, undefined, 'no poster: no image');
 });
 
 test('search finds in shared libraries, the token never leaves the bot', async () => {
