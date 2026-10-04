@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_criminal",
+  "name": "Criminal",
+  "version": "1.0.0",
+  "description": "/steal: rob another member of a share of their balance. Chance, loot, fine and cooldown per bot; balances from the Economy module.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "MIT",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "discord.interactions.reply",
+      "discord.members.read",
+      "modules.economy.balance.read",
+      "modules.economy.balance.write"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/steal.json"
+  ],
+  "nodes": [
+    "steal"
+  ],
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  },
+  "icon": "🕵️",
+  "category": "fun",
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  }
+}

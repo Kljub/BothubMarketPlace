@@ -1,0 +1,23 @@
+{
+  "plugin.plugin_criminal.name": "Criminal",
+  "plugin.plugin_criminal.description": "/steal: einem Mitglied einen Teil seines Guthabens klauen. Chance, Beute, Strafe und Cooldown pro Bot; Guthaben aus dem Economy-Modul.",
+  "plugin.plugin_criminal.setting.success_chance": "Erfolgschance (%)",
+  "plugin.plugin_criminal.setting.success_chance_hint": "Wie oft ein Diebstahl klappt.",
+  "plugin.plugin_criminal.setting.steal_percent": "Beute (% des Opfer-Guthabens)",
+  "plugin.plugin_criminal.setting.steal_percent_hint": "Dieser Anteil wandert zum Dieb.",
+  "plugin.plugin_criminal.setting.max_steal": "Höchste Beute",
+  "plugin.plugin_criminal.setting.max_steal_hint": "Leer: kein Limit.",
+  "plugin.plugin_criminal.setting.fail_penalty_percent": "Strafe (% des eigenen Guthabens)",
+  "plugin.plugin_criminal.setting.fail_penalty_percent_hint": "Bei Erwischt.",
+  "plugin.plugin_criminal.setting.penalty_to_victim": "Strafe geht ans Opfer",
+  "plugin.plugin_criminal.setting.cooldown_minutes": "Cooldown (Minuten)",
+  "plugin.plugin_criminal.setting.cooldown_minutes_hint": "0: kein Cooldown.",
+  "plugin.plugin_criminal.setting.currency": "Name der Währung",
+  "plugin.plugin_criminal.setting.currency_hint": "Nur der Text in den Antworten.",
+  "plugin.plugin_criminal.node.steal.label": "Klauen",
+  "plugin.plugin_criminal.node.steal.description": "Versucht, einem Mitglied Guthaben zu klauen.",
+  "plugin.plugin_criminal.node.steal.port.replied": "Beantwortet",
+  "plugin.plugin_criminal.node.steal.port.failed": "Fehlgeschlagen",
+  "plugin.plugin_criminal.node.steal.config.target": "Opfer (Nutzer-ID)",
+  "plugin.plugin_criminal.node.steal.result": "Ergebnis (success, caught)"
+}

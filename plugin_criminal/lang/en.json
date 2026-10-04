@@ -1,0 +1,23 @@
+{
+  "plugin.plugin_criminal.name": "Criminal",
+  "plugin.plugin_criminal.description": "/steal: rob another member of a share of their balance. Chance, loot, fine and cooldown per bot; balances from the Economy module.",
+  "plugin.plugin_criminal.setting.success_chance": "Success chance (%)",
+  "plugin.plugin_criminal.setting.success_chance_hint": "How often a theft works.",
+  "plugin.plugin_criminal.setting.steal_percent": "Loot (% of the victim's balance)",
+  "plugin.plugin_criminal.setting.steal_percent_hint": "This share goes to the thief.",
+  "plugin.plugin_criminal.setting.max_steal": "Highest loot",
+  "plugin.plugin_criminal.setting.max_steal_hint": "Empty: no limit.",
+  "plugin.plugin_criminal.setting.fail_penalty_percent": "Fine (% of the own balance)",
+  "plugin.plugin_criminal.setting.fail_penalty_percent_hint": "When caught.",
+  "plugin.plugin_criminal.setting.penalty_to_victim": "The fine goes to the victim",
+  "plugin.plugin_criminal.setting.cooldown_minutes": "Cooldown (minutes)",
+  "plugin.plugin_criminal.setting.cooldown_minutes_hint": "0: no cooldown.",
+  "plugin.plugin_criminal.setting.currency": "Currency name",
+  "plugin.plugin_criminal.setting.currency_hint": "Only the text in the answers.",
+  "plugin.plugin_criminal.node.steal.label": "Steal",
+  "plugin.plugin_criminal.node.steal.description": "Tries to steal from a member.",
+  "plugin.plugin_criminal.node.steal.port.replied": "Answered",
+  "plugin.plugin_criminal.node.steal.port.failed": "Failed",
+  "plugin.plugin_criminal.node.steal.config.target": "Victim (user ID)",
+  "plugin.plugin_criminal.node.steal.result": "Result (success, caught)"
+}
