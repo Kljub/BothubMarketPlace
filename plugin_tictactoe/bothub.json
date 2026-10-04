@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_tictactoe",
+  "name": "Tic Tac Toe",
+  "version": "1.0.0",
+  "description": "Tic tac toe against the bot or as a duel, with an optional bet from the Economy module.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "MIT",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "scheduler",
+      "discord.interactions.reply",
+      "discord.members.read",
+      "modules.economy.balance.read",
+      "modules.economy.balance.write"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/tictactoe.json"
+  ],
+  "nodes": [
+    "start"
+  ],
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  },
+  "icon": "❌",
+  "category": "fun",
+  "services": {
+    "tasks": [
+      {
+        "name": "expire",
+        "every": "1m"
+      }
+    ]
+  },
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  }
+}

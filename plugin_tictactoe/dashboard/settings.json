@@ -1,0 +1,26 @@
+{
+  "fields": [
+    {
+      "key": "min_bet",
+      "type": "text",
+      "max": 9,
+      "pattern": "^[0-9]*$",
+      "default": "10"
+    },
+    {
+      "key": "max_bet",
+      "type": "text",
+      "max": 9,
+      "pattern": "^[0-9]*$",
+      "default": "1000",
+      "hint": true
+    },
+    {
+      "key": "currency",
+      "type": "text",
+      "max": 32,
+      "default": "coins",
+      "hint": true
+    }
+  ]
+}

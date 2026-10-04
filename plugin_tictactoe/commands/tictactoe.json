@@ -1,0 +1,137 @@
+{
+  "name": "tictactoe",
+  "description": "Tic tac toe against the bot or a member",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "tictactoe",
+          "description": "Tic tac toe against the bot or a member"
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "option_opponent",
+        "type": "option.user",
+        "typeVersion": 1,
+        "config": {
+          "name": "opponent",
+          "description": "A member (empty: against the bot)",
+          "required": false,
+          "variable": "opponent"
+        },
+        "position": {
+          "x": 140,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_bet",
+        "type": "option.number",
+        "typeVersion": 1,
+        "config": {
+          "name": "bet",
+          "description": "Bet (optional)",
+          "required": false,
+          "variable": "bet"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_tictactoe.start",
+        "typeVersion": 1,
+        "config": {
+          "opponent": "{option_opponent}",
+          "bet": "{option_bet}",
+          "variable": "res"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 400,
+          "y": 700
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 720,
+          "y": 700
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "option_opponent",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_bet",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

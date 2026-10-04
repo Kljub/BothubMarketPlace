@@ -1,0 +1,16 @@
+{
+  "plugin.plugin_tictactoe.name": "Tic Tac Toe",
+  "plugin.plugin_tictactoe.description": "Tic Tac Toe gegen den Bot oder als Duell, mit optionalem Einsatz aus dem Economy-Modul.",
+  "plugin.plugin_tictactoe.setting.min_bet": "Niedrigster Einsatz",
+  "plugin.plugin_tictactoe.setting.max_bet": "Höchster Einsatz",
+  "plugin.plugin_tictactoe.setting.max_bet_hint": "Leer: kein Limit.",
+  "plugin.plugin_tictactoe.setting.currency": "Name der Währung",
+  "plugin.plugin_tictactoe.setting.currency_hint": "Nur der Text in den Antworten; die Guthaben kommen aus dem Economy-Modul.",
+  "plugin.plugin_tictactoe.node.start.label": "Tic Tac Toe starten",
+  "plugin.plugin_tictactoe.node.start.description": "Startet ein Spiel gegen den Bot oder fordert ein Mitglied heraus.",
+  "plugin.plugin_tictactoe.node.start.port.replied": "Beantwortet",
+  "plugin.plugin_tictactoe.node.start.port.failed": "Fehlgeschlagen",
+  "plugin.plugin_tictactoe.node.start.config.opponent": "Gegner (Nutzer-ID, leer: Bot)",
+  "plugin.plugin_tictactoe.node.start.config.bet": "Einsatz",
+  "plugin.plugin_tictactoe.node.start.result": "Spiel-ID"
+}
