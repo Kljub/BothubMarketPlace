@@ -1,0 +1,18 @@
+{
+  "plugin.plugin_minesweeper.name": "Minesweeper",
+  "plugin.plugin_minesweeper.description": "A mine bet on 24 fields: pick the mines, every diamond raises the multiplier, 🔥 cashes out.",
+  "plugin.plugin_minesweeper.setting.rtp": "Payout rate (RTP, %)",
+  "plugin.plugin_minesweeper.setting.rtp_hint": "100 = a fair game; below it the house keeps the rest (e.g. 95).",
+  "plugin.plugin_minesweeper.setting.min_bet": "Lowest bet",
+  "plugin.plugin_minesweeper.setting.max_bet": "Highest bet",
+  "plugin.plugin_minesweeper.setting.max_bet_hint": "Empty: no limit.",
+  "plugin.plugin_minesweeper.setting.currency": "Currency name",
+  "plugin.plugin_minesweeper.setting.currency_hint": "Only the text in the answers; balances come from the Economy module.",
+  "plugin.plugin_minesweeper.node.play.label": "Start minesweeper",
+  "plugin.plugin_minesweeper.node.play.description": "Takes the bet and posts the field.",
+  "plugin.plugin_minesweeper.node.play.port.replied": "Answered",
+  "plugin.plugin_minesweeper.node.play.port.failed": "Failed",
+  "plugin.plugin_minesweeper.node.play.config.bet": "Bet",
+  "plugin.plugin_minesweeper.node.play.config.mines": "Mines",
+  "plugin.plugin_minesweeper.node.play.result": "Round ID"
+}

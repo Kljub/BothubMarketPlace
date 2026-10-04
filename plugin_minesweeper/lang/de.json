@@ -1,0 +1,18 @@
+{
+  "plugin.plugin_minesweeper.name": "Minesweeper",
+  "plugin.plugin_minesweeper.description": "Minen-Wette auf 24 Feldern: Minen-Anzahl wählen, jeder Diamant erhöht den Multiplikator, 🔥 zahlt aus.",
+  "plugin.plugin_minesweeper.setting.rtp": "Auszahlungsquote (RTP, %)",
+  "plugin.plugin_minesweeper.setting.rtp_hint": "100 = faires Spiel; darunter behält das Haus den Rest (z. B. 95).",
+  "plugin.plugin_minesweeper.setting.min_bet": "Niedrigster Einsatz",
+  "plugin.plugin_minesweeper.setting.max_bet": "Höchster Einsatz",
+  "plugin.plugin_minesweeper.setting.max_bet_hint": "Leer: kein Limit.",
+  "plugin.plugin_minesweeper.setting.currency": "Name der Währung",
+  "plugin.plugin_minesweeper.setting.currency_hint": "Nur der Text in den Antworten; die Guthaben kommen aus dem Economy-Modul.",
+  "plugin.plugin_minesweeper.node.play.label": "Minesweeper starten",
+  "plugin.plugin_minesweeper.node.play.description": "Nimmt den Einsatz und postet das Minenfeld.",
+  "plugin.plugin_minesweeper.node.play.port.replied": "Beantwortet",
+  "plugin.plugin_minesweeper.node.play.port.failed": "Fehlgeschlagen",
+  "plugin.plugin_minesweeper.node.play.config.bet": "Einsatz",
+  "plugin.plugin_minesweeper.node.play.config.mines": "Minen",
+  "plugin.plugin_minesweeper.node.play.result": "Runden-ID"
+}
