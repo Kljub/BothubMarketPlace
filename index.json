@@ -184,6 +184,40 @@
       "voice": false
     },
     {
+      "id": "plugin_rps",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_rps-1.0.0/plugin_rps-1.0.0.zip",
+      "sha256": "813e0a3138728eb40d289cc4986f41cb744d00853a17b876bc2cc69f6bc266a8",
+      "size": 11032,
+      "name": "Rock Paper Scissors",
+      "description": "Rock, paper, scissors against the bot (/rps) or as a duel (/rps-duel), with optional bets from the Economy module.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "MIT",
+      "icon": "✂️",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "scheduler",
+          "discord.interactions.reply",
+          "discord.members.read",
+          "modules.economy.balance.read",
+          "modules.economy.balance.write"
+        ]
+      },
+      "layers": {
+        "commands": 2,
+        "events": 0,
+        "services": 1,
+        "nodes": 2,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_soundboard",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_soundboard-1.0.0/plugin_soundboard-1.0.0.zip",

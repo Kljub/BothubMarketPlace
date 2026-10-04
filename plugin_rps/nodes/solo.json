@@ -1,0 +1,54 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_rps.node.solo.label",
+  "descriptionKey": "plugin.plugin_rps.node.solo.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_rps.node.solo.result"
+    },
+    {
+      "suffix": ".bot",
+      "labelKey": "plugin.plugin_rps.node.solo.result_bot"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "choice": {
+        "type": "string",
+        "maxLength": 32
+      },
+      "bet": {
+        "type": "string",
+        "maxLength": 32
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

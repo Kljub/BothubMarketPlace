@@ -1,0 +1,23 @@
+{
+  "plugin.plugin_rps.name": "Rock Paper Scissors",
+  "plugin.plugin_rps.description": "Rock, paper, scissors against the bot (/rps) or as a duel (/rps-duel), with optional bets from the Economy module.",
+  "plugin.plugin_rps.setting.currency": "Currency name",
+  "plugin.plugin_rps.setting.currency_hint": "Shown in the answers (balances come from the Economy module).",
+  "plugin.plugin_rps.setting.max_bet": "Highest bet",
+  "plugin.plugin_rps.setting.max_bet_hint": "Empty: no limit.",
+  "plugin.plugin_rps.node.solo.label": "Against the bot",
+  "plugin.plugin_rps.node.solo.description": "One round against the bot; a win pays twice the bet.",
+  "plugin.plugin_rps.node.solo.port.replied": "Answered",
+  "plugin.plugin_rps.node.solo.port.failed": "Failed",
+  "plugin.plugin_rps.node.duel.label": "Duel",
+  "plugin.plugin_rps.node.duel.description": "Challenges a member (accept, then both pick).",
+  "plugin.plugin_rps.node.duel.port.replied": "Answered",
+  "plugin.plugin_rps.node.duel.port.failed": "Failed",
+  "plugin.plugin_rps.node.solo.result": "Result (win, lose, tie)",
+  "plugin.plugin_rps.node.solo.result_bot": "Pick of the bot",
+  "plugin.plugin_rps.node.duel.result": "Duel ID",
+  "plugin.plugin_rps.node.solo.config.choice": "Pick (rock, paper, scissors)",
+  "plugin.plugin_rps.node.solo.config.bet": "Bet",
+  "plugin.plugin_rps.node.duel.config.opponent": "Opponent (user ID)",
+  "plugin.plugin_rps.node.duel.config.bet": "Bet"
+}

@@ -1,0 +1,138 @@
+{
+  "name": "rps",
+  "description": "Rock, paper, scissors against the bot",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "rps",
+          "description": "Rock, paper, scissors against the bot"
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "option_choice",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "choice",
+          "description": "Your pick",
+          "required": true,
+          "variable": "choice",
+          "choices": "rock\npaper\nscissors"
+        },
+        "position": {
+          "x": 140,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_bet",
+        "type": "option.number",
+        "typeVersion": 1,
+        "config": {
+          "name": "bet",
+          "description": "Bet from your balance (optional)",
+          "required": false,
+          "variable": "bet"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_rps.solo",
+        "typeVersion": 1,
+        "config": {
+          "choice": "{option_choice}",
+          "bet": "{option_bet}",
+          "variable": "rps"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 400,
+          "y": 700
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 720,
+          "y": 700
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "option_choice",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_bet",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

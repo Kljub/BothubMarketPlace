@@ -1,0 +1,23 @@
+{
+  "plugin.plugin_rps.name": "Schere, Stein, Papier",
+  "plugin.plugin_rps.description": "Schere, Stein, Papier gegen den Bot (/rps) oder als Duell (/rps-duel), mit optionalem Einsatz aus dem Economy-Modul.",
+  "plugin.plugin_rps.setting.currency": "Name der Währung",
+  "plugin.plugin_rps.setting.currency_hint": "Wie in den Antworten gezeigt (die Guthaben kommen aus dem Economy-Modul).",
+  "plugin.plugin_rps.setting.max_bet": "Höchster Einsatz",
+  "plugin.plugin_rps.setting.max_bet_hint": "Leer: kein Limit.",
+  "plugin.plugin_rps.node.solo.label": "Gegen den Bot",
+  "plugin.plugin_rps.node.solo.description": "Eine Runde gegen den Bot, gewinnt doppelten Einsatz.",
+  "plugin.plugin_rps.node.solo.port.replied": "Beantwortet",
+  "plugin.plugin_rps.node.solo.port.failed": "Fehlgeschlagen",
+  "plugin.plugin_rps.node.duel.label": "Duell",
+  "plugin.plugin_rps.node.duel.description": "Fordert ein Mitglied heraus (Annehmen, dann wählen beide).",
+  "plugin.plugin_rps.node.duel.port.replied": "Beantwortet",
+  "plugin.plugin_rps.node.duel.port.failed": "Fehlgeschlagen",
+  "plugin.plugin_rps.node.solo.result": "Ergebnis (win, lose, tie)",
+  "plugin.plugin_rps.node.solo.result_bot": "Wahl des Bots",
+  "plugin.plugin_rps.node.duel.result": "Duell-ID",
+  "plugin.plugin_rps.node.solo.config.choice": "Wahl (rock, paper, scissors)",
+  "plugin.plugin_rps.node.solo.config.bet": "Einsatz",
+  "plugin.plugin_rps.node.duel.config.opponent": "Gegner (Nutzer-ID)",
+  "plugin.plugin_rps.node.duel.config.bet": "Einsatz"
+}
