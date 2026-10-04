@@ -1,0 +1,109 @@
+{
+  "fields": [
+    {
+      "key": "provider",
+      "type": "select",
+      "options": [
+        "openai",
+        "anthropic",
+        "groq",
+        "nvidia",
+        "ollama",
+        "custom"
+      ],
+      "default": "openai",
+      "hint": true
+    },
+    {
+      "key": "model",
+      "type": "text",
+      "max": 100,
+      "hint": true
+    },
+    {
+      "key": "system_prompt",
+      "type": "text",
+      "max": 2000,
+      "multiline": true,
+      "hint": true
+    },
+    {
+      "key": "positive_prompt",
+      "type": "text",
+      "max": 1000,
+      "multiline": true
+    },
+    {
+      "key": "negative_prompt",
+      "type": "text",
+      "max": 1000,
+      "multiline": true
+    },
+    {
+      "key": "max_tokens",
+      "type": "number",
+      "min": 50,
+      "max": 2000,
+      "default": 1000
+    },
+    {
+      "key": "temperature",
+      "type": "number",
+      "min": 0,
+      "max": 200,
+      "default": 70,
+      "hint": true
+    },
+    {
+      "key": "history_length",
+      "type": "number",
+      "min": 0,
+      "max": 20,
+      "default": 10,
+      "hint": true
+    },
+    {
+      "key": "session_minutes",
+      "type": "number",
+      "min": 1,
+      "max": 1440,
+      "default": 30
+    },
+    {
+      "key": "web_search",
+      "type": "bool",
+      "default": false,
+      "hint": true
+    },
+    {
+      "key": "web_search_always",
+      "type": "bool",
+      "default": false,
+      "showIf": {
+        "web_search": [
+          "true"
+        ]
+      }
+    },
+    {
+      "key": "mention_enabled",
+      "type": "bool",
+      "default": false,
+      "hint": true
+    },
+    {
+      "key": "mention_channels",
+      "type": "channels",
+      "channelTypes": [
+        "text",
+        "announcement"
+      ],
+      "max": 25,
+      "showIf": {
+        "mention_enabled": [
+          "true"
+        ]
+      }
+    }
+  ]
+}
