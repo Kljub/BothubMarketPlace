@@ -63,11 +63,14 @@ export interface TestContextOptions {
      * dashboard/settings.json: its "permissions" fields are what
      * config.checkAccess checks; config.set takes only its keys.
      */
+    /** Keys of the bot's other variables (dashboard or other plugins): variables.create refuses them. */
+    takenVariables?: string[];
     settings?: {
         fields: Array<{
             key: string;
             type: string;
             default?: Json;
+            dynamic?: boolean;
             item?: Array<{
                 key: string;
                 type: string;
@@ -194,6 +197,14 @@ export interface TestContext {
     readonly fileStore: Map<string, string>;
     /** Current settings (config.set changes them). */
     readonly settingsNow: Record<string, Json>;
+    /** Variables created with variables.create, and their values ("key|server|owner"). */
+    readonly variableDefs: Map<string, Record<string, Json>>;
+    readonly variableValues: Map<string, string>;
+    /** Options set with config.setOptions, per field. */
+    readonly fieldOptions: Record<string, {
+        value: string;
+        label: string;
+    }[]>;
     [area: string]: unknown;
 }
 export declare function createTestContext(options?: TestContextOptions): TestContext;

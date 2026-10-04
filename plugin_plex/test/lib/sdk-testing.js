@@ -38,6 +38,8 @@ const CALLS = {
     'module.get': 'modules.read', 'module.getId': 'modules.read', 'module.getName': 'modules.read',
     'module.isEnabled': 'modules.read', 'module.getConfig': 'modules.read', 'module.list': 'modules.read',
     'message.send': 'discord.messages.send', 'message.sendFile': 'discord.messages.files',
+    'variables.create': 'data.variables', 'variables.delete': 'data.variables', 'variables.list': 'data.variables',
+    'variables.get': 'data.variables', 'variables.set': 'data.variables', 'variables.reset': 'data.variables',
     'files.list': 'storage.files', 'files.get': 'storage.files', 'files.put': 'storage.files', 'files.delete': 'storage.files', 'files.fromDiscord': 'storage.files',
     'voice.join': 'discord.voice.connect', 'voice.leave': 'discord.voice.connect', 'voice.play': 'discord.voice.speak',
     'voice.stop': 'discord.voice.speak', 'voice.state': 'discord.voice.connect',
@@ -119,6 +121,15 @@ export function createTestContext(options = {}) {
     const permissions = new Set((options.permissions ?? []).flatMap((p) => REPLACED[p] ?? [p]));
     const config = structuredClone(options.config ?? {});
     const fieldOptions = {};
+    const variableDefs = new Map();
+    const variableValues = new Map();
+    const variableSlot = (v, where) => {
+        const server = v.perServer ? where.guildId ?? '' : '';
+        const owner = v.owner === 'member' ? where.userId ?? '' : v.owner === 'channel' ? where.channelId ?? '' : '';
+        if ((v.perServer && !server) || (v.owner !== 'shared' && !owner))
+            throw new SdkCallError('sdk.variables.data_needs_context');
+        return `${v.key}|${server}|${owner}`;
+    };
     const options_settings = () => options.settings?.fields ?? [];
     const store = new Map(Object.entries(options.storage ?? {}));
     const globalStore = new Map(Object.entries(options.globalStorage ?? {}));
@@ -397,6 +408,52 @@ export function createTestContext(options = {}) {
                         out[h.toLowerCase()] = masked(value);
                 }
                 return { status: reply.status ?? 200, headers: out, json, text };
+            },
+        },
+        // Like the bot: own variables only, values per server / member / channel as the variable says.
+        variables: {
+            create: async (def) => {
+                if (typeof def?.key !== 'string' || !/^[a-z][a-z0-9_]{0,31}$/.test(def.key))
+                    throw new SdkCallError('sdk.variables.bad_key');
+                if ((options.takenVariables ?? []).includes(def.key))
+                    throw new SdkCallError('sdk.variables.taken');
+                const type = def.type ?? 'text';
+                const owner = def.owner ?? 'shared';
+                if (!['text', 'number', 'list', 'object', 'object_list'].includes(type) || !['shared', 'member', 'channel'].includes(owner))
+                    throw new SdkCallError('sdk.variables.bad_type');
+                const created = !variableDefs.has(def.key);
+                const dflt = def.default === undefined ? '' : typeof def.default === 'string' ? def.default : JSON.stringify(def.default);
+                variableDefs.set(def.key, { key: def.key, name: def.name ?? def.key, description: def.description ?? '', type, owner, perServer: def.perServer !== false, default: dflt, group: def.group ?? id });
+                return { key: def.key, created };
+            },
+            delete: async (key) => {
+                if (!variableDefs.delete(key))
+                    throw new SdkCallError('sdk.variables.unknown');
+                for (const k of [...variableValues.keys()])
+                    if (k.startsWith(`${key}|`))
+                        variableValues.delete(k);
+                return true;
+            },
+            list: async () => [...variableDefs.values()].map((v) => structuredClone(v)),
+            get: async (key, where = {}) => {
+                const v = variableDefs.get(key);
+                if (!v)
+                    throw new SdkCallError('sdk.variables.unknown');
+                return variableValues.get(variableSlot(v, where)) ?? v.default;
+            },
+            set: async (key, value, where = {}) => {
+                const v = variableDefs.get(key);
+                if (!v)
+                    throw new SdkCallError('sdk.variables.unknown');
+                variableValues.set(variableSlot(v, where), typeof value === 'string' ? value : JSON.stringify(value));
+                return true;
+            },
+            reset: async (key, where = {}) => {
+                const v = variableDefs.get(key);
+                if (!v)
+                    throw new SdkCallError('sdk.variables.unknown');
+                variableValues.delete(variableSlot(v, where));
+                return true;
             },
         },
         files: {
@@ -708,7 +765,7 @@ export function createTestContext(options = {}) {
         }
         return areas.get(name);
     };
-    return new Proxy({ botId, sent, logs, store, globalStore, calls, played, requests, web: webRequests, actions, answers, balances, fileStore, settingsNow: config, fieldOptions }, {
+    return new Proxy({ botId, sent, logs, store, globalStore, calls, played, requests, web: webRequests, actions, answers, balances, fileStore, settingsNow: config, fieldOptions, variableDefs, variableValues }, {
         get: (target, prop) => {
             if (typeof prop !== 'string')
                 return undefined;
