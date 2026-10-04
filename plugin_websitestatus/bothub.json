@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_websitestatus",
+  "name": "Website Status Check",
+  "version": "1.0.0",
+  "description": "Watches websites and keeps a status board (online, warning, offline, latency) in a channel. Websites can share one embed per group.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "MIT",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "scheduler",
+      "discord.messages.send",
+      "discord.messages.edit",
+      "http.check"
+    ]
+  },
+  "main": "index.js",
+  "services": {
+    "tasks": [
+      {
+        "name": "tick",
+        "every": "1m"
+      }
+    ]
+  },
+  "nodes": [
+    "site_status"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  },
+  "icon": "📡",
+  "category": "utility"
+}

@@ -1,0 +1,74 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_websitestatus.node.site_status.label",
+  "descriptionKey": "plugin.plugin_websitestatus.node.site_status.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "unchecked",
+      "type": "flow"
+    },
+    {
+      "name": "not_found",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_websitestatus.node.site_status.result"
+    },
+    {
+      "suffix": ".emoji",
+      "labelKey": "plugin.plugin_websitestatus.node.site_status.result_emoji"
+    },
+    {
+      "suffix": ".name",
+      "labelKey": "plugin.plugin_websitestatus.node.site_status.result_name"
+    },
+    {
+      "suffix": ".url",
+      "labelKey": "plugin.plugin_websitestatus.node.site_status.result_url"
+    },
+    {
+      "suffix": ".latency",
+      "labelKey": "plugin.plugin_websitestatus.node.site_status.result_latency"
+    },
+    {
+      "suffix": ".code",
+      "labelKey": "plugin.plugin_websitestatus.node.site_status.result_code"
+    },
+    {
+      "suffix": ".checked",
+      "labelKey": "plugin.plugin_websitestatus.node.site_status.result_checked"
+    },
+    {
+      "suffix": ".color",
+      "labelKey": "plugin.plugin_websitestatus.node.site_status.result_color"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "site": {
+        "type": "string",
+        "maxLength": 64
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}
