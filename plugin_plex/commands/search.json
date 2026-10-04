@@ -10,7 +10,8 @@
         "typeVersion": 1,
         "config": {
           "command_name": "plex-search",
-          "description": "Searches the Plex libraries"
+          "description": "Searches the Plex libraries",
+          "hide_replies": false
         },
         "position": {
           "x": 400,

@@ -10,7 +10,8 @@
         "typeVersion": 1,
         "config": {
           "command_name": "plex-random",
-          "description": "A random title from Plex"
+          "description": "A random title from Plex",
+          "hide_replies": false
         },
         "position": {
           "x": 400,

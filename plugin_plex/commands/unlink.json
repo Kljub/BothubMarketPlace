@@ -10,7 +10,8 @@
         "typeVersion": 1,
         "config": {
           "command_name": "plex-unlink",
-          "description": "Removes the link to your Plex account"
+          "description": "Removes the link to your Plex account",
+          "hide_replies": true
         },
         "position": {
           "x": 400,
@@ -38,8 +39,7 @@
             "mode": "normal",
             "content": "✅ Plex account **{px}** unlinked."
           },
-          "target": "reply",
-          "ephemeral": true
+          "target": "reply"
         },
         "position": {
           "x": 140,

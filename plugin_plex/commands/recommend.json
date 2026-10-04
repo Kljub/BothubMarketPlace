@@ -10,7 +10,8 @@
         "typeVersion": 1,
         "config": {
           "command_name": "plex-recommend",
-          "description": "A recommendation from your watch history"
+          "description": "A recommendation from your watch history",
+          "hide_replies": false
         },
         "position": {
           "x": 400,

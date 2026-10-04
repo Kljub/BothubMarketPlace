@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "plugin_plex",
   "name": "Plex",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Plex for Discord: library search, now playing, random picks, recommendations, Overseerr requests, account linking with a role, and new-content notices.",
   "developer": {
     "name": "BotHub"

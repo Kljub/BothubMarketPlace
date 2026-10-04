@@ -23,7 +23,8 @@
             ],
             "banned_channels": [],
             "hide_without_permission": true
-          }
+          },
+          "hide_replies": true
         },
         "position": {
           "x": 400,
@@ -60,8 +61,7 @@
               }
             ]
           },
-          "target": "reply",
-          "ephemeral": true
+          "target": "reply"
         },
         "position": {
           "x": 140,

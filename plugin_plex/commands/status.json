@@ -10,7 +10,8 @@
         "typeVersion": 1,
         "config": {
           "command_name": "plex-status",
-          "description": "Shows the state of the Plex server"
+          "description": "Shows the state of the Plex server",
+          "hide_replies": true
         },
         "position": {
           "x": 400,
@@ -75,8 +76,7 @@
               }
             ]
           },
-          "target": "reply",
-          "ephemeral": true
+          "target": "reply"
         },
         "position": {
           "x": 140,
@@ -98,8 +98,7 @@
               }
             ]
           },
-          "target": "reply",
-          "ephemeral": true
+          "target": "reply"
         },
         "position": {
           "x": 660,

@@ -10,7 +10,8 @@
         "typeVersion": 1,
         "config": {
           "command_name": "plex-link",
-          "description": "Links your Plex account"
+          "description": "Links your Plex account",
+          "hide_replies": true
         },
         "position": {
           "x": 400,
@@ -38,8 +39,7 @@
             "mode": "normal",
             "content": "🔗 Open {px} and enter the code **{px.code}** (within 15 minutes).\nThe bot confirms by DM when it is done."
           },
-          "target": "reply",
-          "ephemeral": true
+          "target": "reply"
         },
         "position": {
           "x": 140,
@@ -55,8 +55,7 @@
             "mode": "normal",
             "content": "ℹ️ You are linked as **{px}** already. /plex-unlink removes it."
           },
-          "target": "reply",
-          "ephemeral": true
+          "target": "reply"
         },
         "position": {
           "x": 660,

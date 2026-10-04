@@ -331,7 +331,14 @@
       "version": "1.4.1",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_plex-1.4.1/plugin_plex-1.4.1.zip",
       "sha256": "337b8719dbdfcabae1d9958d80475bd79cf128ef986b5109f16d9aa87bc6f9c4",
-      "size": 38182,
+      "size": 38182
+    },
+    {
+      "id": "plugin_plex",
+      "version": "1.5.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_plex-1.5.0/plugin_plex-1.5.0.zip",
+      "sha256": "d8e2837205e905d428e7c054b6f42dce2e8ad65e5d8d4155787a4b6531e7f9b8",
+      "size": 38412,
       "name": "Plex",
       "description": "Plex for Discord: library search, now playing, random picks, recommendations, Overseerr requests, account linking with a role, and new-content notices.",
       "developer": {

@@ -10,7 +10,8 @@
         "typeVersion": 1,
         "config": {
           "command_name": "plex-request",
-          "description": "Requests a movie or show (Overseerr)"
+          "description": "Requests a movie or show (Overseerr)",
+          "hide_replies": false
         },
         "position": {
           "x": 400,
