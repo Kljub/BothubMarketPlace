@@ -1,0 +1,307 @@
+{
+  "name": "tempfile-create",
+  "description": "Posts a file or text members open with a button",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "tempfile-create",
+          "description": "Posts a file or text members open with a button",
+          "permissions": {
+            "allowed_roles": [
+              {
+                "id": "everyone"
+              }
+            ],
+            "banned_roles": [],
+            "required_permissions": [
+              "manage_guild"
+            ],
+            "banned_channels": [],
+            "hide_without_permission": true
+          }
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "option_name",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "name",
+          "description": "Unique name on this server",
+          "required": true,
+          "variable": "name"
+        },
+        "position": {
+          "x": -200,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_attachment",
+        "type": "option.attachment",
+        "typeVersion": 1,
+        "config": {
+          "name": "attachment",
+          "description": "The file (max. 8 MB)",
+          "required": false,
+          "variable": "attachment"
+        },
+        "position": {
+          "x": 60,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_text",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "text",
+          "description": "Text instead of or with the file",
+          "required": false,
+          "variable": "text"
+        },
+        "position": {
+          "x": 320,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_password",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "password",
+          "description": "Password for opening (optional)",
+          "required": false,
+          "variable": "password"
+        },
+        "position": {
+          "x": 580,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_max_usages",
+        "type": "option.number",
+        "typeVersion": 1,
+        "config": {
+          "name": "max_usages",
+          "description": "How often it may be opened in total",
+          "required": false,
+          "variable": "max_usages"
+        },
+        "position": {
+          "x": 840,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_starting_date",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "starting_date",
+          "description": "Available from, e.g. 2026-12-24 18:00 (UTC)",
+          "required": false,
+          "variable": "starting_date"
+        },
+        "position": {
+          "x": 1100,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_expiring_date",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "expiring_date",
+          "description": "Available until, e.g. 2026-12-31 23:59 (UTC)",
+          "required": false,
+          "variable": "expiring_date"
+        },
+        "position": {
+          "x": 1360,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_one_per_user",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "one_per_user",
+          "description": "Each member only once?",
+          "required": false,
+          "variable": "one_per_user",
+          "choices": "yes\nno"
+        },
+        "position": {
+          "x": 1620,
+          "y": 40
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_tempattachments.create",
+        "typeVersion": 1,
+        "config": {
+          "name": "{option_name}",
+          "attachment": "{option_attachment}",
+          "text": "{option_text}",
+          "password": "{option_password}",
+          "max": "{option_max_usages}",
+          "start": "{option_starting_date}",
+          "end": "{option_expiring_date}",
+          "once": "{option_one_per_user}",
+          "variable": "ta"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 400,
+          "y": 700
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 720,
+          "y": 700
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "option_name",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_attachment",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_text",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_password",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_max_usages",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_starting_date",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_expiring_date",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_one_per_user",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

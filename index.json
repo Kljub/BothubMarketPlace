@@ -184,6 +184,42 @@
       "voice": false
     },
     {
+      "id": "plugin_tempattachments",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_tempattachments-1.0.0/plugin_tempattachments-1.0.0.zip",
+      "sha256": "e633b1825db504c2a0666662ba2f71aedbffd61758ff21d6d25c151e81de4571",
+      "size": 14992,
+      "name": "Temp Attachments",
+      "description": "Files or texts behind an access button: password, start and end date, max. uses, once per member and role limits.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "MIT",
+      "icon": "📎",
+      "category": "utility",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "storage.files",
+          "scheduler",
+          "discord.messages.send",
+          "discord.messages.edit",
+          "discord.interactions.reply",
+          "discord.modals",
+          "discord.members.read"
+        ]
+      },
+      "layers": {
+        "commands": 4,
+        "events": 0,
+        "services": 1,
+        "nodes": 4,
+        "dashboard": 0
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_weather",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_weather-1.0.0/plugin_weather-1.0.0.zip",

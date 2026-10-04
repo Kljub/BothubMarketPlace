@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_tempattachments",
+  "name": "Temp Attachments",
+  "version": "1.0.0",
+  "description": "Files or texts behind an access button: password, start and end date, max. uses, once per member and role limits.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "MIT",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "storage.files",
+      "scheduler",
+      "discord.messages.send",
+      "discord.messages.edit",
+      "discord.interactions.reply",
+      "discord.modals",
+      "discord.members.read"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/tempfile-create.json",
+    "commands/tempfile-allowrole.json",
+    "commands/tempfile-removerole.json",
+    "commands/tempfile-delete.json"
+  ],
+  "nodes": [
+    "create",
+    "allow_role",
+    "remove_role",
+    "delete"
+  ],
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  },
+  "icon": "📎",
+  "category": "utility",
+  "services": {
+    "tasks": [
+      {
+        "name": "sweep",
+        "every": "5m"
+      }
+    ]
+  }
+}

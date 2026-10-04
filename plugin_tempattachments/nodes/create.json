@@ -1,0 +1,74 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_tempattachments.node.create.label",
+  "descriptionKey": "plugin.plugin_tempattachments.node.create.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_tempattachments.node.create.result"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "attachment": {
+        "type": "string",
+        "maxLength": 500
+      },
+      "text": {
+        "type": "string",
+        "maxLength": 2000
+      },
+      "password": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "max": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "start": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "end": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "once": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}
