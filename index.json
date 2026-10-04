@@ -78,6 +78,72 @@
       "voice": false
     },
     {
+      "id": "plugin_casino",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_casino-1.0.0/plugin_casino-1.0.0.zip",
+      "sha256": "c7e9547363bb5bc5a19e3c309dee949178613a6655e605e23e9b9249dfbcba1e",
+      "size": 17868,
+      "name": "Casino",
+      "description": "Coinflip, dice, slots, roulette and blackjack with bets from the Economy module; the payout rate (RTP) is set per bot.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "MIT",
+      "icon": "🎰",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "scheduler",
+          "discord.interactions.reply",
+          "modules.economy.balance.read",
+          "modules.economy.balance.write"
+        ]
+      },
+      "layers": {
+        "commands": 5,
+        "events": 0,
+        "services": 1,
+        "nodes": 5,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
+      "id": "plugin_criminal",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_criminal-1.0.0/plugin_criminal-1.0.0.zip",
+      "sha256": "807ca5110ddb8f76edd83d0743cc1956d47deb446f6fe9dcb84639bce526000f",
+      "size": 6972,
+      "name": "Criminal",
+      "description": "/steal: rob another member of a share of their balance. Chance, loot, fine and cooldown per bot; balances from the Economy module.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "MIT",
+      "icon": "🕵️",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "discord.interactions.reply",
+          "discord.members.read",
+          "modules.economy.balance.read",
+          "modules.economy.balance.write"
+        ]
+      },
+      "layers": {
+        "commands": 1,
+        "events": 0,
+        "services": 0,
+        "nodes": 1,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_emojimanager",
       "version": "1.1.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_emojimanager-1.1.0/plugin_emojimanager-1.1.0.zip",
@@ -107,6 +173,39 @@
         "events": 0,
         "services": 0,
         "nodes": 3,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
+      "id": "plugin_minesweeper",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_minesweeper-1.0.0/plugin_minesweeper-1.0.0.zip",
+      "sha256": "559c38e9a8bb784a06daead14e2720905b1d10b43ccff58cb6488737277cb179",
+      "size": 9609,
+      "name": "Minesweeper",
+      "description": "A 24-field mine bet: the member picks the number of mines, every diamond raises the multiplier, 🔥 cashes out. RTP per bot.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "MIT",
+      "icon": "💣",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "scheduler",
+          "discord.interactions.reply",
+          "modules.economy.balance.read",
+          "modules.economy.balance.write"
+        ]
+      },
+      "layers": {
+        "commands": 1,
+        "events": 0,
+        "services": 1,
+        "nodes": 1,
         "dashboard": 1
       },
       "voice": false
@@ -297,6 +396,40 @@
       "voice": false
     },
     {
+      "id": "plugin_tictactoe",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_tictactoe-1.0.0/plugin_tictactoe-1.0.0.zip",
+      "sha256": "9890c6766932e94d8a58613cf09c633c5ffb4614b1bba3f4f308072ac778994c",
+      "size": 9169,
+      "name": "Tic Tac Toe",
+      "description": "Tic tac toe against the bot or as a duel, with an optional bet from the Economy module.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "MIT",
+      "icon": "❌",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "scheduler",
+          "discord.interactions.reply",
+          "discord.members.read",
+          "modules.economy.balance.read",
+          "modules.economy.balance.write"
+        ]
+      },
+      "layers": {
+        "commands": 1,
+        "events": 0,
+        "services": 1,
+        "nodes": 1,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_weather",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_weather-1.0.0/plugin_weather-1.0.0.zip",
@@ -364,6 +497,38 @@
         "events": 0,
         "services": 1,
         "nodes": 1,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
+      "id": "plugin_work",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_work-1.0.0/plugin_work-1.0.0.zip",
+      "sha256": "f56b386266857a0b27fea82eeb1b0795a6c16eed4f3f5b156e1f68d442c80b3c",
+      "size": 11086,
+      "name": "Work",
+      "description": "A job system: the bot owner sets jobs with pay range and cooldown; members take one (/job-accept), earn with /work and quit with /job-leave. Pay goes to the Economy module.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "MIT",
+      "icon": "💼",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "discord.interactions.reply",
+          "modules.economy.balance.read",
+          "modules.economy.balance.write"
+        ]
+      },
+      "layers": {
+        "commands": 4,
+        "events": 0,
+        "services": 0,
+        "nodes": 4,
         "dashboard": 1
       },
       "voice": false

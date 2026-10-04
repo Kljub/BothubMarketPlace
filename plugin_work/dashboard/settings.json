@@ -1,0 +1,73 @@
+{
+  "fields": [
+    {
+      "key": "jobs",
+      "type": "list",
+      "max": 25,
+      "titleField": "name",
+      "hint": true,
+      "item": [
+        {
+          "key": "name",
+          "type": "text",
+          "max": 64,
+          "required": true
+        },
+        {
+          "key": "key",
+          "type": "text",
+          "max": 32,
+          "pattern": "^[a-z0-9_-]{1,32}$",
+          "required": true
+        },
+        {
+          "key": "emoji",
+          "type": "text",
+          "max": 16,
+          "default": "💼"
+        },
+        {
+          "key": "description",
+          "type": "text",
+          "max": 200
+        },
+        {
+          "key": "pay_min",
+          "type": "text",
+          "max": 9,
+          "pattern": "^[0-9]*$",
+          "default": "10"
+        },
+        {
+          "key": "pay_max",
+          "type": "text",
+          "max": 9,
+          "pattern": "^[0-9]*$",
+          "default": "50"
+        },
+        {
+          "key": "cooldown_minutes",
+          "type": "number",
+          "min": 1,
+          "max": 1440,
+          "default": 60
+        },
+        {
+          "key": "enabled",
+          "type": "bool",
+          "default": true
+        }
+      ],
+      "unique": [
+        "key"
+      ]
+    },
+    {
+      "key": "currency",
+      "type": "text",
+      "max": 32,
+      "default": "coins",
+      "hint": true
+    }
+  ]
+}

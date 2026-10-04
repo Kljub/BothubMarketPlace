@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_work",
+  "name": "Work",
+  "version": "1.0.0",
+  "description": "A job system: the bot owner sets jobs with pay range and cooldown; members take one (/job-accept), earn with /work and quit with /job-leave. Pay goes to the Economy module.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "MIT",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "discord.interactions.reply",
+      "modules.economy.balance.read",
+      "modules.economy.balance.write"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/job-list.json",
+    "commands/job-accept.json",
+    "commands/job-leave.json",
+    "commands/work.json"
+  ],
+  "nodes": [
+    "list",
+    "accept",
+    "leave",
+    "work"
+  ],
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  },
+  "icon": "💼",
+  "category": "fun",
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  }
+}
