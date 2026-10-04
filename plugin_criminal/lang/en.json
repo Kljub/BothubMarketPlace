@@ -1,6 +1,6 @@
 {
   "plugin.plugin_criminal.name": "Criminal",
-  "plugin.plugin_criminal.description": "/steal: rob another member of a share of their balance. Chance, loot, fine and cooldown per bot; balances from the Economy module.",
+  "plugin.plugin_criminal.description": "/steal: rob another member's wallet; /rob-bank: a crew robs a member's bank. Chances, loot, fines and cooldowns per bot; balances from the Economy module.",
   "plugin.plugin_criminal.setting.success_chance": "Success chance (%)",
   "plugin.plugin_criminal.setting.success_chance_hint": "How often a theft works.",
   "plugin.plugin_criminal.setting.steal_percent": "Loot (% of the victim's balance)",
@@ -19,5 +19,23 @@
   "plugin.plugin_criminal.node.steal.port.replied": "Answered",
   "plugin.plugin_criminal.node.steal.port.failed": "Failed",
   "plugin.plugin_criminal.node.steal.config.target": "Victim (user ID)",
-  "plugin.plugin_criminal.node.steal.result": "Result (success, caught)"
+  "plugin.plugin_criminal.node.steal.result": "Result (success, caught)",
+  "plugin.plugin_criminal.setting.heist_min_crew": "Heist: smallest crew",
+  "plugin.plugin_criminal.setting.heist_min_crew_hint": "Members needed before the leader can start /rob-bank.",
+  "plugin.plugin_criminal.setting.heist_chance": "Heist: success chance (%)",
+  "plugin.plugin_criminal.setting.heist_chance_hint": "+5 % for each member above the smallest crew, at most 90 %.",
+  "plugin.plugin_criminal.setting.heist_percent": "Heist: loot (% of the victim's bank)",
+  "plugin.plugin_criminal.setting.heist_percent_hint": "Split evenly between the crew.",
+  "plugin.plugin_criminal.setting.heist_max": "Heist: highest loot",
+  "plugin.plugin_criminal.setting.heist_max_hint": "Empty: no limit.",
+  "plugin.plugin_criminal.setting.heist_fine_percent": "Heist: fine (% of the own wallet)",
+  "plugin.plugin_criminal.setting.heist_fine_percent_hint": "Every crew member pays it when caught.",
+  "plugin.plugin_criminal.setting.heist_cooldown_minutes": "Heist: protection of the victim (minutes)",
+  "plugin.plugin_criminal.setting.heist_cooldown_minutes_hint": "After a heist the same bank is safe for this long.",
+  "plugin.plugin_criminal.node.heist.label": "Bank heist",
+  "plugin.plugin_criminal.node.heist.description": "Opens a heist lobby on a member's bank.",
+  "plugin.plugin_criminal.node.heist.port.replied": "Answered",
+  "plugin.plugin_criminal.node.heist.port.failed": "Failed",
+  "plugin.plugin_criminal.node.heist.config.target": "Victim (user ID)",
+  "plugin.plugin_criminal.node.heist.result": "Heist ID"
 }

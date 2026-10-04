@@ -1,6 +1,6 @@
 {
   "plugin.plugin_criminal.name": "Criminal",
-  "plugin.plugin_criminal.description": "/steal: einem Mitglied einen Teil seines Guthabens klauen. Chance, Beute, Strafe und Cooldown pro Bot; Guthaben aus dem Economy-Modul.",
+  "plugin.plugin_criminal.description": "/steal: die Geldbörse eines Mitglieds beklauen; /rob-bank: eine Crew raubt die Bank eines Mitglieds aus. Chancen, Beute, Strafen und Cooldowns pro Bot; Guthaben aus dem Economy-Modul.",
   "plugin.plugin_criminal.setting.success_chance": "Erfolgschance (%)",
   "plugin.plugin_criminal.setting.success_chance_hint": "Wie oft ein Diebstahl klappt.",
   "plugin.plugin_criminal.setting.steal_percent": "Beute (% des Opfer-Guthabens)",
@@ -19,5 +19,23 @@
   "plugin.plugin_criminal.node.steal.port.replied": "Beantwortet",
   "plugin.plugin_criminal.node.steal.port.failed": "Fehlgeschlagen",
   "plugin.plugin_criminal.node.steal.config.target": "Opfer (Nutzer-ID)",
-  "plugin.plugin_criminal.node.steal.result": "Ergebnis (success, caught)"
+  "plugin.plugin_criminal.node.steal.result": "Ergebnis (success, caught)",
+  "plugin.plugin_criminal.setting.heist_min_crew": "Bankraub: kleinste Crew",
+  "plugin.plugin_criminal.setting.heist_min_crew_hint": "So viele Mitglieder braucht es, bevor der Anführer /rob-bank startet.",
+  "plugin.plugin_criminal.setting.heist_chance": "Bankraub: Erfolgschance (%)",
+  "plugin.plugin_criminal.setting.heist_chance_hint": "+5 % pro Mitglied über der kleinsten Crew, höchstens 90 %.",
+  "plugin.plugin_criminal.setting.heist_percent": "Bankraub: Beute (% der Bank des Opfers)",
+  "plugin.plugin_criminal.setting.heist_percent_hint": "Wird gleichmäßig in der Crew geteilt.",
+  "plugin.plugin_criminal.setting.heist_max": "Bankraub: höchste Beute",
+  "plugin.plugin_criminal.setting.heist_max_hint": "Leer: kein Limit.",
+  "plugin.plugin_criminal.setting.heist_fine_percent": "Bankraub: Strafe (% der eigenen Geldbörse)",
+  "plugin.plugin_criminal.setting.heist_fine_percent_hint": "Zahlt jedes Crew-Mitglied, wenn sie erwischt werden.",
+  "plugin.plugin_criminal.setting.heist_cooldown_minutes": "Bankraub: Schutz des Opfers (Minuten)",
+  "plugin.plugin_criminal.setting.heist_cooldown_minutes_hint": "Nach einem Raub ist dieselbe Bank so lange sicher.",
+  "plugin.plugin_criminal.node.heist.label": "Bankraub",
+  "plugin.plugin_criminal.node.heist.description": "Öffnet eine Bankraub-Lobby auf die Bank eines Mitglieds.",
+  "plugin.plugin_criminal.node.heist.port.replied": "Beantwortet",
+  "plugin.plugin_criminal.node.heist.port.failed": "Fehlgeschlagen",
+  "plugin.plugin_criminal.node.heist.config.target": "Opfer (Nutzer-ID)",
+  "plugin.plugin_criminal.node.heist.result": "Raub-ID"
 }

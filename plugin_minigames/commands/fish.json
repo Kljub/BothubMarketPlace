@@ -1,0 +1,85 @@
+{
+  "name": "fish",
+  "description": "Go fishing for coins",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "fish",
+          "description": "Go fishing for coins"
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_minigames.fish",
+        "typeVersion": 1,
+        "config": {
+          "variable": "res"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 400,
+          "y": 700
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 720,
+          "y": 700
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

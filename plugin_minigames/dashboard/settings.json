@@ -1,0 +1,113 @@
+{
+  "fields": [
+    {
+      "key": "rtp",
+      "type": "number",
+      "min": 50,
+      "max": 100,
+      "default": 97,
+      "hint": true
+    },
+    {
+      "key": "scratch_price",
+      "type": "text",
+      "max": 9,
+      "pattern": "^[0-9]*$",
+      "default": "100",
+      "hint": true
+    },
+    {
+      "key": "puzzle_reward",
+      "type": "text",
+      "max": 9,
+      "pattern": "^[0-9]*$",
+      "default": "50",
+      "hint": true
+    },
+    {
+      "key": "puzzle_cooldown_minutes",
+      "type": "number",
+      "min": 0,
+      "max": 1440,
+      "default": 60,
+      "hint": true
+    },
+    {
+      "key": "beg_chance",
+      "type": "number",
+      "min": 0,
+      "max": 100,
+      "default": 70,
+      "hint": true
+    },
+    {
+      "key": "beg_min",
+      "type": "text",
+      "max": 9,
+      "pattern": "^[0-9]*$",
+      "default": "1",
+      "hint": true
+    },
+    {
+      "key": "beg_max",
+      "type": "text",
+      "max": 9,
+      "pattern": "^[0-9]*$",
+      "default": "50",
+      "hint": true
+    },
+    {
+      "key": "beg_cooldown_minutes",
+      "type": "number",
+      "min": 0,
+      "max": 1440,
+      "default": 5,
+      "hint": true
+    },
+    {
+      "key": "fish_cooldown_minutes",
+      "type": "number",
+      "min": 0,
+      "max": 1440,
+      "default": 10,
+      "hint": true
+    },
+    {
+      "key": "fish_scale",
+      "type": "number",
+      "min": 0,
+      "max": 1000,
+      "default": 100,
+      "hint": true
+    },
+    {
+      "key": "hangman_words",
+      "type": "text",
+      "max": 2000,
+      "multiline": true,
+      "hint": true
+    },
+    {
+      "key": "min_bet",
+      "type": "text",
+      "max": 9,
+      "pattern": "^[0-9]*$",
+      "default": "10"
+    },
+    {
+      "key": "max_bet",
+      "type": "text",
+      "max": 9,
+      "pattern": "^[0-9]*$",
+      "default": "1000",
+      "hint": true
+    },
+    {
+      "key": "currency",
+      "type": "text",
+      "max": 32,
+      "default": "coins",
+      "hint": true
+    }
+  ]
+}

@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "plugin_criminal",
   "name": "Criminal",
-  "version": "1.0.0",
-  "description": "/steal: rob another member of a share of their balance. Chance, loot, fine and cooldown per bot; balances from the Economy module.",
+  "version": "1.1.0",
+  "description": "/steal: rob another member's wallet; /rob-bank: a crew robs a member's bank. Chances, loot, fines and cooldowns per bot; balances from the Economy module.",
   "developer": {
     "name": "BotHub"
   },
@@ -15,15 +15,19 @@
       "discord.interactions.reply",
       "discord.members.read",
       "modules.economy.balance.read",
-      "modules.economy.balance.write"
+      "modules.economy.balance.write",
+      "scheduler",
+      "modules.economy.bank.write"
     ]
   },
   "main": "index.js",
   "commands": [
-    "commands/steal.json"
+    "commands/steal.json",
+    "commands/rob-bank.json"
   ],
   "nodes": [
-    "steal"
+    "steal",
+    "heist"
   ],
   "lang": {
     "en": "lang/en.json",
@@ -31,6 +35,14 @@
   },
   "icon": "🕵️",
   "category": "fun",
+  "services": {
+    "tasks": [
+      {
+        "name": "expire",
+        "every": "1m"
+      }
+    ]
+  },
   "dashboard": {
     "settings": "dashboard/settings.json"
   }

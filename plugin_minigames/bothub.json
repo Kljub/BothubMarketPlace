@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_minigames",
+  "name": "Minigames",
+  "version": "1.0.0",
+  "description": "Dice duels, 5 dice, higher or lower, scratch cards, double or steal, mastermind, hangman, match pairs, lights out, begging and fishing. Bets and rewards use the Economy module.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "MIT",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "scheduler",
+      "discord.interactions.reply",
+      "discord.members.read",
+      "modules.economy.balance.read",
+      "modules.economy.balance.write"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/dicebet.json",
+    "commands/5dice.json",
+    "commands/high-low.json",
+    "commands/scratchcard.json",
+    "commands/dos.json",
+    "commands/mastermind.json",
+    "commands/hangman.json",
+    "commands/matchpairs.json",
+    "commands/lightsout.json",
+    "commands/beg.json",
+    "commands/fish.json"
+  ],
+  "nodes": [
+    "dicebet",
+    "fivedice",
+    "highlow",
+    "scratchcard",
+    "dos",
+    "mastermind",
+    "hangman",
+    "matchpairs",
+    "lightsout",
+    "beg",
+    "fish"
+  ],
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  },
+  "icon": "🎮",
+  "category": "fun",
+  "services": {
+    "tasks": [
+      {
+        "name": "expire",
+        "every": "1m"
+      }
+    ]
+  },
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  }
+}

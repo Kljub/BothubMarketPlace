@@ -15,8 +15,9 @@ Policies**.
 | 🔎 **AniSearch** | Anime and manga search, airing schedules and reminders | 6 |
 | 🎨 **ArcEnCiel** | Image generation with Arc en Ciel: text to image, image to image, auto-tagging; upscale and regenerate buttons | `/imagine`, `/img2img`, `/autotag` |
 | 🎰 **Casino** | Coinflip, dice, slots, roulette and blackjack with bets; payout rate (RTP) per bot | 5 |
-| 🕵️ **Criminal** | Rob another member: chance, loot, fine and cooldown per bot | `/steal` |
+| 🕵️ **Criminal** | Rob another member's wallet, or a member's bank with a crew: chance, loot, fine and cooldown per bot | `/steal`, `/rob-bank` |
 | 😀 **Emoji Manager** | Emoji menus and emoji uploads | 3 |
+| 🎮 **Minigames** | Dice duels, 5 dice, higher or lower, scratch cards, double or steal, mastermind, hangman, match pairs, lights out, begging, fishing | 11 |
 | 💣 **Minesweeper** | A mine bet on 24 fields with a rising multiplier | `/minesweeper` |
 | 🎬 **Plex** | Plex for Discord: library search, now playing, random picks, Overseerr requests, account linking, new-content notices | 12 |
 | ✂️ **Rock Paper Scissors** | Against the bot or as a duel, optional bets | `/rps`, `/rps-duel` |

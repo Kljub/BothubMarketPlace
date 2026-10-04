@@ -160,9 +160,16 @@
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_criminal-1.0.0/plugin_criminal-1.0.0.zip",
       "sha256": "807ca5110ddb8f76edd83d0743cc1956d47deb446f6fe9dcb84639bce526000f",
-      "size": 6972,
+      "size": 6972
+    },
+    {
+      "id": "plugin_criminal",
+      "version": "1.1.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_criminal-1.1.0/plugin_criminal-1.1.0.zip",
+      "sha256": "459ecaaf188cff21f7eca0b5889ac6113a91227171051e130bac09d98588a93c",
+      "size": 11832,
       "name": "Criminal",
-      "description": "/steal: rob another member of a share of their balance. Chance, loot, fine and cooldown per bot; balances from the Economy module.",
+      "description": "/steal: rob another member's wallet; /rob-bank: a crew robs a member's bank. Chances, loot, fines and cooldowns per bot; balances from the Economy module.",
       "developer": {
         "name": "BotHub"
       },
@@ -176,14 +183,16 @@
           "discord.interactions.reply",
           "discord.members.read",
           "modules.economy.balance.read",
-          "modules.economy.balance.write"
+          "modules.economy.balance.write",
+          "scheduler",
+          "modules.economy.bank.write"
         ]
       },
       "layers": {
-        "commands": 1,
+        "commands": 2,
         "events": 0,
-        "services": 0,
-        "nodes": 1,
+        "services": 1,
+        "nodes": 2,
         "dashboard": 1
       },
       "voice": false
@@ -251,6 +260,40 @@
         "events": 0,
         "services": 1,
         "nodes": 1,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
+      "id": "plugin_minigames",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_minigames-1.0.0/plugin_minigames-1.0.0.zip",
+      "sha256": "8d91004168088144ff8a6757c2536bb13d226e23410d476b4a020936ee1e1f39",
+      "size": 34333,
+      "name": "Minigames",
+      "description": "Dice duels, 5 dice, higher or lower, scratch cards, double or steal, mastermind, hangman, match pairs, lights out, begging and fishing. Bets and rewards use the Economy module.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "MIT",
+      "icon": "🎮",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "scheduler",
+          "discord.interactions.reply",
+          "discord.members.read",
+          "modules.economy.balance.read",
+          "modules.economy.balance.write"
+        ]
+      },
+      "layers": {
+        "commands": 11,
+        "events": 0,
+        "services": 1,
+        "nodes": 11,
         "dashboard": 1
       },
       "voice": false
