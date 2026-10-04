@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createTestContext, runBlock, runComponent, runTask } from '#sdk-testing';
 import plugin from '../index.js';
+import settings from '../dashboard/settings.json' with { type: 'json' };
 
 const GUILD = '100000000000000001';
 const VOICE = '300000000000000009';
@@ -11,7 +12,7 @@ const AIRHORN = 'https://cdn.discordapp.com/attachments/1/2/airhorn.mp3';
 const NOTES = 'https://cdn.discordapp.com/attachments/1/3/notes.txt';
 const permissions = ['storage', 'storage.files', 'scheduler', 'discord.voice.connect', 'discord.voice.speak', 'discord.interactions.reply', 'discord.members.read', 'discord.guilds.read'];
 const ctxWith = () => createTestContext({
-  id: 'plugin_soundboard', permissions, config: { volume: '50' },
+  id: 'plugin_soundboard', permissions, config: { volume: '50' }, settings,
   attachments: { [AIRHORN]: Buffer.from('ID3 airhorn').toString('base64'), [NOTES]: Buffer.from('hello').toString('base64') },
   discord: { 'member.get': (g, u) => ({ id: u, roles: [], voiceChannelId: u === BOB ? VOICE : null }), 'guild.list': () => [{ id: GUILD, name: 'G', memberCount: 2 }] },
 });
@@ -54,4 +55,22 @@ test('panel buttons play in the clicker\'s voice channel; idle leaves', async ()
   await ctx.voice.stop(GUILD);
   await runTask(plugin, 'idle', ctx);
   assert.equal((await ctx.voice.state(GUILD)).channelId, null);
+});
+
+test('the sounds are the settings list: dashboard uploads play, 1.0.0 storage moves over', async () => {
+  const ctx = ctxWith();
+  const put = await ctx.files.put(Buffer.from('ID3 drum').toString('base64'), 'drum.mp3');
+  await ctx.config.set('sounds', [{ name: 'Drum', file: put.name }]);
+  const played = await runBlock(plugin, 'play', ctx, { vars, config: { sound: 'drum', channel: VOICE } });
+  assert.equal(played.port, 'next');
+  await runBlock(plugin, 'add', ctx, { vars, config: { name: 'airhorn', attachment: AIRHORN } });
+  assert.deepEqual(ctx.settingsNow.sounds.map((s) => s.name), ['Drum', 'airhorn'], '/soundboard-add shows up on the settings page');
+
+  const old = ctxWith();
+  const f = await old.files.put(Buffer.from('ID3 old').toString('base64'), 'old.mp3');
+  await old.storage.set('sounds', JSON.stringify([{ name: 'old', file: f.name, plays: 3 }]));
+  const listed = await runBlock(plugin, 'list', old, {});
+  assert.match(listed.results[''], /old\*\* · played 3×/);
+  assert.equal(old.settingsNow.sounds[0].name, 'old');
+  assert.equal(await old.storage.get('sounds'), null);
 });

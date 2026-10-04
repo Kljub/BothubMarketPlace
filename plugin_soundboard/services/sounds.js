@@ -1,6 +1,8 @@
-// Service "sounds": the sounds of the bot (storage "sounds" = [{ name, file,
-// filename, by, plays }]); the audio is a plugin file (storage.files, mp3,
-// ogg, wav or webm up to 8 MB). Playing joins the member's voice channel;
+// Service "sounds": the sounds of the bot are the settings list "sounds"
+// ({ _id, name, file }), so the dashboard shows them and can upload new
+// ones; /soundboard-add adds to the same list (ctx.config.set). The audio is
+// a plugin file (storage.files, mp3, ogg, wav or webm up to 8 MB). Play
+// counts: storage "plays:<name>". Playing joins the member's voice channel;
 // the "idle" task leaves after a minute without sound.
 import { readJson, setting, writeJson } from './util.js';
 
@@ -8,8 +10,26 @@ export const MAX_SOUNDS = 25;
 const NAME = /^[a-z0-9_-]{1,32}$/;
 const AUDIO = /\.(mp3|ogg|wav|webm)$/;
 
-export const list = (ctx) => readJson(ctx, 'sounds', []);
 export const cleanName = (v) => String(v ?? '').trim().toLowerCase();
+
+/** The sounds with a name and a file, in the order of the settings. */
+export async function list(ctx) {
+  // 1.0.0 kept the sounds in storage: they move into the settings once.
+  const old = await readJson(ctx, 'sounds', null);
+  if (old) {
+    const now = setting(ctx, 'sounds', []);
+    const add = old.filter((o) => !now.some((s) => cleanName(s.name) === o.name)).map((o) => ({ name: o.name, file: o.file }));
+    if (add.length) await ctx.config.set('sounds', [...now, ...add].slice(0, MAX_SOUNDS));
+    for (const o of old) if (o.plays) await ctx.storage.set(`plays:${o.name}`, String(o.plays));
+    await ctx.storage.delete('sounds');
+  }
+  const out = [];
+  for (const s of setting(ctx, 'sounds', [])) {
+    if (!s?.file || !cleanName(s.name)) continue;
+    out.push({ ...s, name: cleanName(s.name), plays: Number((await ctx.storage.get(`plays:${cleanName(s.name)}`)) ?? 0) });
+  }
+  return out;
+}
 
 export async function find(ctx, name) {
   return (await list(ctx)).find((s) => s.name === cleanName(name)) ?? null;
@@ -33,17 +53,18 @@ export async function add(ctx, name, url, by) {
     if (!sounds.some((s) => s.file === stored.name)) await ctx.files.delete(stored.name).catch(() => undefined);
     return '❌ Only mp3, ogg, wav or webm.';
   }
-  await writeJson(ctx, 'sounds', [...sounds, { name: n, file: stored.name, filename: stored.filename, by, plays: 0 }]);
+  await ctx.config.set('sounds', [...setting(ctx, 'sounds', []), { name: n, file: stored.name }]);
   return null;
 }
 
 export async function removeSound(ctx, name) {
-  const sounds = await list(ctx);
-  const s = sounds.find((x) => x.name === cleanName(name));
-  if (!s) return false;
-  const rest = sounds.filter((x) => x !== s);
-  await writeJson(ctx, 'sounds', rest);
-  if (!rest.some((x) => x.file === s.file)) await ctx.files.delete(s.file).catch(() => undefined);
+  await list(ctx);
+  const all = setting(ctx, 'sounds', []);
+  const rest = all.filter((x) => cleanName(x.name) !== cleanName(name));
+  if (rest.length === all.length) return false;
+  // The bot deletes the file once no setting names it any more.
+  await ctx.config.set('sounds', rest);
+  await ctx.storage.delete(`plays:${cleanName(name)}`);
   return true;
 }
 
@@ -61,8 +82,7 @@ export async function play(ctx, guildId, channelId, name) {
     const e = String(err?.message ?? err);
     return e.includes('busy') ? '❌ Something else plays on this server right now (e.g. music).' : `❌ Could not play: ${e}`;
   }
-  s.plays += 1;
-  await writeJson(ctx, 'sounds', sounds);
+  await ctx.storage.increment(`plays:${s.name}`);
   await writeJson(ctx, `last:${guildId}`, Date.now());
   return null;
 }

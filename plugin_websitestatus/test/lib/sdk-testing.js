@@ -95,9 +95,11 @@ const HTTP_BODY_BYTES = 64 * 1024;
 const HTTP_RESPONSE_BYTES = 1024 * 1024;
 const HTTP_TIMEOUT_MS = 10000;
 // Plugin files (storage.files).
-const FILE_NAME = /^[0-9a-f]{16}\.(png|gif|webp|jpg)$/;
-const FILE_NAMES = /[0-9a-f]{16}\.(?:png|gif|webp|jpg)/g;
-const FILE_MAX_BYTES = 2 * 1024 * 1024;
+const FILE_NAME = /^[0-9a-f]{16}\.[a-z0-9]{1,8}$/;
+const FILE_NAMES = /[0-9a-f]{16}\.[a-z0-9]{1,8}/g;
+const FILE_MAX_BYTES = 8 * 1024 * 1024;
+// Like the bot (bot/src/sdk/files.ts): programs and image names without image content are refused.
+const EXECUTABLE = new Set(['exe', 'msi', 'bat', 'cmd', 'com', 'scr', 'ps1', 'vbs', 'js', 'jse', 'wsf', 'hta', 'jar', 'sh', 'apk', 'dll', 'lnk', 'reg', 'png', 'gif', 'webp', 'jpg', 'jpeg']);
 const FILE_MAX_COUNT = 100;
 const base64Bytes = (b64) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
 const bytesBase64 = (data) => btoa(String.fromCharCode(...data));
@@ -146,16 +148,19 @@ export function createTestContext(options = {}) {
     const answers = [];
     const balances = new Map(Object.entries(options.balances ?? {}));
     const fileStore = new Map(Object.entries(options.files ?? {}));
+    const fileNames = new Map();
     const fileOf = (name) => {
         if (typeof name !== 'string' || !FILE_NAME.test(name) || !fileStore.has(name))
             return null;
         const data = fileStore.get(name);
-        return { name, mime: sniff(base64Bytes(data))?.mime ?? 'image/png', size: base64Bytes(data).length, data };
+        return { name, mime: sniff(base64Bytes(data))?.mime ?? 'application/octet-stream', size: base64Bytes(data).length, filename: fileNames.get(name) ?? '', data };
     };
-    const putFile = async (data) => {
+    const putFile = async (data, filename = '', imagesOnly = true) => {
         if (!data.length || data.length > FILE_MAX_BYTES)
             throw new SdkCallError('sdk.files.too_big');
-        const type = sniff(data);
+        const image = sniff(data);
+        const ext = /\.([A-Za-z0-9]{1,8})$/.exec(filename.trim())?.[1]?.toLowerCase() ?? 'bin';
+        const type = image ?? (imagesOnly || EXECUTABLE.has(ext) ? null : { mime: 'application/octet-stream', ext });
         if (!type)
             throw new SdkCallError('sdk.files.bad_type');
         const digest = new Uint8Array(await crypto.subtle.digest('SHA-256', data));
@@ -163,7 +168,10 @@ export function createTestContext(options = {}) {
         if (!fileStore.has(name) && fileStore.size >= FILE_MAX_COUNT)
             throw new SdkCallError('sdk.files.full');
         fileStore.set(name, bytesBase64(data));
-        return { name, mime: type.mime, size: data.length };
+        const original = image ? '' : filename.replace(/^.*[\\/]/, '').slice(-100);
+        if (original)
+            fileNames.set(name, original);
+        return { name, mime: type.mime, size: data.length, filename: original };
     };
     const hosts = options.hosts ?? Object.keys(options.web ?? {});
     const manifestSecrets = Array.isArray(options.manifest?.secrets) ? options.manifest.secrets : null;
@@ -273,7 +281,11 @@ export function createTestContext(options = {}) {
             leave: async (guildId) => { voiceGuild(guildId); voice.delete(guildId); },
             play: async (guildId, file, opts = {}) => {
                 voiceGuild(guildId);
-                if (typeof file !== 'string' || !SOUND_FILE.test(file) || (options.sounds && !options.sounds.includes(file))) {
+                // A sound of the plugin files (storage.files) or of the plugin folder.
+                const stored = typeof file === 'string' && /^[0-9a-f]{16}\.(mp3|ogg|wav|webm)$/.test(file);
+                if (stored && !permissions.has('storage.files'))
+                    throw new SdkCallError('sdk.call.denied');
+                if (stored ? !fileStore.has(file) : typeof file !== 'string' || !SOUND_FILE.test(file) || (options.sounds && !options.sounds.includes(file))) {
                     throw new SdkCallError('sdk.voice.bad_file');
                 }
                 const volume = opts.volume ?? 1;
@@ -476,15 +488,15 @@ export function createTestContext(options = {}) {
             },
         },
         files: {
-            list: async () => [...fileStore.keys()].map((n) => { const f = fileOf(n); return { name: f.name, mime: f.mime, size: f.size }; }),
+            list: async () => [...fileStore.keys()].map((n) => { const f = fileOf(n); return { name: f.name, mime: f.mime, size: f.size, filename: f.filename }; }),
             get: async (name) => fileOf(name),
-            put: async (data) => {
+            put: async (data, filename) => {
                 if (typeof data !== 'string' || !/^[A-Za-z0-9+/]+={0,2}$/.test(data))
                     throw new SdkCallError('sdk.files.bad_type');
-                return putFile(base64Bytes(data));
+                return putFile(base64Bytes(data), filename ?? '', typeof filename !== 'string');
             },
             delete: async (name) => fileStore.delete(String(name)),
-            fromDiscord: async (url) => {
+            fromDiscord: async (url, filename) => {
                 let u = null;
                 try {
                     u = new URL(String(url));
@@ -497,7 +509,7 @@ export function createTestContext(options = {}) {
                 const data = options.attachments?.[String(url)];
                 if (data === undefined)
                     throw new SdkCallError('sdk.http.failed');
-                return putFile(base64Bytes(data));
+                return putFile(base64Bytes(data), filename?.trim() ? filename : decodeURIComponent(u.pathname.split('/').pop() ?? ''), false);
             },
         },
         message: {
@@ -559,10 +571,17 @@ export function createTestContext(options = {}) {
                 if ((kind === 'editReply' || kind === 'followUp') && !done.some((x) => x.kind !== 'showModal'))
                     throw new SdkCallError('sdk.interaction.not_replied');
                 const opts = (kind === 'deferReply' ? a : b);
+                if (opts?.file !== undefined && (kind === 'reply' || kind === 'followUp')) {
+                    if (!permissions.has('storage.files'))
+                        throw new SdkCallError('sdk.call.denied');
+                    if (!fileOf(opts.file))
+                        throw new SdkCallError('sdk.files.unknown');
+                }
                 answers.push({
                     handle, kind,
                     ...(kind === 'showModal' ? { modal: structuredClone(a) } : kind === 'deferReply' ? {} : { message: structuredClone(a) }),
                     ...(opts?.ephemeral ? { ephemeral: true } : {}),
+                    ...(opts?.file !== undefined && (kind === 'reply' || kind === 'followUp') ? { file: opts.file } : {}),
                 });
             }])),
         economy: {

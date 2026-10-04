@@ -1,6 +1,28 @@
 {
   "fields": [
     {
+      "key": "sounds",
+      "type": "list",
+      "max": 25,
+      "titleField": "name",
+      "hint": true,
+      "item": [
+        {
+          "key": "name",
+          "type": "text",
+          "max": 32,
+          "pattern": "^[A-Za-z0-9_-]{1,32}$",
+          "required": true
+        },
+        {
+          "key": "file",
+          "type": "file",
+          "accept": "audio",
+          "required": true
+        }
+      ]
+    },
+    {
       "key": "volume",
       "type": "select",
       "options": [

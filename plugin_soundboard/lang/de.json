@@ -40,5 +40,9 @@
   "plugin.plugin_soundboard.node.stop.description": "Stoppt den Sound und verlässt den Voice-Channel.",
   "plugin.plugin_soundboard.node.stop.result": "Antwort",
   "plugin.plugin_soundboard.node.stop.port.replied": "Beantwortet",
-  "plugin.plugin_soundboard.node.stop.port.failed": "Fehlgeschlagen"
+  "plugin.plugin_soundboard.node.stop.port.failed": "Fehlgeschlagen",
+  "plugin.plugin_soundboard.setting.sounds": "Sounds",
+  "plugin.plugin_soundboard.setting.sounds_hint": "Alle Sounds des Soundboards. Hier hochladen oder mit /soundboard-add; der Name ist, was Mitglieder auswählen.",
+  "plugin.plugin_soundboard.setting.sounds.name": "Name (a-z, 0-9, _ und -)",
+  "plugin.plugin_soundboard.setting.sounds.file": "Sound"
 }

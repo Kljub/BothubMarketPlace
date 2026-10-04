@@ -145,6 +145,7 @@ export interface SecretFileAnswer {
     headers: Record<string, string>;
     file: StoredFile;
 }
+/** voiceChannelId: the voice channel the member is in now, null when none. */
 export interface MemberInfo {
     id: Id;
     name: string;
@@ -153,6 +154,7 @@ export interface MemberInfo {
     avatar: string;
     joinedAt: string | null;
     roles: Id[];
+    voiceChannelId: Id | null;
 }
 export interface RoleInfo {
     id: Id;
@@ -684,6 +686,7 @@ export interface PluginContext {
     readonly voice: {
         join(guildId: Id, channelId: Id): Async<void>;
         leave(guildId: Id): Async<void>;
+        /** file: sounds/<name>.ogg|mp3|wav of the plugin folder, or a stored plugin file (mp3, ogg, wav, webm; needs storage.files). */
         play(guildId: Id, file: string, options?: {
             volume?: number;
         }): Async<void>;

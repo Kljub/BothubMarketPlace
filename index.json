@@ -222,7 +222,14 @@
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_soundboard-1.0.0/plugin_soundboard-1.0.0.zip",
       "sha256": "95174b547dc44f31086db756213ad42df655485d1f2e06af85a7013289fe27cb",
-      "size": 14950,
+      "size": 14950
+    },
+    {
+      "id": "plugin_soundboard",
+      "version": "1.1.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_soundboard-1.1.0/plugin_soundboard-1.1.0.zip",
+      "sha256": "1efe56940140769d258630ba8fac31d51e9b1a76a2a52261abafa8f866311d95",
+      "size": 15700,
       "name": "Soundboard",
       "description": "Sound clips members play in their voice channel: a panel with a button per sound, /soundboard-play, uploads with /soundboard-add.",
       "developer": {

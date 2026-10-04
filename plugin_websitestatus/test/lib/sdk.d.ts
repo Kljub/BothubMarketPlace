@@ -145,6 +145,7 @@ export interface SecretFileAnswer {
     headers: Record<string, string>;
     file: StoredFile;
 }
+/** voiceChannelId: the voice channel the member is in now, null when none. */
 export interface MemberInfo {
     id: Id;
     name: string;
@@ -153,6 +154,7 @@ export interface MemberInfo {
     avatar: string;
     joinedAt: string | null;
     roles: Id[];
+    voiceChannelId: Id | null;
 }
 export interface RoleInfo {
     id: Id;
@@ -195,10 +197,12 @@ export interface MessageInfo {
     stickers: number;
 }
 /** A file of the plugin files: name = content hash + extension (e.g. "3f2a9c0d1b7e4a55.png"). */
+/** A plugin file: images (PNG, GIF, WEBP, JPEG) or other files with their original name (filename). */
 export interface StoredFile {
     name: string;
-    mime: 'image/png' | 'image/gif' | 'image/webp' | 'image/jpeg';
+    mime: string;
     size: number;
+    filename: string;
 }
 /** Who to check with config.checkAccess: an interaction event or IDs. */
 export type AccessSubject = {
@@ -474,8 +478,10 @@ export interface PluginContext {
      * click/select/modal (InteractionEvent.handle). The token stays in the bot.
      */
     readonly interaction: {
+        /** options.file: a plugin file sent along (storage.files), e.g. privately with ephemeral. */
         reply(handle: string, message: Message | string, options?: {
             ephemeral?: boolean;
+            file?: string;
         }): Async<void>;
         editReply(handle: string, message: Message | string): Async<void>;
         deferReply(handle: string, options?: {
@@ -483,6 +489,7 @@ export interface PluginContext {
         }): Async<void>;
         followUp(handle: string, message: Message | string, options?: {
             ephemeral?: boolean;
+            file?: string;
         }): Async<void>;
         /** Changes the message whose button/select was used. */
         update(handle: string, message: Message | string): Async<void>;
@@ -679,6 +686,7 @@ export interface PluginContext {
     readonly voice: {
         join(guildId: Id, channelId: Id): Async<void>;
         leave(guildId: Id): Async<void>;
+        /** file: sounds/<name>.ogg|mp3|wav of the plugin folder, or a stored plugin file (mp3, ogg, wav, webm; needs storage.files). */
         play(guildId: Id, file: string, options?: {
             volume?: number;
         }): Async<void>;
@@ -720,10 +728,14 @@ export interface PluginContext {
         get(name: string): Async<(StoredFile & {
             data: string;
         }) | null>;
-        /** Stores an image (base64; max. about 48 KB per call, bigger ones via fromDiscord). Same picture = same name. */
-        put(base64: string): Async<StoredFile>;
-        /** Stores a Discord attachment (cdn.discordapp.com / media.discordapp.net), e.g. a command's attachment option. */
-        fromDiscord(url: string): Async<StoredFile>;
+        /**
+         * Stores a file (base64; max. about 48 KB per call, bigger ones via
+         * fromDiscord). Without filename only images; with one any file but
+         * programs (exe, bat, js, …). Same content = same name.
+         */
+        put(base64: string, filename?: string): Async<StoredFile>;
+        /** Stores a Discord attachment (cdn.discordapp.com / media.discordapp.net), e.g. a command's attachment option; any file but programs, up to 8 MB. */
+        fromDiscord(url: string, filename?: string): Async<StoredFile>;
         delete(name: string): Async<boolean>;
     };
 }

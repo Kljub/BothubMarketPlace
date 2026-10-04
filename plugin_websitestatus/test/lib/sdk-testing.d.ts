@@ -112,7 +112,8 @@ export interface InteractionAnswer {
     kind: 'reply' | 'editReply' | 'deferReply' | 'followUp' | 'update' | 'showModal';
     message?: Message | string;
     ephemeral?: boolean;
-    modal?: Json;
+    modal?: Json; /** A plugin file sent with it (options.file). */
+    file?: string;
 }
 /** ctx.http.secret request (see the SDK). */
 export interface SecretRequestKit {

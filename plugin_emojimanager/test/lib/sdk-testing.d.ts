@@ -112,7 +112,8 @@ export interface InteractionAnswer {
     kind: 'reply' | 'editReply' | 'deferReply' | 'followUp' | 'update' | 'showModal';
     message?: Message | string;
     ephemeral?: boolean;
-    modal?: Json;
+    modal?: Json; /** A plugin file sent with it (options.file). */
+    file?: string;
 }
 /** ctx.http.secret request (see the SDK). */
 export interface SecretRequestKit {
@@ -148,7 +149,8 @@ export interface EndpointReply {
     json?: Json;
     text?: string;
     base64?: string;
-    headers?: Record<string, string>;
+    headers?: Record<string, string>; /** http.check: the latency it reports (default 1). */
+    latencyMs?: number;
 }
 export interface PlayedSound {
     guildId: string;
