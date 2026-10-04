@@ -1,0 +1,138 @@
+{
+  "name": "coinflip",
+  "description": "Heads or tails: double or nothing",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "coinflip",
+          "description": "Heads or tails: double or nothing"
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "option_bet",
+        "type": "option.number",
+        "typeVersion": 1,
+        "config": {
+          "name": "bet",
+          "description": "Your bet",
+          "required": true,
+          "variable": "bet"
+        },
+        "position": {
+          "x": 140,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_side",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "side",
+          "description": "Your side",
+          "required": true,
+          "variable": "side",
+          "choices": "heads\ntails"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_casino.coinflip",
+        "typeVersion": 1,
+        "config": {
+          "bet": "{option_bet}",
+          "side": "{option_side}",
+          "variable": "res"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 400,
+          "y": 700
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 720,
+          "y": 700
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "option_bet",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_side",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}
