@@ -355,6 +355,42 @@
       "voice": false
     },
     {
+      "id": "plugin_serverbackup",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_serverbackup-1.0.0/plugin_serverbackup-1.0.0.zip",
+      "sha256": "5f85f720d227828b432d51a21a92ec39c776f2e32729b9c26f1587289a635d4a",
+      "size": 16534,
+      "name": "Server Backup",
+      "description": "Backups of a whole server (roles and permissions, channels with their permissions, emojis, settings, optionally bans) by command or schedule; restore them or clone them into another server.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "MIT",
+      "icon": "💾",
+      "category": "utility",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "storage.files",
+          "scheduler",
+          "discord.server.backup",
+          "discord.server.restore",
+          "discord.guilds.read",
+          "discord.interactions.reply",
+          "discord.messages.send"
+        ]
+      },
+      "layers": {
+        "commands": 5,
+        "events": 0,
+        "services": 1,
+        "nodes": 5,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_soundboard",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_soundboard-1.0.0/plugin_soundboard-1.0.0.zip",

@@ -1,0 +1,124 @@
+{
+  "name": "backup delete",
+  "description": "Deletes a backup",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "backup delete",
+          "description": "Deletes a backup",
+          "permissions": {
+            "allowed_roles": [
+              {
+                "id": "everyone"
+              }
+            ],
+            "banned_roles": [],
+            "required_permissions": [
+              "manage_guild"
+            ],
+            "banned_channels": [],
+            "hide_without_permission": true
+          }
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "option_number",
+        "type": "option.number",
+        "typeVersion": 1,
+        "config": {
+          "name": "number",
+          "description": "Which backup (1 = newest)",
+          "required": false,
+          "variable": "number"
+        },
+        "position": {
+          "x": 140,
+          "y": 40
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_serverbackup.delete",
+        "typeVersion": 1,
+        "config": {
+          "number": "{option_number}",
+          "variable": "res"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 400,
+          "y": 700
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 720,
+          "y": 700
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "option_number",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}
