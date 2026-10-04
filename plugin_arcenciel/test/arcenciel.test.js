@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createTestContext, runBlock } from '#sdk-testing';
 import plugin from '../index.js';
+import { runComponent } from '#sdk-testing';
 import manifest from '../bothub.json' with { type: 'json' };
 import settings from '../dashboard/settings.json' with { type: 'json' };
 import { jobBody, num, waitForImage } from '../services/arc.js';
@@ -28,6 +29,8 @@ function arc({ polls = 1, status = 'completed', safety = 'ok', key = 'arc-key-12
     const path = new URL(req.url).pathname;
     if (req.method === 'POST' && path === '/api/generator/uploads') return { json: { path: 'generator/src-1.png' } };
     if (req.method === 'POST' && path === '/api/generator/jobs') return { json: { job: { id: 'job-1', status: 'queued' }, position: 2, queueEtaMs: 5000 } };
+    if (req.method === 'POST' && path === '/api/generator/jobs/job-1/remix') return { json: { job: { id: 'job-1', status: 'queued' }, position: 0 } };
+    if (path === '/api/generator/options') return { json: { models: { upscale: ['4x-UltraSharp'] } } };
     if (path === '/api/generator/jobs/job-1') {
       reads += 1;
       const done = reads > polls;
@@ -69,7 +72,10 @@ test('imagine: queues a job with the defaults, posts the image, edits the answer
   assert.equal(sent.channelId, CHANNEL);
   assert.match(sent.file, /^[0-9a-f]{16}\.png$/);
   assert.equal(sent.message.embeds[0].image_url, `attachment://${sent.file}`);
-  assert.match(sent.message.embeds[0].footer, /seed 42/);
+  assert.equal(sent.message.embeds[1].fields.find((f) => f.name === 'Seed').value, '`42`', 'second embed: seed');
+  assert.equal(sent.message.embeds[1].fields[0].value, 'a cat in space');
+  assert.equal(sent.message.embeds[1].fields.find((f) => f.name === 'Negative prompt').value, 'blurry');
+  assert.deepEqual(sent.message.components[0].map((b) => b.key), ['upscale', 'regen']);
   assert.match(ctx.answers.at(-1).message, /Done/);
   assert.equal(ctx.answers.at(-1).kind, 'editReply');
   assert.equal(ctx.fileStore.size, 0, 'the image is not kept after posting');
@@ -145,4 +151,28 @@ test('numbers are clamped and rounded', () => {
   assert.equal(num('abc', 7, 1, 20), 7);
   const body = jobBody(createTestContext({ id: 'plugin_arcenciel', settings }), { prompt: 'p', steps: '0' }, true);
   assert.deepEqual([body.steps, body.cfg, body.width, body.height], [1, 7, 512, 512]);
+});
+
+test('buttons: upscale remixes with the seed and a model, regenerate queues again; autotag has none', async () => {
+  const api = arc();
+  const ctx = ctxWith({ api, config: { upscale_factor: '2' } });
+  await generate(ctx, { prompt: 'a fox' }, vars(), 'cmd-1', fast);
+  await settle();
+  const ev = (key) => ({ data: 'job-1', handle: `h-${key}`, user: { id: USER, name: 'u', displayName: 'u' }, guildId: GUILD, channelId: CHANNEL });
+  await runComponent(plugin, 'upscale', ctx, ev('upscale'));
+  await settle();
+  const remix = api.seen.find((r) => r.url.endsWith('/remix'));
+  assert.equal(remix.json.seed, 42);
+  assert.deepEqual(remix.json.upscaleProfiles, [{ upscaleModelName: '4x-UltraSharp' }]);
+  assert.equal(remix.json.scaleFactor, 2);
+  const up = ctx.sent.at(-1);
+  assert.equal(up.message.embeds[0].title, '🔍 Upscaled');
+  assert.deepEqual(up.message.components[0].map((b) => b.key), ['regen'], 'no second upscale');
+  await runComponent(plugin, 'regen', ctx, ev('regen'));
+  await settle();
+  const jobs = api.seen.filter((r) => r.method === 'POST' && r.url.endsWith('/jobs'));
+  assert.equal(jobs.length, 2);
+  assert.equal(jobs[1].json.seed, undefined, 'a new seed');
+  await runComponent(plugin, 'regen', ctx, { ...ev('regen'), data: 'gone' });
+  assert.match(ctx.answers.at(-1).message, /too old/);
 });

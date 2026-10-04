@@ -68,5 +68,12 @@
   "plugin.plugin_arcenciel.node.autotag.port.not_set_up": "Not set up",
   "plugin.plugin_arcenciel.node.autotag.port.failed": "Failed",
   "plugin.plugin_arcenciel.node.autotag.config.image": "Image (attachment URL)",
-  "plugin.plugin_arcenciel.node.autotag.config.variable": "Variable"
+  "plugin.plugin_arcenciel.node.autotag.config.variable": "Variable",
+  "plugin.plugin_arcenciel.setting.upscale_model": "Upscale model",
+  "plugin.plugin_arcenciel.setting.upscale_model_hint": "Name of an upscale model of Arc en Ciel; empty: the first one offered.",
+  "plugin.plugin_arcenciel.setting.upscale_factor": "Upscale factor",
+  "plugin.plugin_arcenciel.setting.upscale_factor.1_5": "1.5×",
+  "plugin.plugin_arcenciel.setting.upscale_factor.2": "2×",
+  "plugin.plugin_arcenciel.setting.upscale_factor.3": "3×",
+  "plugin.plugin_arcenciel.setting.upscale_factor.4": "4×"
 }

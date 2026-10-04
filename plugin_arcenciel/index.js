@@ -4,8 +4,10 @@
 import autotag from './nodes/autotag.js';
 import img2img from './nodes/img2img.js';
 import imagine from './nodes/imagine.js';
+import { components } from './services/buttons.js';
 
 /** @type {import('@bothub/sdk').PluginDefinition} */
 export default {
   blocks: { imagine, img2img, autotag },
+  components,
 };

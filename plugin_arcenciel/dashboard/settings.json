@@ -60,6 +60,23 @@
       "max": 100
     },
     {
+      "key": "upscale_model",
+      "type": "text",
+      "max": 200,
+      "hint": true
+    },
+    {
+      "key": "upscale_factor",
+      "type": "select",
+      "options": [
+        "1_5",
+        "2",
+        "3",
+        "4"
+      ],
+      "default": "2"
+    },
+    {
       "key": "allow_nsfw",
       "type": "bool",
       "default": false,

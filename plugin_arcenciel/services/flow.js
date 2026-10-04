@@ -52,23 +52,66 @@ export async function answer(ctx, handle, text, edit = false) {
   else await ctx.interaction.reply(handle, text, { ephemeral: true });
 }
 
-/** The public message with the image. */
-export function imageMessage(ctx, { title, prompt, userId, seed, spoiler }) {
+/**
+ * The public message: the image, then a second embed with prompt, negative
+ * prompt, seed and the job's settings. buttons: "🔍 Upscale" (not on an
+ * upscaled image) and "🔄 Regenerate" for the generating commands.
+ */
+export function imageMessage(ctx, { title, prompt, userId, seed, spoiler, body = null, jobId = '', buttons = false, upscaled = false }) {
+  const color = String(setting(ctx, 'color', '#e879f9'));
   const embed = {
-    color: String(setting(ctx, 'color', '#e879f9')),
+    color,
     title: title.slice(0, 256),
-    description: `${userId ? `<@${userId}> · ` : ''}${prompt}`.slice(0, 4000),
+    description: userId ? `<@${userId}>` : undefined,
     image_url: 'attachment',
-    footer: `Arc en Ciel${seed !== undefined && seed !== null ? ` · seed ${seed}` : ''}`,
+    footer: 'Arc en Ciel',
   };
-  return { embeds: [embed], spoiler };
+  const fields = [{ name: 'Prompt', value: String(prompt || '—').slice(0, 1024) }];
+  if (body?.negativePrompt) fields.push({ name: 'Negative prompt', value: String(body.negativePrompt).slice(0, 1024) });
+  fields.push({ name: 'Seed', value: seed !== undefined && seed !== null ? `\`${seed}\`` : '—', inline: true });
+  if (body) {
+    fields.push({ name: 'Size', value: `${body.width}×${body.height}${upscaled ? ' (upscaled)' : ''}`, inline: true });
+    fields.push({ name: 'Steps · CFG', value: `${body.steps} · ${body.cfg}`, inline: true });
+    if (body.modelName) fields.push({ name: 'Model', value: String(body.modelName).slice(0, 1024), inline: true });
+    if (body.mode === 'img2img') fields.push({ name: 'Strength', value: String(body.denoise), inline: true });
+  }
+  const message = { embeds: [embed, { color, fields }], spoiler };
+  if (buttons && jobId) {
+    message.components = [[
+      ...(upscaled ? [] : [{ key: 'upscale', data: jobId, label: 'Upscale', emoji: '🔍', style: 'primary' }]),
+      { key: 'regen', data: jobId, label: 'Regenerate', emoji: '🔄', style: 'secondary' },
+    ]];
+  }
+  return message;
+}
+
+/** What the buttons need of a posted job (storage "job:<id>", the last 200). */
+export async function rememberJob(ctx, id, info) {
+  await ctx.storage.set(`job:${id}`, JSON.stringify(info));
+  let ids = [];
+  try {
+    ids = JSON.parse((await ctx.storage.get('jobs')) ?? '[]');
+  } catch {
+    ids = [];
+  }
+  ids = [...ids.filter((x) => x !== id), id];
+  for (const old of ids.slice(0, -200)) await ctx.storage.delete(`job:${old}`);
+  await ctx.storage.set('jobs', JSON.stringify(ids.slice(-200)));
+}
+
+export async function jobInfo(ctx, id) {
+  try {
+    return JSON.parse((await ctx.storage.get(`job:${String(id).slice(0, 64)}`)) ?? 'null');
+  } catch {
+    return null;
+  }
 }
 
 /**
  * Runs on after the block: waits for the job, posts the image in the channel
  * and edits the command answer. Never throws (errors go into the answer).
  */
-export async function finishJob(ctx, { jobId, handle, channelId, userId, title, prompt, spoiler, waitOptions = {} }) {
+export async function finishJob(ctx, { jobId, handle, channelId, userId, title, prompt, spoiler, waitOptions = {}, body = null, buttons = false, upscaled = false }) {
   let file = null;
   try {
     const done = await waitForImage(ctx, jobId, {
@@ -76,7 +119,9 @@ export async function finishJob(ctx, { jobId, handle, channelId, userId, title, 
       onProgress: (phase) => answer(ctx, handle, `⏳ ${phase === 'queued' ? 'Waiting in the queue' : 'Generating'} …`, true),
     });
     file = done.file;
-    await ctx.message.sendFile(channelId, file.name, imageMessage(ctx, { title, prompt, userId, seed: done.job.seed, spoiler }));
+    const seed = done.job.seed;
+    if (buttons) await rememberJob(ctx, jobId, { prompt, body, seed, userId, title, upscaled });
+    await ctx.message.sendFile(channelId, file.name, imageMessage(ctx, { title, prompt, userId, seed, spoiler, body, jobId, buttons, upscaled }));
     await answer(ctx, handle, '✅ Done, the image is in the channel.', true);
     return { ok: true };
   } catch (err) {
