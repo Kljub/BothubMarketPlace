@@ -94,6 +94,14 @@ export interface WebRequest {
     query: Record<string, string>;
     json: Json | undefined;
     headers: Record<string, string>;
+    /** http.secret with `file`: the multipart image (base64) and its text fields. */
+    file?: {
+        field: string;
+        name: string;
+        mime: string;
+        data: string;
+    };
+    fields?: Record<string, string>;
 }
 /** An answer of the plugin to a command or click (ctx.interaction.*). */
 export interface InteractionAnswer {
@@ -117,6 +125,12 @@ export interface SecretRequestKit {
         format?: 'bearer' | 'plain' | 'query';
         param?: string;
     };
+    file?: {
+        name: string;
+        field?: string;
+    };
+    fields?: Record<string, string>;
+    saveAs?: 'file';
 }
 export interface EndpointRequest {
     method: string;
@@ -125,10 +139,12 @@ export interface EndpointRequest {
     json: Json | undefined;
     headers: Record<string, string>;
 }
+/** base64: a binary answer (e.g. an image for saveAs 'file'). */
 export interface EndpointReply {
     status?: number;
     json?: Json;
     text?: string;
+    base64?: string;
     headers?: Record<string, string>;
 }
 export interface PlayedSound {

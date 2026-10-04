@@ -1,0 +1,215 @@
+{
+  "name": "img2img",
+  "description": "Generates a new image from your image and a prompt (Arc en Ciel)",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "img2img",
+          "description": "Generates a new image from your image and a prompt (Arc en Ciel)"
+        },
+        "position": {
+          "x": 520,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_image",
+        "type": "option.attachment",
+        "typeVersion": 1,
+        "config": {
+          "name": "image",
+          "description": "Your image (PNG, GIF, WEBP or JPEG, max. 2 MB)",
+          "required": true,
+          "variable": "image"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_prompt",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "prompt",
+          "description": "What the new image shows",
+          "required": true,
+          "variable": "prompt"
+        },
+        "position": {
+          "x": 120,
+          "y": 160
+        }
+      },
+      {
+        "id": "opt_strength",
+        "type": "option.number",
+        "typeVersion": 1,
+        "config": {
+          "name": "strength",
+          "description": "How much it may change (0.05–1, default 0.6)",
+          "required": false,
+          "variable": "strength"
+        },
+        "position": {
+          "x": 120,
+          "y": 280
+        }
+      },
+      {
+        "id": "opt_neg_prompt",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "neg_prompt",
+          "description": "What it should not show",
+          "required": false,
+          "variable": "neg_prompt"
+        },
+        "position": {
+          "x": 120,
+          "y": 400
+        }
+      },
+      {
+        "id": "opt_steps",
+        "type": "option.number",
+        "typeVersion": 1,
+        "config": {
+          "name": "steps",
+          "description": "Steps (1–50)",
+          "required": false,
+          "variable": "steps"
+        },
+        "position": {
+          "x": 120,
+          "y": 520
+        }
+      },
+      {
+        "id": "block",
+        "type": "plugin.plugin_arcenciel.img2img",
+        "typeVersion": 1,
+        "config": {
+          "image": "{option_image}",
+          "prompt": "{option_prompt}",
+          "strength": "{option_strength}",
+          "negative": "{option_neg_prompt}",
+          "steps": "{option_steps}",
+          "variable": "img2img"
+        },
+        "position": {
+          "x": 520,
+          "y": 200
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 900,
+          "y": 40
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 900,
+          "y": 200
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_image",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_prompt",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_strength",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_neg_prompt",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_steps",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "block",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

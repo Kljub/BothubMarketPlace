@@ -1,0 +1,111 @@
+{
+  "name": "autotag",
+  "description": "Finds matching tags for an image (Arc en Ciel)",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "autotag",
+          "description": "Finds matching tags for an image (Arc en Ciel)"
+        },
+        "position": {
+          "x": 520,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_image",
+        "type": "option.attachment",
+        "typeVersion": 1,
+        "config": {
+          "name": "image",
+          "description": "The image (PNG, GIF, WEBP or JPEG, max. 2 MB)",
+          "required": true,
+          "variable": "image"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "block",
+        "type": "plugin.plugin_arcenciel.autotag",
+        "typeVersion": 1,
+        "config": {
+          "image": "{option_image}",
+          "variable": "autotag"
+        },
+        "position": {
+          "x": 520,
+          "y": 200
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 900,
+          "y": 40
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 900,
+          "y": 200
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_image",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "block",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

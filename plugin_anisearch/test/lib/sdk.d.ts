@@ -115,6 +115,22 @@ export interface SecretRequest {
         format?: 'bearer' | 'plain' | 'query';
         param?: string;
     };
+    /**
+     * "storage.files": send one image of the plugin files as
+     * multipart/form-data (field name, default "file"), with text `fields`.
+     * Not together with `json`.
+     */
+    file?: {
+        name: string;
+        field?: string;
+    };
+    fields?: Record<string, string>;
+    /**
+     * "storage.files": 'file' stores a successful answer (an image: PNG, GIF,
+     * WEBP or JPEG, max. 2 MB) in the plugin files; the answer is then
+     * { status, headers, file } (see SecretFileAnswer). Error answers come as text.
+     */
+    saveAs?: 'file';
 }
 export interface HttpAnswer {
     status: number;
@@ -122,6 +138,12 @@ export interface HttpAnswer {
     json: Json;
     text: string;
     base64?: string;
+}
+/** ctx.http.secret with saveAs 'file' and a 2xx answer. */
+export interface SecretFileAnswer {
+    status: number;
+    headers: Record<string, string>;
+    file: StoredFile;
 }
 export interface MemberInfo {
     id: Id;
@@ -142,6 +164,7 @@ export interface RoleInfo {
     hoist: boolean;
     members: number;
 }
+/** nsfw: age-restricted channel (channel.get). */
 export interface ChannelInfo {
     id: Id;
     name: string;
@@ -150,6 +173,7 @@ export interface ChannelInfo {
     position?: number;
     guildId?: Id;
     topic?: string | null;
+    nsfw?: boolean;
 }
 export interface MessageInfo {
     id: Id;
@@ -169,6 +193,12 @@ export interface MessageInfo {
     }>;
     embeds: number;
     stickers: number;
+}
+/** A file of the plugin files: name = content hash + extension (e.g. "3f2a9c0d1b7e4a55.png"). */
+export interface StoredFile {
+    name: string;
+    mime: 'image/png' | 'image/gif' | 'image/webp' | 'image/jpeg';
+    size: number;
 }
 /** Who to check with config.checkAccess: an interaction event or IDs. */
 export type AccessSubject = {
@@ -217,7 +247,7 @@ export interface PluginContext {
         getManifest(): Record<string, Json>;
     };
     readonly logger: Record<'debug' | 'info' | 'warn' | 'error' | 'success', (text: string) => Async<void>>;
-    /** Plugin settings saved on the dashboard; set/delete are planned. */
+    /** Plugin settings of this bot: saved on the dashboard (defaults for fields nobody saved). A dashboard save counts at once. */
     readonly config: {
         get(key: string): Json | undefined;
         has(key: string): boolean;
@@ -230,7 +260,16 @@ export interface PluginContext {
          * Always reads the saved value, so a dashboard change counts at once.
          */
         checkAccess(key: string, who: AccessSubject): Async<AccessResult>;
+        /**
+         * Changes one field of the settings page (e.g. a list entry added by a
+         * command); the dashboard shows it. The value is checked like a
+         * dashboard save: sdk.config.unknown_key, sdk.config.bad_value. Access
+         * rules ("permissions") and messages stay with the dashboard
+         * (sdk.config.not_settable). List entries get an "_id". Images the
+         * settings no longer name are deleted from the plugin files.
+         */
         set(key: string, value: Json): Async<void>;
+        /** Back to the field's default. */
         delete(key: string): Async<void>;
     };
     readonly utils: {
@@ -400,6 +439,15 @@ export interface PluginContext {
     };
     readonly message: {
         get(channelId: Id, messageId: Id): Async<MessageInfo>;
+        /**
+         * "discord.messages.files": posts an image of the plugin files as an
+         * attachment, with an optional message. In an embed, image_url or
+         * thumbnail_url "attachment" shows the file there. Max. 5 messages per 5 s
+         * (shared with send). spoiler: true blurs the image until clicked.
+         */
+        sendFile(channelId: Id, fileName: string, message?: (Message & {
+            spoiler?: boolean;
+        }) | string): Async<Id>;
         /** "discord.messages.send": returns the message ID. No pings, max. 5 per 5 s. */
         send(channelId: Id, message: Message | string): Async<Id>;
         /** "discord.messages.send": direct message to a user; returns the message ID. */
@@ -598,7 +646,7 @@ export interface PluginContext {
         }): Async<HttpAnswer>;
         secret(request: SecretRequest): Async<{
             status: number;
-            headers: Record<string, string>;
+            headers: Record<string, string | SecretFileAnswer>;
             json: Json;
             text: string;
         }>;
@@ -626,6 +674,18 @@ export interface PluginContext {
     readonly secrets: {
         get(name: string): Async<string | null>;
         has(name: string): Async<boolean>;
+    };
+    readonly files: {
+        list(): Async<StoredFile[]>;
+        /** The file with its content (base64), null when unknown. */
+        get(name: string): Async<(StoredFile & {
+            data: string;
+        }) | null>;
+        /** Stores an image (base64; max. about 48 KB per call, bigger ones via fromDiscord). Same picture = same name. */
+        put(base64: string): Async<StoredFile>;
+        /** Stores a Discord attachment (cdn.discordapp.com / media.discordapp.net), e.g. a command's attachment option. */
+        fromDiscord(url: string): Async<StoredFile>;
+        delete(name: string): Async<boolean>;
     };
 }
 /** What a builder block of the plugin gets: its config and the run's variables. */

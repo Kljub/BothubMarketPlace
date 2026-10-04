@@ -59,14 +59,26 @@ export interface TestContextOptions {
     hosts?: string[];
     /** Start balances of the Economy module: "<guildId>:<userId>" -> coins. */
     balances?: Record<string, number>;
-    /** dashboard/settings.json: its "permissions" fields are what config.checkAccess checks. */
+    /**
+     * dashboard/settings.json: its "permissions" fields are what
+     * config.checkAccess checks; config.set takes only its keys.
+     */
     settings?: {
         fields: Array<{
             key: string;
             type: string;
             default?: Json;
+            item?: Array<{
+                key: string;
+                type: string;
+                default?: Json;
+            }>;
         }>;
     };
+    /** Start content of ctx.files: name ("<16 hex>.png") -> base64. */
+    files?: Record<string, string>;
+    /** files.fromDiscord: attachment URL -> base64 content. Other URLs fail like a dead link. */
+    attachments?: Record<string, string>;
     /**
      * Members for config.checkAccess: user ID -> role IDs and Discord
      * permission names ("manage_messages", …). Users not listed are not on the server.
@@ -82,6 +94,14 @@ export interface WebRequest {
     query: Record<string, string>;
     json: Json | undefined;
     headers: Record<string, string>;
+    /** http.secret with `file`: the multipart image (base64) and its text fields. */
+    file?: {
+        field: string;
+        name: string;
+        mime: string;
+        data: string;
+    };
+    fields?: Record<string, string>;
 }
 /** An answer of the plugin to a command or click (ctx.interaction.*). */
 export interface InteractionAnswer {
@@ -105,6 +125,12 @@ export interface SecretRequestKit {
         format?: 'bearer' | 'plain' | 'query';
         param?: string;
     };
+    file?: {
+        name: string;
+        field?: string;
+    };
+    fields?: Record<string, string>;
+    saveAs?: 'file';
 }
 export interface EndpointRequest {
     method: string;
@@ -113,10 +139,12 @@ export interface EndpointRequest {
     json: Json | undefined;
     headers: Record<string, string>;
 }
+/** base64: a binary answer (e.g. an image for saveAs 'file'). */
 export interface EndpointReply {
     status?: number;
     json?: Json;
     text?: string;
+    base64?: string;
     headers?: Record<string, string>;
 }
 export interface PlayedSound {
@@ -125,10 +153,12 @@ export interface PlayedSound {
     file: string;
     volume: number;
 }
+/** A sent message; file: the image of message.sendFile. */
 export interface SentMessage {
     channelId: string;
     message: Message | string;
     id: string;
+    file?: string;
 }
 export interface LogLine {
     level: string;
@@ -160,6 +190,10 @@ export interface TestContext {
     readonly answers: InteractionAnswer[];
     /** Economy balances: "<guildId>:<userId>" -> coins. */
     readonly balances: Map<string, number>;
+    /** Current plugin files: name -> base64. */
+    readonly fileStore: Map<string, string>;
+    /** Current settings (config.set changes them). */
+    readonly settingsNow: Record<string, Json>;
     [area: string]: unknown;
 }
 export declare function createTestContext(options?: TestContextOptions): TestContext;

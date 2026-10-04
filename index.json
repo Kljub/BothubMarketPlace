@@ -41,6 +41,43 @@
       "voice": false
     },
     {
+      "id": "plugin_arcenciel",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_arcenciel-1.0.0/plugin_arcenciel-1.0.0.zip",
+      "sha256": "daa668372095ed34ee7fae448114471fabe9eef2df452ce7b68d8528c4767e56",
+      "size": 15919,
+      "name": "ArcEnCiel",
+      "description": "AI images from arcenciel.io in Discord: /imagine, /img2img and /autotag.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "MIT",
+      "icon": "🎨",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "storage.files",
+          "secrets.use",
+          "discord.interactions.reply",
+          "discord.messages.files",
+          "discord.channels.read"
+        ]
+      },
+      "secrets": [
+        "ARCENCIEL_API_KEY"
+      ],
+      "layers": {
+        "commands": 3,
+        "events": 0,
+        "services": 1,
+        "nodes": 3,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_emojimanager",
       "version": "1.1.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_emojimanager-1.1.0/plugin_emojimanager-1.1.0.zip",

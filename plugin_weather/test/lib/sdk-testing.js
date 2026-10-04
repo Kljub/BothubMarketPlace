@@ -344,16 +344,39 @@ export function createTestContext(options = {}) {
                 }
                 if (request.json !== undefined && bytes(JSON.stringify(request.json)) > HTTP_BODY_BYTES)
                     throw new SdkCallError('sdk.http.too_big');
+                const filesAllowed = permissions.has('storage.files');
+                if ((request.file !== undefined || request.saveAs !== undefined) && !filesAllowed)
+                    throw new SdkCallError('sdk.call.denied');
+                if (request.saveAs !== undefined && request.saveAs !== 'file')
+                    throw new SdkCallError('sdk.http.bad_save_as');
+                let sentFile;
+                if (request.file !== undefined) {
+                    const field = request.file.field ?? 'file';
+                    if (!/^[A-Za-z0-9_.-]{1,64}$/.test(field) || request.json !== undefined)
+                        throw new SdkCallError('sdk.http.bad_file');
+                    const f = fileOf(request.file.name);
+                    if (!f)
+                        throw new SdkCallError('sdk.files.unknown');
+                    sentFile = { field, name: f.name, mime: f.mime, data: f.data };
+                }
                 const server = options.web?.[u.hostname];
                 if (!server)
                     throw new SdkCallError('sdk.http.failed');
-                const req = { method, url: u.toString(), query: Object.fromEntries(u.searchParams), json: request.json, headers };
+                const req = { method, url: u.toString(), query: Object.fromEntries(u.searchParams), json: request.json, headers, ...(sentFile ? { file: sentFile, fields: { ...(request.fields ?? {}) } } : {}) };
                 requests.push(structuredClone(req));
                 let timer;
                 const timeout = new Promise((_, reject) => {
                     timer = setTimeout(() => reject(new SdkCallError('sdk.http.timeout')), HTTP_TIMEOUT_MS);
                 });
                 const reply = await Promise.race([Promise.resolve().then(() => server(structuredClone(req))), timeout]).finally(() => clearTimeout(timer));
+                const status = reply.status ?? 200;
+                if (request.saveAs === 'file' && status >= 200 && status < 300) {
+                    const out = {};
+                    for (const [h, value] of Object.entries(reply.headers ?? {}))
+                        if (h.toLowerCase() !== 'set-cookie')
+                            out[h.toLowerCase()] = value;
+                    return { status, headers: out, file: await putFile(base64Bytes(reply.base64 ?? btoa(reply.text ?? ''))) };
+                }
                 const hide = [request.auth ? secretOf(request.auth.secret) : null, /^[A-Z][A-Z0-9_]{1,39}$/.test(name) ? secretOf(name) : null].filter((v) => !!v);
                 const masked = (t) => hide.reduce((acc, v) => (v.length >= 4 ? acc.split(v).join('••••') : acc), t);
                 const text = masked(reply.text ?? (reply.json !== undefined ? JSON.stringify(reply.json) : ''));
@@ -413,15 +436,19 @@ export function createTestContext(options = {}) {
                     throw new SdkCallError('sdk.discord.rate_limited');
                 sendTimes.push(now);
                 const msg = structuredClone(message ?? {});
+                const spoiler = typeof msg === 'object' && msg.spoiler === true;
+                if (typeof msg === 'object')
+                    delete msg.spoiler;
+                const fileName = spoiler ? `SPOILER_${file.name}` : file.name;
                 if (typeof msg === 'object' && Array.isArray(msg.embeds)) {
                     for (const e of msg.embeds) {
                         for (const k of ['image_url', 'thumbnail_url'])
                             if (e[k] === 'attachment')
-                                e[k] = `attachment://${file.name}`;
+                                e[k] = `attachment://${fileName}`;
                     }
                 }
                 const msgId = String(nextId++);
-                sent.push({ channelId, message: msg, id: msgId, file: file.name });
+                sent.push({ channelId, message: msg, id: msgId, file: fileName });
                 return msgId;
             },
             send: async (channelId, message) => {

@@ -115,6 +115,22 @@ export interface SecretRequest {
         format?: 'bearer' | 'plain' | 'query';
         param?: string;
     };
+    /**
+     * "storage.files": send one image of the plugin files as
+     * multipart/form-data (field name, default "file"), with text `fields`.
+     * Not together with `json`.
+     */
+    file?: {
+        name: string;
+        field?: string;
+    };
+    fields?: Record<string, string>;
+    /**
+     * "storage.files": 'file' stores a successful answer (an image: PNG, GIF,
+     * WEBP or JPEG, max. 2 MB) in the plugin files; the answer is then
+     * { status, headers, file } (see SecretFileAnswer). Error answers come as text.
+     */
+    saveAs?: 'file';
 }
 export interface HttpAnswer {
     status: number;
@@ -122,6 +138,12 @@ export interface HttpAnswer {
     json: Json;
     text: string;
     base64?: string;
+}
+/** ctx.http.secret with saveAs 'file' and a 2xx answer. */
+export interface SecretFileAnswer {
+    status: number;
+    headers: Record<string, string>;
+    file: StoredFile;
 }
 export interface MemberInfo {
     id: Id;
@@ -142,6 +164,7 @@ export interface RoleInfo {
     hoist: boolean;
     members: number;
 }
+/** nsfw: age-restricted channel (channel.get). */
 export interface ChannelInfo {
     id: Id;
     name: string;
@@ -150,6 +173,7 @@ export interface ChannelInfo {
     position?: number;
     guildId?: Id;
     topic?: string | null;
+    nsfw?: boolean;
 }
 export interface MessageInfo {
     id: Id;
@@ -419,9 +443,11 @@ export interface PluginContext {
          * "discord.messages.files": posts an image of the plugin files as an
          * attachment, with an optional message. In an embed, image_url or
          * thumbnail_url "attachment" shows the file there. Max. 5 messages per 5 s
-         * (shared with send).
+         * (shared with send). spoiler: true blurs the image until clicked.
          */
-        sendFile(channelId: Id, fileName: string, message?: Message | string): Async<Id>;
+        sendFile(channelId: Id, fileName: string, message?: (Message & {
+            spoiler?: boolean;
+        }) | string): Async<Id>;
         /** "discord.messages.send": returns the message ID. No pings, max. 5 per 5 s. */
         send(channelId: Id, message: Message | string): Async<Id>;
         /** "discord.messages.send": direct message to a user; returns the message ID. */
@@ -620,7 +646,7 @@ export interface PluginContext {
         }): Async<HttpAnswer>;
         secret(request: SecretRequest): Async<{
             status: number;
-            headers: Record<string, string>;
+            headers: Record<string, string | SecretFileAnswer>;
             json: Json;
             text: string;
         }>;

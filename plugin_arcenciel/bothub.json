@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_arcenciel",
+  "name": "ArcEnCiel",
+  "version": "1.0.0",
+  "description": "AI images from arcenciel.io in Discord: /imagine, /img2img and /autotag.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "MIT",
+  "icon": "🎨",
+  "category": "fun",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "storage.files",
+      "secrets.use",
+      "discord.interactions.reply",
+      "discord.messages.files",
+      "discord.channels.read"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/imagine.json",
+    "commands/img2img.json",
+    "commands/autotag.json"
+  ],
+  "services": {
+    "secrets": [
+      "ARCENCIEL_API_KEY"
+    ],
+    "hosts": [
+      "arcenciel.io"
+    ]
+  },
+  "nodes": [
+    "imagine",
+    "img2img",
+    "autotag"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

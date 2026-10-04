@@ -1,0 +1,82 @@
+{
+  "fields": [
+    {
+      "key": "checkpoint",
+      "type": "text",
+      "max": 200,
+      "hint": true
+    },
+    {
+      "key": "vae",
+      "type": "text",
+      "max": 200
+    },
+    {
+      "key": "negative_prompt",
+      "type": "text",
+      "max": 2000,
+      "multiline": true,
+      "hint": true
+    },
+    {
+      "key": "width",
+      "type": "number",
+      "min": 256,
+      "max": 1536,
+      "default": 512
+    },
+    {
+      "key": "height",
+      "type": "number",
+      "min": 256,
+      "max": 1536,
+      "default": 512
+    },
+    {
+      "key": "steps",
+      "type": "number",
+      "min": 1,
+      "max": 50,
+      "default": 20,
+      "hint": true
+    },
+    {
+      "key": "cfg",
+      "type": "text",
+      "max": 5,
+      "pattern": "^([1-9]|1[0-9]|20)(\\.[0-9])?$",
+      "default": "7",
+      "hint": true
+    },
+    {
+      "key": "sampler",
+      "type": "text",
+      "max": 100,
+      "hint": true
+    },
+    {
+      "key": "scheduler",
+      "type": "text",
+      "max": 100
+    },
+    {
+      "key": "allow_nsfw",
+      "type": "bool",
+      "default": false,
+      "hint": true
+    },
+    {
+      "key": "per_user_hour",
+      "type": "number",
+      "min": 0,
+      "max": 500,
+      "default": 10,
+      "hint": true
+    },
+    {
+      "key": "color",
+      "type": "color",
+      "default": "#e879f9"
+    }
+  ]
+}
