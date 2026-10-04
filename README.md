@@ -86,4 +86,14 @@ access: every call goes through the SDK manager of the bot.
 
 ## License
 
-MIT, like each plugin's manifest says.
+Plugins of the BotHub Marketplace by [Kljub](https://github.com/Kljub),
+original repository: <https://github.com/Kljub/BothubMarketPlace>, for
+[BotHub](https://github.com/Kljub/BothubV3).
+
+Licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE) (the
+manifests say `PolyForm-Noncommercial-1.0.0`): free for personal use,
+hobby projects, communities, education and non-profit organisations; **no
+commercial use**. Copies, forks and derived works must keep the
+`Required Notice:` lines of [LICENSE](LICENSE), that is, the name BotHub,
+the copyright and the link to this repository as the original. Versions
+released before this change stay under MIT.
