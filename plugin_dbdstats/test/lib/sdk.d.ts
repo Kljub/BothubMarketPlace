@@ -248,9 +248,11 @@ export interface GuildInfo {
     name: string;
     memberCount: number;
 }
+/** category: the module group (utility, security, messages, fun, ticket, social, community, customization, statistics). */
 export interface ModuleInfo {
     id: string;
     name: string;
+    category: string;
     enabled: boolean;
     config: Record<string, Json>;
 }

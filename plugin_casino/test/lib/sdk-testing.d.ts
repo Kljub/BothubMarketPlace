@@ -15,6 +15,7 @@ export interface TestGuild {
 export interface TestModule {
     id: string;
     name: string;
+    category?: string;
     enabled: boolean;
     config: Record<string, Json>;
 }
