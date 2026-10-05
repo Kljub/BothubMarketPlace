@@ -43,5 +43,12 @@
   "plugin.plugin_websitestatus.setting.slow_ms.1500": "1.5 s",
   "plugin.plugin_websitestatus.setting.slow_ms.2000": "2 s",
   "plugin.plugin_websitestatus.setting.slow_ms.3000": "3 s",
-  "plugin.plugin_websitestatus.setting.slow_ms.5000": "5 s"
+  "plugin.plugin_websitestatus.setting.slow_ms.5000": "5 s",
+  "plugin.plugin_websitestatus.node.check_now.label": "Check websites now",
+  "plugin.plugin_websitestatus.node.check_now.description": "Checks every website at once, updates the status board and answers with the results.",
+  "plugin.plugin_websitestatus.node.check_now.result": "Results (one line per website)",
+  "plugin.plugin_websitestatus.node.check_now.result_online": "Websites online",
+  "plugin.plugin_websitestatus.node.check_now.result_problems": "Websites with problems",
+  "plugin.plugin_websitestatus.node.check_now.port.replied": "Answered",
+  "plugin.plugin_websitestatus.node.check_now.port.failed": "No websites"
 }

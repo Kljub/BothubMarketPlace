@@ -43,5 +43,12 @@
   "plugin.plugin_websitestatus.setting.slow_ms.1500": "1,5 s",
   "plugin.plugin_websitestatus.setting.slow_ms.2000": "2 s",
   "plugin.plugin_websitestatus.setting.slow_ms.3000": "3 s",
-  "plugin.plugin_websitestatus.setting.slow_ms.5000": "5 s"
+  "plugin.plugin_websitestatus.setting.slow_ms.5000": "5 s",
+  "plugin.plugin_websitestatus.node.check_now.label": "Websites jetzt prüfen",
+  "plugin.plugin_websitestatus.node.check_now.description": "Prüft alle Websites sofort, aktualisiert die Statustafel und antwortet mit den Ergebnissen.",
+  "plugin.plugin_websitestatus.node.check_now.result": "Ergebnisse (eine Zeile pro Website)",
+  "plugin.plugin_websitestatus.node.check_now.result_online": "Websites online",
+  "plugin.plugin_websitestatus.node.check_now.result_problems": "Websites mit Problemen",
+  "plugin.plugin_websitestatus.node.check_now.port.replied": "Beantwortet",
+  "plugin.plugin_websitestatus.node.check_now.port.failed": "Keine Websites"
 }

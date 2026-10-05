@@ -19,9 +19,9 @@ const INTERVALS = { '1m': 1, '5m': 5, '10m': 10, '15m': 15, '30m': 30, '1h': 60,
 const EMBEDS_PER_MESSAGE = 10;
 const CHECK_TIMEOUT_MS = 5000;
 
-const TEXT = {
-  en: { online: 'Online', warning: 'Warning', offline: 'Offline', next: 'Next check', unchecked: 'Not checked yet' },
-  de: { online: 'Online', warning: 'Warnung', offline: 'Offline', next: 'Nächster Check', unchecked: 'Noch nicht geprüft' },
+export const TEXT = {
+  en: { status: 'Status', online: 'Online', warning: 'Warning', offline: 'Offline', next: 'Next check', unchecked: 'Not checked yet', checked: 'Websites checked', none: 'No websites are set up.' },
+  de: { status: 'Status', online: 'Online', warning: 'Warnung', offline: 'Offline', next: 'Nächster Check', unchecked: 'Noch nicht geprüft', checked: 'Websites geprüft', none: 'Es sind keine Websites eingerichtet.' },
 };
 
 /** Minutes between two check rounds (setting "interval"). */
@@ -57,7 +57,14 @@ export async function checkAll(ctx) {
   return results;
 }
 
-const line = (t, r) => (r ? `${STATUS[r.status].emoji} **${t[STATUS[r.status].key]}**${r.latencyMs != null ? ` · ${r.latencyMs} ms` : ''}${r.code >= 400 ? ` · HTTP ${r.code}` : ''}` : `⚪ ${t.unchecked}`);
+/** One website: "🟢 Status: **Online** - Google - 123 ms" (HTTP code when it failed). */
+export function line(t, r, name) {
+  if (!r) return `⚪ ${t.status}: ${t.unchecked} - ${name}`;
+  const parts = [`${STATUS[r.status].emoji} ${t.status}: **${t[STATUS[r.status].key]}**`, name];
+  if (r.latencyMs != null) parts.push(`${r.latencyMs} ms`);
+  if (r.code >= 400) parts.push(`HTTP ${r.code}`);
+  return parts.join(' - ');
+}
 
 /**
  * The board's embeds: groups and single websites in the order of the
@@ -87,12 +94,7 @@ export function boardEmbeds(ctx, results, nextAt, lang = 'en') {
     if (i === 0) head.push(countdown);
     if (b.group && descriptions.get(b.group)) head.push(descriptions.get(b.group));
     const embed = { color: STATUS[worst].color, title: String(b.title).slice(0, 256), timestamp: true };
-    if (b.group) {
-      if (head.length) embed.description = head.join('\n');
-      embed.fields = b.items.slice(0, 25).map((r) => ({ name: String(r.site.name).slice(0, 256), value: line(t, r) }));
-    } else {
-      embed.description = [...head, line(t, b.items[0])].join('\n');
-    }
+    embed.description = [...head, ...b.items.slice(0, 40).map((r) => line(t, r, r.site.name))].join('\n').slice(0, 4096);
     return embed;
   });
 }

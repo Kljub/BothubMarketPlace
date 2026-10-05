@@ -5,7 +5,7 @@ import plugin from '../index.js';
 import { classify } from '../services/monitor.js';
 
 const CHANNEL = '900000000000000002';
-const permissions = ['storage', 'scheduler', 'discord.messages.send', 'discord.messages.edit', 'http.check'];
+const permissions = ['storage', 'scheduler', 'discord.messages.send', 'discord.messages.edit', 'http.check', 'discord.interactions.reply'];
 const SITES = [
   { _id: 'a1b2c3d4', name: 'Main', url: 'https://main.example/', group: '' },
   { _id: 'b1b2c3d4', name: 'API', url: 'https://api.example/health', group: 'Production' },
@@ -38,13 +38,14 @@ test('tick: one board message, group shares an embed, countdown once, edited nex
   const { embeds } = ctx.sent[0].message;
   assert.equal(embeds.length, 2);
   assert.equal(embeds[0].title, 'Main');
-  assert.match(embeds[0].description, /Next check:\*\* <t:\d+:R>\n🟢 \*\*Online\*\* · 120 ms/);
+  assert.match(embeds[0].description, /Next check:\*\* <t:\d+:R>\n🟢 Status: \*\*Online\*\* - Main - 120 ms$/);
   assert.equal(embeds[1].title, '📡 Production');
   assert.equal(embeds[1].color, '#ef4444', 'worst status of the group');
-  assert.equal(embeds[1].description, 'Our servers');
-  assert.deepEqual(embeds[1].fields.map((f) => f.name), ['API', 'Shop']);
-  assert.match(embeds[1].fields[0].value, /Offline.*HTTP 503/);
-  assert.equal(embeds[1].fields[1].value, '🟡 **Warning** · 2500 ms', 'slow: warning');
+  assert.deepEqual(embeds[1].description.split('\n'), [
+    'Our servers',
+    '🔴 Status: **Offline** - API - 80 ms - HTTP 503',
+    '🟡 Status: **Warning** - Shop - 2500 ms',
+  ]);
 
   await runTask(plugin, 'tick', ctx);
   assert.equal(ctx.sent.length, 1, 'not due yet: nothing new');
@@ -77,4 +78,18 @@ test('site_status block: last result by name', async () => {
   assert.equal(out.results[''], 'online');
   assert.equal(out.results['.code'], '200');
   assert.equal((await runBlock(plugin, 'site_status', ctx, { config: { site: 'nope' } })).port, 'not_found');
+});
+
+test('check_now block: checks at once, updates the board, answers the command', async () => {
+  const ctx = ctxWith();
+  const out = await runBlock(plugin, 'check_now', ctx, { interaction: 'h1' });
+  assert.equal(out.port, 'replied');
+  assert.equal(out.results['.problems'], '2');
+  assert.equal(ctx.sent.length, 1, 'the board is posted');
+  assert.deepEqual(ctx.answers.map((a) => a.kind), ['deferReply', 'editReply']);
+  assert.match(ctx.answers[1].message.embeds[0].description, /^🟢 Status: \*\*Online\*\* - Main - 120 ms\n/);
+
+  const empty = ctxWith({ sites: [] });
+  assert.equal((await runBlock(plugin, 'check_now', empty, { interaction: 'h2' })).port, 'failed');
+  assert.equal((await runBlock(plugin, 'check_now', ctxWith())).port, 'next', 'without a command: no answer');
 });
