@@ -16,6 +16,11 @@ balances as `/balance`.
 | `/lightsout` | Switch off all 25 lights; a light toggles its neighbours too. |
 | `/beg` | A chance for a few coins, with a cooldown. |
 | `/fish` | A catch from boot (0) to shark (300–600), with a cooldown. |
+| `/2048` | Slide and merge the tiles until a 2048 tile appears (puzzle reward). |
+| `/connect4 [opponent] [bet]` | Four in a row against a member (optional bet) or the bot. |
+| `/chess [opponent]` | Chess against a member or the bot; full rules. |
+| `/chess-move <move>` | A move: `e2e4`, `e7e8q`, `Nf3`, `exd5`, `O-O`. |
+| `/trivia [difficulty]` | A quiz question (opentdb.com); the first right answer wins the trivia reward. |
 
 Solved puzzles (mastermind, hangman, match pairs, lights out) pay a reward,
 once per cooldown per member. Games untouched for 10 minutes end: duels pay

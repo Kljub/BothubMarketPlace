@@ -33,6 +33,21 @@
       "hint": true
     },
     {
+      "key": "trivia_reward",
+      "type": "text",
+      "max": 9,
+      "pattern": "^[0-9]*$",
+      "default": "25",
+      "hint": true
+    },
+    {
+      "key": "trivia_cooldown_minutes",
+      "type": "number",
+      "min": 0,
+      "max": 1440,
+      "default": 5
+    },
+    {
       "key": "beg_chance",
       "type": "number",
       "min": 0,

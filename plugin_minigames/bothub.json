@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "plugin_minigames",
   "name": "Minigames",
-  "version": "1.1.0",
-  "description": "Dice duels, 5 dice, higher or lower, scratch cards, double or steal, mastermind, hangman, match pairs, lights out, begging and fishing. Bets and rewards use the Economy module.",
+  "version": "1.2.0",
+  "description": "Dice duels, 5 dice, higher or lower, scratch cards, double or steal, mastermind, hangman, match pairs (memory), lights out, 2048, Connect 4, chess, trivia, begging and fishing. Bets and rewards use the Economy module.",
   "developer": {
     "name": "BotHub"
   },
@@ -16,7 +16,8 @@
       "discord.interactions.reply",
       "discord.members.read",
       "modules.economy.balance.read",
-      "modules.economy.balance.write"
+      "modules.economy.balance.write",
+      "http.outbound"
     ]
   },
   "main": "index.js",
@@ -31,7 +32,12 @@
     "commands/matchpairs.json",
     "commands/lightsout.json",
     "commands/beg.json",
-    "commands/fish.json"
+    "commands/fish.json",
+    "commands/2048.json",
+    "commands/connect4.json",
+    "commands/chess.json",
+    "commands/chess-move.json",
+    "commands/trivia.json"
   ],
   "nodes": [
     "dicebet",
@@ -44,7 +50,12 @@
     "matchpairs",
     "lightsout",
     "beg",
-    "fish"
+    "fish",
+    "game2048",
+    "connect4",
+    "chess",
+    "chessmove",
+    "trivia"
   ],
   "lang": {
     "en": "lang/en.json",
@@ -58,6 +69,9 @@
         "name": "expire",
         "every": "1m"
       }
+    ],
+    "hosts": [
+      "opentdb.com"
     ]
   },
   "dashboard": {

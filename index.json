@@ -447,9 +447,16 @@
       "version": "1.1.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_minigames-1.1.0/plugin_minigames-1.1.0.zip",
       "sha256": "bed5963ed6b3fbbff274c82bf9e9d210e41aa83cd339072226ea82ff16a95346",
-      "size": 34983,
+      "size": 34983
+    },
+    {
+      "id": "plugin_minigames",
+      "version": "1.2.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_minigames-1.2.0/plugin_minigames-1.2.0.zip",
+      "sha256": "7aa7ebd205a8ada16a689f4668e6ac4d384272d283d2e13b218298bc7e277b12",
+      "size": 54627,
       "name": "Minigames",
-      "description": "Dice duels, 5 dice, higher or lower, scratch cards, double or steal, mastermind, hangman, match pairs, lights out, begging and fishing. Bets and rewards use the Economy module.",
+      "description": "Dice duels, 5 dice, higher or lower, scratch cards, double or steal, mastermind, hangman, match pairs (memory), lights out, 2048, Connect 4, chess, trivia, begging and fishing. Bets and rewards use the Economy module.",
       "developer": {
         "name": "BotHub"
       },
@@ -464,14 +471,15 @@
           "discord.interactions.reply",
           "discord.members.read",
           "modules.economy.balance.read",
-          "modules.economy.balance.write"
+          "modules.economy.balance.write",
+          "http.outbound"
         ]
       },
       "layers": {
-        "commands": 11,
+        "commands": 16,
         "events": 0,
         "services": 1,
-        "nodes": 11,
+        "nodes": 16,
         "dashboard": 1
       },
       "voice": false
