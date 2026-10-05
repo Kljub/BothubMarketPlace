@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_lootcraft",
+  "name": "Loot & Craft",
+  "version": "1.0.0",
+  "description": "Mine ores, coal and gems, smelt ores into bars, craft items and sell them for Economy money. Items, drops and recipes can be changed per bot.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "discord.interactions.reply",
+      "modules.economy.balance.read",
+      "modules.economy.balance.write"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/mine.json",
+    "commands/inventory.json",
+    "commands/recipes.json",
+    "commands/smelt.json",
+    "commands/craft.json",
+    "commands/sell.json"
+  ],
+  "nodes": [
+    "mine",
+    "inventory",
+    "recipes",
+    "smelt",
+    "craft",
+    "sell"
+  ],
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  },
+  "icon": "⛏️",
+  "category": "fun",
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  }
+}

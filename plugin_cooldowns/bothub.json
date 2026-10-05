@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_cooldowns",
+  "name": "Cooldown Reminders",
+  "version": "1.0.0",
+  "description": "Members start a reminder for a cooldown (/cooldown daily) and get a message when it is over.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "scheduler",
+      "discord.interactions.reply",
+      "discord.messages.send"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/cooldown.json",
+    "commands/cooldowns.json",
+    "commands/cooldown-stop.json"
+  ],
+  "nodes": [
+    "start",
+    "list",
+    "stop"
+  ],
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  },
+  "icon": "⏰",
+  "category": "utility",
+  "services": {
+    "tasks": [
+      {
+        "name": "remind",
+        "every": "1m"
+      }
+    ]
+  },
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  }
+}

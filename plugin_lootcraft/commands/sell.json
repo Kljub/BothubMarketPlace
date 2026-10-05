@@ -1,0 +1,137 @@
+{
+  "name": "sell",
+  "description": "Sells items for money",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "sell",
+          "description": "Sells items for money"
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "option_item",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "item",
+          "description": "Item key or name, or \"all\"",
+          "required": true,
+          "variable": "item"
+        },
+        "position": {
+          "x": 140,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_amount",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "amount",
+          "description": "How many (default: all you have)",
+          "required": false,
+          "variable": "amount"
+        },
+        "position": {
+          "x": 360,
+          "y": 40
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_lootcraft.sell",
+        "typeVersion": 1,
+        "config": {
+          "item": "{option_item}",
+          "amount": "{option_amount}",
+          "variable": "res"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 400,
+          "y": 700
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 720,
+          "y": 700
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "option_item",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_amount",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

@@ -177,6 +177,38 @@
       "voice": false
     },
     {
+      "id": "plugin_cooldowns",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_cooldowns-1.0.0/plugin_cooldowns-1.0.0.zip",
+      "sha256": "be230fd61bd4d2103c0da56ca3b1cfd82c5732f7fc03e589e9df11be20f8006a",
+      "size": 9332,
+      "name": "Cooldown Reminders",
+      "description": "Members start a reminder for a cooldown (/cooldown daily) and get a message when it is over.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "⏰",
+      "category": "utility",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "scheduler",
+          "discord.interactions.reply",
+          "discord.messages.send"
+        ]
+      },
+      "layers": {
+        "commands": 3,
+        "events": 0,
+        "services": 1,
+        "nodes": 3,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_criminal",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_criminal-1.0.0/plugin_criminal-1.0.0.zip",
@@ -327,6 +359,38 @@
         "events": 0,
         "services": 3,
         "nodes": 2,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
+      "id": "plugin_lootcraft",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_lootcraft-1.0.0/plugin_lootcraft-1.0.0.zip",
+      "sha256": "147b35aec960d018dc29b3b4090c5c882fb32a6e63f5fc98cd8e9e424fc29019",
+      "size": 17043,
+      "name": "Loot & Craft",
+      "description": "Mine ores, coal and gems, smelt ores into bars, craft items and sell them for Economy money. Items, drops and recipes can be changed per bot.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "⛏️",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "discord.interactions.reply",
+          "modules.economy.balance.read",
+          "modules.economy.balance.write"
+        ]
+      },
+      "layers": {
+        "commands": 6,
+        "events": 0,
+        "services": 0,
+        "nodes": 6,
         "dashboard": 1
       },
       "voice": false
@@ -658,6 +722,38 @@
         "dashboard": 1
       },
       "voice": true
+    },
+    {
+      "id": "plugin_stocks",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_stocks-1.0.0/plugin_stocks-1.0.0.zip",
+      "sha256": "bdf710a6be89edea7bb00c55493cc75675d0a314eea656edccf1a254373ed2c8",
+      "size": 12875,
+      "name": "Stock Market",
+      "description": "A fictional stock market per server: prices move every interval, members buy and sell shares with Economy money.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🏦",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "discord.interactions.reply",
+          "modules.economy.balance.read",
+          "modules.economy.balance.write"
+        ]
+      },
+      "layers": {
+        "commands": 4,
+        "events": 0,
+        "services": 0,
+        "nodes": 4,
+        "dashboard": 1
+      },
+      "voice": false
     },
     {
       "id": "plugin_tempattachments",

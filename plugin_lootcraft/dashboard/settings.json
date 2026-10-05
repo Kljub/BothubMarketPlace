@@ -1,0 +1,139 @@
+{
+  "fields": [
+    {
+      "key": "mine_cooldown_minutes",
+      "type": "number",
+      "min": 1,
+      "max": 1440,
+      "default": 30
+    },
+    {
+      "key": "mine_rolls",
+      "type": "number",
+      "min": 1,
+      "max": 10,
+      "default": 3,
+      "hint": true
+    },
+    {
+      "key": "currencyKey",
+      "type": "currency",
+      "hint": true
+    },
+    {
+      "key": "items",
+      "type": "list",
+      "max": 50,
+      "titleField": "name",
+      "hint": true,
+      "item": [
+        {
+          "key": "key",
+          "type": "text",
+          "max": 32,
+          "pattern": "^[a-z0-9_-]{1,32}$",
+          "required": true
+        },
+        {
+          "key": "name",
+          "type": "text",
+          "max": 64,
+          "required": true
+        },
+        {
+          "key": "emoji",
+          "type": "text",
+          "max": 16,
+          "default": "📦"
+        },
+        {
+          "key": "value",
+          "type": "text",
+          "max": 9,
+          "pattern": "^[0-9]*$",
+          "default": "10"
+        }
+      ],
+      "unique": [
+        "key"
+      ]
+    },
+    {
+      "key": "drops",
+      "type": "list",
+      "max": 30,
+      "titleField": "item",
+      "hint": true,
+      "item": [
+        {
+          "key": "item",
+          "type": "text",
+          "max": 32,
+          "pattern": "^[a-z0-9_-]{1,32}$",
+          "required": true
+        },
+        {
+          "key": "weight",
+          "type": "number",
+          "min": 1,
+          "max": 1000,
+          "default": 10
+        },
+        {
+          "key": "min",
+          "type": "number",
+          "min": 1,
+          "max": 1000,
+          "default": 1
+        },
+        {
+          "key": "max",
+          "type": "number",
+          "min": 1,
+          "max": 1000,
+          "default": 1
+        }
+      ]
+    },
+    {
+      "key": "recipes",
+      "type": "list",
+      "max": 50,
+      "titleField": "output",
+      "hint": true,
+      "item": [
+        {
+          "key": "kind",
+          "type": "select",
+          "options": [
+            "smelt",
+            "craft"
+          ],
+          "default": "smelt"
+        },
+        {
+          "key": "output",
+          "type": "text",
+          "max": 32,
+          "pattern": "^[a-z0-9_-]{1,32}$",
+          "required": true
+        },
+        {
+          "key": "amount",
+          "type": "number",
+          "min": 1,
+          "max": 1000,
+          "default": 1
+        },
+        {
+          "key": "inputs",
+          "type": "text",
+          "max": 300,
+          "pattern": "^[a-z0-9_-]+(:[0-9]+)?(\\s*,\\s*[a-z0-9_-]+(:[0-9]+)?)*$",
+          "required": true,
+          "hint": true
+        }
+      ]
+    }
+  ]
+}
