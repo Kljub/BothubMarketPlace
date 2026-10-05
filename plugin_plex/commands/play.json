@@ -1,0 +1,99 @@
+{
+  "name": "plex-play",
+  "description": "Plays music from Plex in your voice channel",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "plex-play",
+          "description": "Plays music from Plex in your voice channel"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_query",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "query",
+          "description": "Song, album, artist or playlist",
+          "required": true,
+          "variable": "query"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_kind",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "kind",
+          "description": "What it is (empty: find it)",
+          "required": false,
+          "choices": "track\nalbum\nartist\nplaylist",
+          "variable": "kind"
+        },
+        "position": {
+          "x": 700,
+          "y": 40
+        }
+      },
+      {
+        "id": "play",
+        "type": "plugin.plugin_plex.play",
+        "typeVersion": 1,
+        "config": {
+          "query": "{option_query}",
+          "kind": "{option_kind}",
+          "variable": "plex"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_query",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_kind",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "play",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

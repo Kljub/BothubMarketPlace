@@ -5,6 +5,7 @@ import status from './nodes/status.js';
 import nowPlaying from './nodes/now_playing.js';
 import search from './nodes/search.js';
 import random from './nodes/random.js';
+import play from './nodes/play.js';
 import recommend from './nodes/recommend.js';
 import request from './nodes/request.js';
 import link from './nodes/link.js';
@@ -21,7 +22,7 @@ import { webhooks } from './services/webhooks.js';
 /** @type {import('@bothub/sdk').PluginDefinition} */
 export default {
   blocks: { status, now_playing: nowPlaying, search, random, recommend, request, link, unlink_account: unlinkAccount, libraries,
-    watchlist, watchlist_add: watchlistAdd, watchlist_remove: watchlistRemove },
+    watchlist, watchlist_add: watchlistAdd, watchlist_remove: watchlistRemove, play },
   components: { reroll },
   tasks,
   webhooks,

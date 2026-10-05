@@ -98,6 +98,17 @@ export interface InteractionEvent {
     /** Modals: field key → text. */
     fields?: Record<string, string>;
 }
+/** One song for ctx.music.enqueue (max. 100 per call). */
+export interface MusicItem {
+    title: string;
+    author?: string;
+    /** Seconds. */
+    duration?: number;
+    /** A public https page of the song (shown in /queue); never the stream. */
+    link?: string;
+    /** Where the audio comes from: url (address secret or https host), path, query, auth. */
+    source: Pick<SecretRequest, 'url' | 'path' | 'query' | 'auth'>;
+}
 /** A request of ctx.http.secret. */
 export interface SecretRequest {
     /** Name of the secret with the address (e.g. 'PLEX_URL'), or an https URL of a host in services.hosts. */
@@ -630,14 +641,26 @@ export interface PluginContext {
             createdAt: string;
         }>>;
     };
-    /** "economy": balances of the bot's Economy module (the same as /balance). */
+    /**
+     * "economy": balances of the bot's Economy module (the same as /balance).
+     * currency: key of one of its currencies (a "currency" settings field gives
+     * the admin a dropdown); empty or left out: the default currency. An unknown
+     * key fails with sdk.economy.unknown_currency.
+     */
     readonly economy: {
-        get(guildId: Id, userId: Id): Async<number>;
-        add(guildId: Id, userId: Id, amount: number): Async<number>;
+        /** The currencies of the Economy settings, the default first. */
+        currencies(): Async<Array<{
+            key: string;
+            name: string;
+            emoji: string;
+            default: boolean;
+        }>>;
+        get(guildId: Id, userId: Id, currency?: string): Async<number>;
+        add(guildId: Id, userId: Id, amount: number, currency?: string): Async<number>;
         /** Fails with sdk.economy.not_enough instead of going below 0. */
-        remove(guildId: Id, userId: Id, amount: number): Async<number>;
-        transfer(guildId: Id, fromUserId: Id, toUserId: Id, amount: number): Async<void>;
-        leaderboard(guildId: Id, limit?: number): Async<Array<{
+        remove(guildId: Id, userId: Id, amount: number, currency?: string): Async<number>;
+        transfer(guildId: Id, fromUserId: Id, toUserId: Id, amount: number, currency?: string): Async<void>;
+        leaderboard(guildId: Id, limit?: number, currency?: string): Async<Array<{
             userId: Id;
             balance: number;
         }>>;
@@ -645,6 +668,28 @@ export interface PluginContext {
         bank(guildId: Id, userId: Id): Async<number>;
         /** "modules.economy.bank.write": bank money of one member into the wallet of another; sdk.economy.not_enough when too little. */
         bankTransfer(guildId: Id, fromUserId: Id, toUserId: Id, amount: number): Async<void>;
+    };
+    /**
+     * "modules.music.queue": songs into the music queue of the Music module (the
+     * same queue as /play: skip, queue, volume and loop work). source is a
+     * secret request like ctx.http.secret (an address secret plus path, auth
+     * with a secret): the bot builds the stream address and the plugin never
+     * sees it. joinUser: join that member's voice channel when the bot is in
+     * none (sdk.music.no_voice when they are not in one). Errors:
+     * sdk.music.bad_items, sdk.music.unavailable, sdk.music.failed.
+     */
+    readonly music: {
+        enqueue(guildId: Id, items: MusicItem | MusicItem[], options?: {
+            joinUser?: Id;
+            textChannelId?: Id;
+            requester?: Id;
+            position?: 'end' | 'next';
+            play?: boolean;
+        }): Async<{
+            position: number;
+            added: number;
+            queue: number;
+        }>;
     };
     readonly commands: {
         register(definition: Record<string, Json>): Async<Id>;

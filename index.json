@@ -459,7 +459,14 @@
       "version": "1.6.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_plex-1.6.0/plugin_plex-1.6.0.zip",
       "sha256": "86900e393e397ce5c272305972d6043e35cd086cd61a4181ac4c16ef193b9bae",
-      "size": 40258,
+      "size": 40258
+    },
+    {
+      "id": "plugin_plex",
+      "version": "1.7.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_plex-1.7.0/plugin_plex-1.7.0.zip",
+      "sha256": "0998dc43e5bdedd7c1a763e1fb3ed79c3e884ceda68518abac5d851713a18341",
+      "size": 44990,
       "name": "Plex",
       "description": "Plex for Discord: library search, now playing, random picks, recommendations, Overseerr requests, account linking with a role, and new-content notices.",
       "developer": {
@@ -480,7 +487,8 @@
           "http.outbound",
           "discord.interactions.reply",
           "discord.roles.assign",
-          "webhooks.inbound"
+          "webhooks.inbound",
+          "modules.music.queue"
         ]
       },
       "secrets": [
@@ -498,10 +506,10 @@
         "OVERSEERR_KEY"
       ],
       "layers": {
-        "commands": 12,
+        "commands": 13,
         "events": 0,
         "services": 14,
-        "nodes": 12,
+        "nodes": 13,
         "dashboard": 1
       },
       "voice": false

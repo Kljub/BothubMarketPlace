@@ -63,7 +63,7 @@ const CALLS = {
     'emoji.create': 'discord.emojis.manage', 'emoji.delete': 'discord.emojis.manage',
     'interaction.reply': 'discord.interactions.reply', 'interaction.editReply': 'discord.interactions.reply', 'interaction.deferReply': 'discord.interactions.reply',
     'interaction.followUp': 'discord.interactions.reply', 'interaction.update': 'discord.interactions.reply', 'interaction.showModal': 'discord.modals',
-    'economy.get': 'modules.economy.balance.read', 'economy.add': 'modules.economy.balance.write', 'economy.remove': 'modules.economy.balance.write', 'economy.transfer': 'modules.economy.balance.write', 'economy.leaderboard': 'modules.economy.balance.read', 'economy.bank': 'modules.economy.balance.read', 'economy.bankTransfer': 'modules.economy.bank.write',
+    'music.enqueue': 'modules.music.queue', 'economy.currencies': 'modules.economy.balance.read', 'economy.get': 'modules.economy.balance.read', 'economy.add': 'modules.economy.balance.write', 'economy.remove': 'modules.economy.balance.write', 'economy.transfer': 'modules.economy.balance.write', 'economy.leaderboard': 'modules.economy.balance.read', 'economy.bank': 'modules.economy.balance.read', 'economy.bankTransfer': 'modules.economy.bank.write',
 };
 // Old coarse permission keys and their finer replacements (shared/sdk-permissions.json "replaced"):
 // options.permissions may still name an old key, like a manifest.
@@ -147,6 +147,8 @@ export function createTestContext(options = {}) {
     const webRequests = [];
     const actions = [];
     const answers = [];
+    const queued = [];
+    const joined = [];
     const balances = new Map(Object.entries(options.balances ?? {}));
     const banks = new Map(Object.entries(options.banks ?? {}));
     const fileStore = new Map(Object.entries(options.files ?? {}));
@@ -650,19 +652,35 @@ export function createTestContext(options = {}) {
                     ...(opts?.file !== undefined && (kind === 'reply' || kind === 'followUp') ? { file: opts.file } : {}),
                 });
             }])),
-        economy: {
-            get: async (g, u) => balances.get(`${g}:${u}`) ?? 0,
-            add: async (g, u, n) => coins(g, u, n),
-            remove: async (g, u, n) => {
-                if ((balances.get(`${g}:${u}`) ?? 0) < n)
-                    throw new SdkCallError('sdk.economy.not_enough');
-                return coins(g, u, -n);
+        // music.enqueue: the songs land in ctx.queued (with the source as given; the
+        // test kit has no stream addresses), joinUser in ctx.joined.
+        music: {
+            enqueue: async (g, items, options = {}) => {
+                const list = (Array.isArray(items) ? items : [items]);
+                if (!list.length || list.length > 100 || list.some((x) => !x || typeof x.title !== 'string' || !x.title || !x.source))
+                    throw new SdkCallError('sdk.music.bad_items');
+                for (const x of list)
+                    queued.push({ guildId: g, ...structuredClone(x) });
+                if (typeof options.joinUser === 'string')
+                    joined.push(options.joinUser);
+                return { position: queued.length - list.length + 1, added: list.length, queue: queued.length };
             },
-            transfer: async (g, from, to, n) => {
-                if ((balances.get(`${g}:${from}`) ?? 0) < n)
+        },
+        economy: {
+            // The test kit knows the default currency "coins" and any other well-formed key.
+            currencies: async () => [{ key: 'coins', name: 'Coins', emoji: '🪙', default: true }],
+            get: async (g, u, c) => balances.get(wallet(g, u, c)) ?? 0,
+            add: async (g, u, n, c) => coins(g, u, n, c),
+            remove: async (g, u, n, c) => {
+                if ((balances.get(wallet(g, u, c)) ?? 0) < n)
                     throw new SdkCallError('sdk.economy.not_enough');
-                coins(g, from, -n);
-                coins(g, to, n);
+                return coins(g, u, -n, c);
+            },
+            transfer: async (g, from, to, n, c) => {
+                if ((balances.get(wallet(g, from, c)) ?? 0) < n)
+                    throw new SdkCallError('sdk.economy.not_enough');
+                coins(g, from, -n, c);
+                coins(g, to, n, c);
             },
             bank: async (g, u) => banks.get(`${g}:${u}`) ?? 0,
             bankTransfer: async (g, from, to, n) => {
@@ -673,14 +691,30 @@ export function createTestContext(options = {}) {
                 banks.set(`${g}:${from}`, (banks.get(`${g}:${from}`) ?? 0) - n);
                 coins(g, to, n);
             },
-            leaderboard: async (g, limit = 10) => [...balances].filter(([k]) => k.startsWith(`${g}:`)).map(([k, v]) => ({ userId: k.split(':')[1], balance: v })).sort((x, y) => y.balance - x.balance).slice(0, limit),
+            leaderboard: async (g, limit = 10, c) => {
+                const suffix = c && c !== 'coins' ? `:${c}` : '';
+                return [...balances]
+                    .filter(([k]) => k.startsWith(`${g}:`) && k.split(':').length === (suffix ? 3 : 2) && k.endsWith(suffix))
+                    .map(([k, v]) => ({ userId: k.split(':')[1], balance: v }))
+                    .sort((x, y) => y.balance - x.balance)
+                    .slice(0, limit);
+            },
         },
     };
-    function coins(g, u, n) {
+    /** Key of a balance: the default currency ("coins" or empty) or another one. */
+    function wallet(g, u, c) {
+        if (c === undefined || c === '' || c === 'coins')
+            return `${g}:${u}`;
+        if (typeof c !== 'string' || !/^[a-z0-9]{1,32}$/.test(c))
+            throw new SdkCallError('sdk.economy.unknown_currency');
+        return `${g}:${u}:${c}`;
+    }
+    function coins(g, u, n, c) {
         if (typeof n !== 'number' || !Number.isInteger(n))
             throw new SdkCallError('sdk.economy.bad_amount');
-        const next = (balances.get(`${g}:${u}`) ?? 0) + n;
-        balances.set(`${g}:${u}`, next);
+        const k = wallet(g, u, c);
+        const next = (balances.get(k) ?? 0) + n;
+        balances.set(k, next);
         return next;
     }
     for (const method of ['get', 'post', 'put', 'patch', 'delete']) {
@@ -878,7 +912,7 @@ export function createTestContext(options = {}) {
         }
         return areas.get(name);
     };
-    return new Proxy({ botId, sent, logs, store, globalStore, calls, played, requests, web: webRequests, actions, answers, balances, banks, fileStore, settingsNow: config, fieldOptions, variableDefs, variableValues }, {
+    return new Proxy({ botId, sent, logs, store, globalStore, calls, played, requests, web: webRequests, actions, answers, queued, joined, balances, banks, fileStore, settingsNow: config, fieldOptions, variableDefs, variableValues }, {
         get: (target, prop) => {
             if (typeof prop !== 'string')
                 return undefined;

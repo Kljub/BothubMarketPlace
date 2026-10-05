@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "plugin_plex",
   "name": "Plex",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Plex for Discord: library search, now playing, random picks, recommendations, Overseerr requests, account linking with a role, and new-content notices.",
   "developer": {
     "name": "BotHub"
@@ -22,7 +22,8 @@
       "http.outbound",
       "discord.interactions.reply",
       "discord.roles.assign",
-      "webhooks.inbound"
+      "webhooks.inbound",
+      "modules.music.queue"
     ]
   },
   "main": "index.js",
@@ -38,7 +39,8 @@
     "commands/libraries.json",
     "commands/plex-watchlist.json",
     "commands/plex-watchlist-add.json",
-    "commands/plex-watchlist-remove.json"
+    "commands/plex-watchlist-remove.json",
+    "commands/play.json"
   ],
   "services": {
     "tasks": [
@@ -93,7 +95,8 @@
     "libraries",
     "watchlist",
     "watchlist_add",
-    "watchlist_remove"
+    "watchlist_remove",
+    "play"
   ],
   "dashboard": {
     "settings": "dashboard/settings.json"

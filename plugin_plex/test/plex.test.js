@@ -287,3 +287,47 @@ test('links made before 1.2.0 (per bot) move to the global storage', async () =>
   assert.ok(ctx.globalStore.has(`acc:${USER}`) && !ctx.store.has(`acc:${USER}`));
   assert.equal((await runBlock(plugin, 'watchlist', ctx, { vars })).port, 'not_linked', 'no token yet: link again');
 });
+
+test('plex-play: songs, albums and playlists go into the music queue with the token as a secret', async () => {
+  const MUSIC = { ratingKey: '50', title: 'Get Lucky', grandparentTitle: 'Daft Punk', parentTitle: 'Random Access Memories', librarySectionID: 3, duration: 369000, Media: [{ Part: [{ key: '/library/parts/501/1700000000/file.flac' }] }] };
+  const ALBUM = { ratingKey: '60', title: 'Random Access Memories', parentTitle: 'Daft Punk', librarySectionID: 3 };
+  const HIDDEN = { ...MUSIC, ratingKey: '51', title: 'Private Song', librarySectionID: 9 };
+  const music = ({ path, query }) => {
+    if (path === '/hubs/search') {
+      // Like Plex: only titles that match the term (the album test searches the album).
+      const q = query.query === 'album test' ? 'random access' : query.query.toLowerCase();
+      const match = (list) => list.filter((m) => m.title.toLowerCase().includes(q));
+      return { json: { MediaContainer: { Hub: [
+        { type: 'track', Metadata: match([MUSIC, HIDDEN]) },
+        { type: 'album', Metadata: match([ALBUM]) },
+        { type: 'movie', Metadata: match(MOVIES) },
+        { type: 'playlist', Metadata: match([{ ratingKey: '70', title: 'Road Trip', playlistType: 'audio' }, { ratingKey: '71', title: 'Movie night', playlistType: 'video' }]) },
+      ] } } };
+    }
+    if (path === '/library/metadata/60/children') return { json: { MediaContainer: { Metadata: [MUSIC, { ...MUSIC, ratingKey: '52', title: 'Instant Crush', Media: [{ Part: [{ key: '/library/parts/502/1/file.flac' }] }] }] } } };
+    if (path === '/playlists/70/items') return { json: { MediaContainer: { Metadata: [MUSIC] } } };
+    return servers().PLEX_API({ path, query });
+  };
+  const ctx = createTestContext({ id: 'plugin_plex', permissions: [...permissions, 'modules.music.queue'], secrets: SECRETS, web: { 'plex.local': at(PLEX, music) }, manifest: MANIFEST, config: { libraries: ['1:1', '1:3'] } });
+  // A song: the stream path and the token secret, never the token itself.
+  let out = await runBlock(plugin, 'play', ctx, { config: { query: 'get lucky', kind: 'any' }, vars: { ...vars, 'channel.id': '300000000000000001' }, interaction: 'cmd-1' });
+  assert.equal(out.port, 'replied');
+  assert.deepEqual(ctx.queued[0], {
+    guildId: GUILD, title: 'Daft Punk - Get Lucky', author: 'Daft Punk', duration: 369,
+    source: { url: 'PLEX_URL', path: '/library/parts/501/1700000000/file.flac', auth: { secret: 'PLEX_TOKEN', header: 'X-Plex-Token', format: 'plain' } },
+  });
+  assert.ok(!JSON.stringify(ctx.queued).includes('plex-token-1'), 'the plugin never handles the token');
+  assert.deepEqual(ctx.joined, [USER], "joins the member's voice channel");
+  assert.match(ctx.answers.at(-1).message, /🎵 Song: \*\*Get Lucky\*\* · Daft Punk/);
+  // An album: all its songs.
+  out = await runBlock(plugin, 'play', ctx, { config: { query: 'album test', kind: 'album' }, vars, interaction: 'cmd-2' });
+  assert.equal(out.results['.count'], '2');
+  assert.match(ctx.answers.at(-1).message, /💿 Album: \*\*Random Access Memories\*\*.*\(2 songs\)/);
+  // Audio playlists only; songs of libraries that are not shared stay hidden.
+  out = await runBlock(plugin, 'play', ctx, { config: { query: 'road', kind: 'playlist' }, vars });
+  assert.equal(out.port, 'next');
+  out = await runBlock(plugin, 'play', ctx, { config: { query: 'movie night', kind: 'playlist' }, vars });
+  assert.equal(out.port, 'not_found', 'video playlists are no music');
+  out = await runBlock(plugin, 'play', ctx, { config: { query: 'Private Song', kind: 'track' }, vars });
+  assert.equal(out.port, 'not_found', 'library 9 is not shared');
+});

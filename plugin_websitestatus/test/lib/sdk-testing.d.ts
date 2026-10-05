@@ -201,6 +201,10 @@ export interface TestContext {
     }>;
     /** Answers to commands and clicks (ctx.interaction.*), in order. */
     readonly answers: InteractionAnswer[];
+    /** Songs of ctx.music.enqueue (guildId plus the item as given). */
+    readonly queued: Json[];
+    /** Members whose voice channel music.enqueue joined (options.joinUser). */
+    readonly joined: string[];
     /** Economy balances: "<guildId>:<userId>" -> coins. */
     readonly balances: Map<string, number>;
     /** Economy bank amounts: "<guildId>:<userId>" -> coins. */
