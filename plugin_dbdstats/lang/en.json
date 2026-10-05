@@ -1,0 +1,22 @@
+{
+  "plugin.plugin_dbdstats.name": "DBD Stats",
+  "plugin.plugin_dbdstats.description": "Dead by Daylight statistics of any Steam player with /dbd-stats, from the Steam Web API.",
+  "plugin.plugin_dbdstats.setting.color": "Embed color",
+  "plugin.plugin_dbdstats.node.stats.label": "DBD stats",
+  "plugin.plugin_dbdstats.node.stats.description": "Loads the Dead by Daylight statistics of a Steam player.",
+  "plugin.plugin_dbdstats.node.stats.result": "Player name",
+  "plugin.plugin_dbdstats.node.stats.result_steamid": "SteamID64",
+  "plugin.plugin_dbdstats.node.stats.result_bloodpoints": "Bloodpoints",
+  "plugin.plugin_dbdstats.node.stats.result_escapes": "Escapes",
+  "plugin.plugin_dbdstats.node.stats.result_kills": "Kills",
+  "plugin.plugin_dbdstats.node.stats.result_playtime": "Time played",
+  "plugin.plugin_dbdstats.node.stats.result_error": "Error",
+  "plugin.plugin_dbdstats.node.stats.config.player": "Player (name, link or SteamID64)",
+  "plugin.plugin_dbdstats.node.stats.config.variable": "Variable",
+  "plugin.plugin_dbdstats.node.stats.port.replied": "Answered",
+  "plugin.plugin_dbdstats.node.stats.port.next": "Found",
+  "plugin.plugin_dbdstats.node.stats.port.not_found": "Not found",
+  "plugin.plugin_dbdstats.node.stats.port.private": "Profile private",
+  "plugin.plugin_dbdstats.node.stats.port.not_set_up": "Not set up",
+  "plugin.plugin_dbdstats.node.stats.port.failed": "Failed"
+}

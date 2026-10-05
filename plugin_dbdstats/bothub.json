@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_dbdstats",
+  "name": "DBD Stats",
+  "version": "1.0.0",
+  "description": "Dead by Daylight statistics of any Steam player with /dbd-stats, from the Steam Web API.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "icon": "🩸",
+  "category": "fun",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "secrets.use",
+      "discord.interactions.reply"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/dbd-stats.json"
+  ],
+  "services": {
+    "secrets": [
+      "STEAM_API_KEY"
+    ],
+    "hosts": [
+      "api.steampowered.com"
+    ]
+  },
+  "nodes": [
+    "stats"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

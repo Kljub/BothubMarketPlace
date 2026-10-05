@@ -66,6 +66,8 @@ export function jobBody(ctx, input, sfwMode) {
     const v = String(setting(ctx, key, '')).trim();
     if (v) body[field] = v;
   }
+  // The member's own model (/arc-models) wins over the settings page.
+  if (String(input.model ?? '').trim()) body.modelName = String(input.model).trim();
   if (input.imagePath) {
     body.imagePath = input.imagePath;
     body.denoise = num(input.strength, 0.6, 0.05, 1);

@@ -1,0 +1,72 @@
+{
+  "name": "dbd-stats",
+  "description": "Shows the Dead by Daylight stats of a Steam player",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "dbd-stats",
+          "description": "Shows the Dead by Daylight stats of a Steam player"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_name",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "name",
+          "description": "Steam custom URL name, profile link or SteamID64",
+          "required": true,
+          "variable": "name"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "stats",
+        "type": "plugin.plugin_dbdstats.stats",
+        "typeVersion": 1,
+        "config": {
+          "player": "{option_name}",
+          "variable": "dbd"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_name",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "stats",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

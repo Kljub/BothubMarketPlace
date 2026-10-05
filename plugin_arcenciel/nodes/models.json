@@ -1,0 +1,58 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_arcenciel.node.models.label",
+  "descriptionKey": "plugin.plugin_arcenciel.node.models.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "not_set_up",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_arcenciel.node.models.result"
+    },
+    {
+      "suffix": ".current",
+      "labelKey": "plugin.plugin_arcenciel.node.models.result_current"
+    },
+    {
+      "suffix": ".error",
+      "labelKey": "plugin.plugin_arcenciel.node.models.result_error"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "search": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

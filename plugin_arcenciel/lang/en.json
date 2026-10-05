@@ -75,5 +75,15 @@
   "plugin.plugin_arcenciel.setting.upscale_factor.1_5": "1.5×",
   "plugin.plugin_arcenciel.setting.upscale_factor.2": "2×",
   "plugin.plugin_arcenciel.setting.upscale_factor.3": "3×",
-  "plugin.plugin_arcenciel.setting.upscale_factor.4": "4×"
+  "plugin.plugin_arcenciel.setting.upscale_factor.4": "4×",
+  "plugin.plugin_arcenciel.node.models.label": "Models",
+  "plugin.plugin_arcenciel.node.models.description": "Lists the Arc en Ciel models privately; the member picks one for their own images.",
+  "plugin.plugin_arcenciel.node.models.result": "Number of models",
+  "plugin.plugin_arcenciel.node.models.result_current": "The member's model",
+  "plugin.plugin_arcenciel.node.models.result_error": "Error",
+  "plugin.plugin_arcenciel.node.models.port.replied": "Answered",
+  "plugin.plugin_arcenciel.node.models.port.next": "Next",
+  "plugin.plugin_arcenciel.node.models.port.not_set_up": "Not set up",
+  "plugin.plugin_arcenciel.node.models.port.failed": "Failed",
+  "plugin.plugin_arcenciel.node.models.config.search": "Search term"
 }

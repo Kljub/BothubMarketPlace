@@ -2,6 +2,7 @@
 // graph. The block returns as soon as the job is queued (port "queued");
 // finishJob runs on in the background. Tests await `running`.
 import { API, ArcError, call, jobBody, NOT_SET_UP, queueJob, uploadSource } from './arc.js';
+import { userModel } from './models.js';
 import { answer, finishJob, jobInfo, safety, takeQuota } from './flow.js';
 import { setting } from './util.js';
 
@@ -42,7 +43,8 @@ export async function generate(ctx, input, vars, handle, waitOptions) {
       }
       imagePath = await uploadSource(ctx, source.name);
     }
-    const body = jobBody(ctx, { ...input, prompt, imagePath }, sfwMode);
+    const model = await userModel(ctx, guildId, userId);
+    const body = jobBody(ctx, { ...input, prompt, imagePath, model }, sfwMode);
     const job = await queueJob(ctx, body);
     const ahead = job.position > 0 ? ` (${job.position} ahead in the queue)` : '';
     await answer(ctx, handle, `⏳ Queued${ahead} …`);

@@ -97,9 +97,16 @@
       "version": "1.1.1",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_arcenciel-1.1.1/plugin_arcenciel-1.1.1.zip",
       "sha256": "f3ca1880dedeacec619e8ddfb6c2a96d7f3c80cf976e54de96ffedf36654f69e",
-      "size": 18077,
+      "size": 18077
+    },
+    {
+      "id": "plugin_arcenciel",
+      "version": "1.2.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_arcenciel-1.2.0/plugin_arcenciel-1.2.0.zip",
+      "sha256": "836182aaa3ff3b43d5ffa4c8ebaa6f57dfd750b99a259573ed96fc00853b290d",
+      "size": 23105,
       "name": "ArcEnCiel",
-      "description": "AI images from arcenciel.io in Discord: /imagine, /img2img and /autotag.",
+      "description": "AI images from arcenciel.io in Discord: /imagine, /img2img, /autotag and /arc-models.",
       "developer": {
         "name": "BotHub"
       },
@@ -121,10 +128,10 @@
         "ARCENCIEL_API_KEY"
       ],
       "layers": {
-        "commands": 3,
+        "commands": 4,
         "events": 0,
         "services": 1,
-        "nodes": 3,
+        "nodes": 4,
         "dashboard": 1
       },
       "voice": false
@@ -214,6 +221,39 @@
         "events": 0,
         "services": 1,
         "nodes": 2,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
+      "id": "plugin_dbdstats",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_dbdstats-1.0.0/plugin_dbdstats-1.0.0.zip",
+      "sha256": "64b7137493837a31b346787169fe1f1fb0d2c4811a0b5dd9b7c00ee67d0ce5e7",
+      "size": 8579,
+      "name": "DBD Stats",
+      "description": "Dead by Daylight statistics of any Steam player with /dbd-stats, from the Steam Web API.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🩸",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "secrets.use",
+          "discord.interactions.reply"
+        ]
+      },
+      "secrets": [
+        "STEAM_API_KEY"
+      ],
+      "layers": {
+        "commands": 1,
+        "events": 0,
+        "services": 1,
+        "nodes": 1,
         "dashboard": 1
       },
       "voice": false

@@ -30,7 +30,14 @@ function arc({ polls = 1, status = 'completed', safety = 'ok', key = 'arc-key-12
     if (req.method === 'POST' && path === '/api/generator/uploads') return { json: { path: 'generator/src-1.png' } };
     if (req.method === 'POST' && path === '/api/generator/jobs') return { json: { job: { id: 'job-1', status: 'queued' }, position: 2, queueEtaMs: 5000 } };
     if (req.method === 'POST' && path === '/api/generator/jobs/job-1/remix') return { json: { job: { id: 'job-1', status: 'queued' }, position: 0 } };
-    if (path === '/api/generator/options') return { json: { models: { upscale: ['4x-UltraSharp'] } } };
+    if (path === '/api/generator/options') {
+      const checkpoints = Array.from({ length: 30 }, (_, i) => ({ name: `model_${String(i).padStart(2, '0')}.safetensors`, displayName: `Model ${String(i).padStart(2, '0')}`, baseModel: i % 2 ? 'SDXL' : 'SD 1.5' }));
+      return { json: { models: { upscale: ['4x-UltraSharp'], checkpoints: checkpoints.map((c) => c.name) }, modelDetails: { checkpoints } } };
+    }
+    if (path === '/api/generator/models/checkpoints') {
+      const q = new URL(req.url).searchParams.get('q');
+      return { json: { query: q, baseModel: null, limit: 25, entries: [{ name: 'anime_v3.safetensors', modelTitle: 'Anime Mix', versionName: 'v3', baseModel: 'SDXL' }] } };
+    }
     if (path === '/api/generator/jobs/job-1') {
       reads += 1;
       const done = reads > polls;
@@ -175,4 +182,43 @@ test('buttons: upscale remixes with the seed and a model, regenerate queues agai
   assert.equal(jobs[1].json.seed, undefined, 'a new seed');
   await runComponent(plugin, 'regen', ctx, { ...ev('regen'), data: 'gone' });
   assert.match(ctx.answers.at(-1).message, /too old/);
+});
+
+test('arc-models: lists the models, a member picks one, their images use it', async () => {
+  const api = arc();
+  const ctx = ctxWith({ api, config: { checkpoint: 'server_default.safetensors' } });
+  const out = await runBlock(plugin, 'models', ctx, { config: { search: '' }, vars: vars(), interaction: 'cmd-m' });
+  assert.equal(out.port, 'replied');
+  assert.equal(out.results[''], '30');
+  const msg = ctx.answers.at(-1).message;
+  assert.equal(ctx.answers.at(-1).ephemeral, true, 'private list');
+  assert.match(msg.embeds[0].title, /models \(30\)/);
+  assert.match(msg.embeds[0].footer, /Page 1 of 2/);
+  const select = msg.components[0][0];
+  assert.equal(select.type, 'select');
+  assert.equal(select.options.length, 25, 'Discord takes 25 options');
+  const ev = (key, extra) => ({ handle: `h-${key}`, key, data: '0', user: { id: USER, name: 'u', displayName: 'u' }, guildId: GUILD, channelId: CHANNEL, ...extra });
+  // Next page, then pick the 27th model.
+  await runComponent(plugin, 'models_page', ctx, ev('models_page', { data: '1' }));
+  assert.match(ctx.answers.at(-1).message.embeds[0].footer, /Page 2 of 2/);
+  await runComponent(plugin, 'models_pick', ctx, ev('models_pick', { values: ['26'] }));
+  assert.match(ctx.answers.at(-1).message, /Model 26/);
+  await generate(ctx, { prompt: 'a cat' }, vars(), 'cmd-1', fast);
+  await settle();
+  const job = api.seen.filter((r) => r.method === 'POST' && r.url.endsWith('/jobs')).at(-1).json;
+  assert.equal(job.modelName, 'model_26.safetensors', "the member's model wins over the setting");
+  // Another member still gets the server default.
+  await generate(ctx, { prompt: 'a dog' }, { ...vars(), 'user.id': '100000000000000009' }, 'cmd-2', fast);
+  await settle();
+  assert.equal(api.seen.filter((r) => r.method === 'POST' && r.url.endsWith('/jobs')).at(-1).json.modelName, 'server_default.safetensors');
+  // Server default again.
+  await runComponent(plugin, 'models_reset', ctx, ev('models_reset'));
+  await generate(ctx, { prompt: 'a cat' }, vars(), 'cmd-3', fast);
+  await settle();
+  assert.equal(api.seen.filter((r) => r.method === 'POST' && r.url.endsWith('/jobs')).at(-1).json.modelName, 'server_default.safetensors');
+  // Search uses the catalogue.
+  const found = await runBlock(plugin, 'models', ctx, { config: { search: 'anime' }, vars: vars(), interaction: 'cmd-s' });
+  assert.equal(found.results[''], '1');
+  assert.match(ctx.answers.at(-1).message.embeds[0].description, /Anime Mix · v3/);
+  assert.ok(api.seen.some((r) => r.url.includes('/models/checkpoints?q=anime')));
 });
