@@ -128,7 +128,7 @@ export interface SecretRequestKit {
     auth?: {
         secret: string;
         header?: string;
-        format?: 'bearer' | 'plain' | 'query';
+        format?: 'bearer' | 'plain' | 'query' | 'basic';
         param?: string;
     };
     file?: {
@@ -137,6 +137,12 @@ export interface SecretRequestKit {
     };
     fields?: Record<string, string>;
     saveAs?: 'file';
+    jsonFile?: {
+        name: string;
+        path: string;
+    };
+    fileFrom?: string;
+    timeoutMs?: number;
 }
 export interface EndpointRequest {
     method: string;

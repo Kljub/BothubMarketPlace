@@ -1,7 +1,7 @@
 // Buttons: blackjack Hit / Stand / Split and "🔄 Again" of every game
 // (only the player; the new round takes a new bet).
 import { bjMessage, gameMessage, newBlackjack, rtpOf, stake } from './blocks.js';
-import { money, pay } from './econ.js';
+import { money, pay, wallet } from './econ.js';
 import { canSplit, dealerPlay, handValue, resolveHand } from './games.js';
 import { readJson, writeJson } from './util.js';
 
@@ -43,7 +43,7 @@ export const components = {
     if (action === 'split') {
       if (s.hands.length > 1 || !canSplit(hand.cards)) return ctx.interaction.reply(ev.handle, '❌ No split possible.', { ephemeral: true });
       try {
-        await ctx.economy.remove(s.guild, s.user, s.bet);
+        await wallet(ctx).remove(s.guild, s.user, s.bet);
       } catch {
         return ctx.interaction.reply(ev.handle, '❌ Not enough for a second bet.', { ephemeral: true });
       }

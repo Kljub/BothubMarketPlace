@@ -109,10 +109,11 @@ export interface SecretRequest {
     json?: Json;
     headers?: Record<string, string>;
     /** The key: secret name, where it goes (default header Authorization, "Bearer <key>"). */
+    /** format 'basic': the secret is "user:password" (HTTP Basic). */
     auth?: {
         secret: string;
         header?: string;
-        format?: 'bearer' | 'plain' | 'query';
+        format?: 'bearer' | 'plain' | 'query' | 'basic';
         param?: string;
     };
     /**
@@ -125,14 +126,21 @@ export interface SecretRequest {
         field?: string;
     };
     fields?: Record<string, string>;
-    /** How long to wait for the answer: 1000-60000 ms (default 10000), e.g. for AI APIs. */
+    /** "storage.files": a plugin file as base64 into `json` at path (e.g. "init_images.0"), for JSON image APIs. */
+    jsonFile?: {
+        name: string;
+        path: string;
+    };
+    /** How long to wait for the answer: 1000-300000 ms (default 10000), e.g. for AI APIs and image generation. */
     timeoutMs?: number;
     /**
      * "storage.files": 'file' stores a successful answer (an image: PNG, GIF,
-     * WEBP or JPEG, max. 2 MB) in the plugin files; the answer is then
+     * WEBP or JPEG, max. 8 MB) in the plugin files; the answer is then
      * { status, headers, file } (see SecretFileAnswer). Error answers come as text.
      */
     saveAs?: 'file';
+    /** With saveAs 'file': the image is base64 in the JSON answer at this path (e.g. "images.0"); the rest of the JSON comes as `json`. */
+    fileFrom?: string;
 }
 export interface HttpAnswer {
     status: number;
@@ -145,7 +153,8 @@ export interface HttpAnswer {
 export interface SecretFileAnswer {
     status: number;
     headers: Record<string, string>;
-    file: StoredFile;
+    file: StoredFile; /** With fileFrom: the JSON answer without the image. */
+    json?: Json;
 }
 /** voiceChannelId: the voice channel the member is in now, null when none. */
 export interface MemberInfo {
@@ -513,7 +522,7 @@ export interface PluginContext {
      * click/select/modal (InteractionEvent.handle). The token stays in the bot.
      */
     readonly interaction: {
-        /** options.file: a plugin file sent along (storage.files), e.g. privately with ephemeral. */
+        /** options.file: a plugin file sent along (storage.files), e.g. privately with ephemeral; embeds with image_url / thumbnail_url 'attachment' show it. */
         reply(handle: string, message: Message | string, options?: {
             ephemeral?: boolean;
             file?: string;

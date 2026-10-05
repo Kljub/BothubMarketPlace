@@ -3,6 +3,7 @@
 import { finish } from './interactions.js';
 import { multiplierAt } from './game.js';
 import { readJson, setting } from './util.js';
+import { wallet } from './econ.js';
 
 const IDLE_MS = 600_000;
 
@@ -14,7 +15,7 @@ export const tasks = {
       if (r && now - r.at < IDLE_MS) continue;
       if (r) {
         const back = r.revealed.length ? Math.floor(r.bet * multiplierAt(r.mineCount, r.revealed.length, Number(setting(ctx, 'rtp', 97)))) : r.bet;
-        await ctx.economy.add(r.guild, r.user, back);
+        await wallet(ctx).add(r.guild, r.user, back);
         await finish(ctx, r);
       } else {
         await finish(ctx, { id, guild: '', user: '' });

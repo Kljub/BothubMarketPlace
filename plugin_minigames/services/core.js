@@ -1,7 +1,7 @@
 // Service "core": games in storage "g:<id>" = { id, kind, guild, user, at,
 // ... }, open ones in "games"; the dice of every game (rng.next, tests set
 // it); puzzle rewards with a cooldown per member ("pr:<guild>:<user>").
-import { money } from './econ.js';
+import { money, wallet } from './econ.js';
 import { readJson, setting, writeJson } from './util.js';
 
 export const rng = { next: Math.random };
@@ -61,7 +61,7 @@ export async function puzzleReward(ctx, guild, user) {
   const last = Number((await ctx.storage.get(key)) ?? 0);
   if (cooldown && Date.now() - last < cooldown) return `\nNext reward <t:${Math.floor((last + cooldown) / 1000)}:R>.`;
   await ctx.storage.set(key, String(Date.now()));
-  await ctx.economy.add(guild, user, amount);
+  await wallet(ctx).add(guild, user, amount);
   return `\nReward: ${money(ctx, amount)}.`;
 }
 

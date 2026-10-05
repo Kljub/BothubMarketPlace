@@ -2,7 +2,7 @@
 // higher wins the pot, a tie pays back; without opponent against the bot)
 // and /dos (double or steal: both pick secretly; both double = both win
 // their bet, one steals = the pot to the stealer, both steal = both lose).
-import { betOf, money, take } from './econ.js';
+import { betOf, money, take, wallet } from './econ.js';
 import { endGame, loadGame, newGame, no, roll, saveGame, say, who } from './core.js';
 
 const DIE = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
@@ -21,8 +21,8 @@ const challenge = (g) => [[{ key: 'duel_accept', data: g.id, label: 'Accept', st
 /** Refund of a duel that never finished. */
 export async function refundDuel(ctx, g) {
   if (!g.bet) return;
-  await ctx.economy.add(g.guild, g.user, g.bet);
-  if (g.accepted) await ctx.economy.add(g.guild, g.opponent, g.bet);
+  await wallet(ctx).add(g.guild, g.user, g.bet);
+  if (g.accepted) await wallet(ctx).add(g.guild, g.opponent, g.bet);
 }
 
 // ---------- dicebet ----------
@@ -46,7 +46,7 @@ async function rollOff(ctx, g) {
     text += `🤝 Tie!${g.bet ? ' Bets back.' : ''}`;
   } else {
     const winner = sa > sb ? g.user : g.opponent;
-    if (winner && g.bet) await ctx.economy.add(g.guild, winner, g.bet * 2);
+    if (winner && g.bet) await wallet(ctx).add(g.guild, winner, g.bet * 2);
     text += winner ? `🏆 <@${winner}> wins${g.bet ? ` ${money(ctx, g.bet * 2)}` : ''}!` : `🤖 The bot wins!${g.bet ? ' Bet lost.' : ''}`;
   }
   return text;
@@ -146,8 +146,8 @@ export const duelComponents = {
     }
     await endGame(ctx, g);
     const [pa, pb] = dosOutcome(g.picks[g.user], g.picks[g.opponent], g.bet);
-    if (pa) await ctx.economy.add(g.guild, g.user, pa);
-    if (pb) await ctx.economy.add(g.guild, g.opponent, pb);
+    if (pa) await wallet(ctx).add(g.guild, g.user, pa);
+    if (pb) await wallet(ctx).add(g.guild, g.opponent, pb);
     const name = (c) => (c === 's' ? '🗡️ Steal' : '💰 Double');
     const text = `<@${g.user}>: ${name(g.picks[g.user])}\n<@${g.opponent}>: ${name(g.picks[g.opponent])}\n\n` + (
       pa && pb ? `Both doubled: ${money(ctx, pa)} each!`

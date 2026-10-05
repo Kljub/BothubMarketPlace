@@ -84,7 +84,7 @@ export async function again(ctx, ev, kind, waitOptions) {
     if (kind === 'upscale') {
       const model = String(setting(ctx, 'upscale_model', '')).trim() || (await upscaleModels(ctx))[0];
       if (!model) throw new ArcError('Arc en Ciel offers no upscale model right now.');
-      const factor = Number(String(setting(ctx, 'upscale_factor', '2')).replace('_', '.')) || 2;
+      const factor = Number(String(setting(ctx, 'upscale_factor', '1_5')).replace('_', '.')) || 1.5;
       const res = await call(ctx, { url: `${API}/jobs/${encodeURIComponent(ev.data)}/remix`, method: 'POST', json: { prompt: info.prompt, seed: info.seed, sfwMode, upscaleProfiles: [{ upscaleModelName: model }], scaleFactor: factor } });
       if (!res.json?.job?.id) throw new ArcError('Arc en Ciel did not queue the upscale.');
       job = { id: String(res.json.job.id), position: Number(res.json.position ?? 0) };

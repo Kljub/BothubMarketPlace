@@ -1,6 +1,6 @@
 // Small earnings with a cooldown: /beg (low risk: a chance for a few coins)
 // and /fish (a catch from the table below, scaled by "fish_scale" %).
-import { money } from './econ.js';
+import { money, wallet } from './econ.js';
 import { cooldown, no, pick, rng, who } from './core.js';
 import { setting } from './util.js';
 
@@ -15,7 +15,7 @@ export async function beg(ctx, { vars, interaction }) {
   const max = Math.max(min, Math.floor(Number(setting(ctx, 'beg_max', '50') || 0)));
   let amount = 0;
   if (rng.next() * 100 < Number(setting(ctx, 'beg_chance', 70))) amount = min + Math.floor(rng.next() * (max - min + 1));
-  if (amount) await ctx.economy.add(guild, user, amount);
+  if (amount) await wallet(ctx).add(guild, user, amount);
   const text = amount ? `🙏 ${pick(DONORS)} gave you ${money(ctx, amount)}.` : `🙅 ${pick(DONORS)} walked past. Nothing this time.`;
   await ctx.interaction.reply(interaction, text);
   return { port: 'replied', results: { '': amount } };
@@ -42,7 +42,7 @@ export async function fish(ctx, { vars, interaction }) {
   if (wait) return no(ctx, interaction, wait);
   const [emoji, name, , lo, hi] = catchOf();
   const value = Math.floor((lo + Math.floor(rng.next() * (hi - lo + 1))) * (Number(setting(ctx, 'fish_scale', 100)) / 100));
-  if (value > 0) await ctx.economy.add(guild, user, value);
+  if (value > 0) await wallet(ctx).add(guild, user, value);
   await ctx.interaction.reply(interaction, `🎣 You caught ${emoji} ${name}${value > 0 ? ` worth ${money(ctx, value)}` : ''}!`);
   return { port: 'replied', results: { '': value } };
 }

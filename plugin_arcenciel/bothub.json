@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "plugin_arcenciel",
   "name": "ArcEnCiel",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "AI images from arcenciel.io in Discord: /imagine, /img2img and /autotag.",
   "developer": {
     "name": "BotHub"

@@ -59,6 +59,8 @@ export interface TestContextOptions {
     hosts?: string[];
     /** Start balances of the Economy module: "<guildId>:<userId>" -> coins. */
     balances?: Record<string, number>;
+    /** Start bank amounts of the Economy module: "<guildId>:<userId>" -> coins. */
+    banks?: Record<string, number>;
     /**
      * dashboard/settings.json: its "permissions" fields are what
      * config.checkAccess checks; config.set takes only its keys.
@@ -126,7 +128,7 @@ export interface SecretRequestKit {
     auth?: {
         secret: string;
         header?: string;
-        format?: 'bearer' | 'plain' | 'query';
+        format?: 'bearer' | 'plain' | 'query' | 'basic';
         param?: string;
     };
     file?: {
@@ -135,6 +137,12 @@ export interface SecretRequestKit {
     };
     fields?: Record<string, string>;
     saveAs?: 'file';
+    jsonFile?: {
+        name: string;
+        path: string;
+    };
+    fileFrom?: string;
+    timeoutMs?: number;
 }
 export interface EndpointRequest {
     method: string;
@@ -195,6 +203,8 @@ export interface TestContext {
     readonly answers: InteractionAnswer[];
     /** Economy balances: "<guildId>:<userId>" -> coins. */
     readonly balances: Map<string, number>;
+    /** Economy bank amounts: "<guildId>:<userId>" -> coins. */
+    readonly banks: Map<string, number>;
     /** Current plugin files: name -> base64. */
     readonly fileStore: Map<string, string>;
     /** Current settings (config.set changes them). */

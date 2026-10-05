@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "plugin_minesweeper",
   "name": "Minesweeper",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A 24-field mine bet: the member picks the number of mines, every diamond raises the multiplier, 🔥 cashes out. RTP per bot.",
   "developer": {
     "name": "BotHub"

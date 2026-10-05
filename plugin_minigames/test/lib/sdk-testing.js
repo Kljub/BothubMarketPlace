@@ -415,14 +415,34 @@ export function createTestContext(options = {}) {
                     const format = request.auth.format ?? 'bearer';
                     if (format === 'query')
                         u.searchParams.set(request.auth.param ?? 'key', key);
+                    else if (format === 'basic')
+                        headers[request.auth.header ?? 'Authorization'] = `Basic ${btoa(key)}`;
                     else
                         headers[request.auth.header ?? 'Authorization'] = format === 'bearer' ? `Bearer ${key}` : key;
                 }
                 if (request.json !== undefined && bytes(JSON.stringify(request.json)) > HTTP_BODY_BYTES)
                     throw new SdkCallError('sdk.http.too_big');
                 const filesAllowed = permissions.has('storage.files');
-                if ((request.file !== undefined || request.saveAs !== undefined) && !filesAllowed)
+                if ((request.file !== undefined || request.saveAs !== undefined || request.jsonFile !== undefined) && !filesAllowed)
                     throw new SdkCallError('sdk.call.denied');
+                if (request.fileFrom !== undefined && request.saveAs !== 'file')
+                    throw new SdkCallError('sdk.http.bad_save_as');
+                let sendJson = request.json;
+                if (request.jsonFile !== undefined) {
+                    const f = fileOf(request.jsonFile.name);
+                    if (!f)
+                        throw new SdkCallError('sdk.files.unknown');
+                    if (sendJson === undefined || !/^[A-Za-z0-9_]{1,64}(\.[A-Za-z0-9_]{1,64}){0,5}$/.test(request.jsonFile.path))
+                        throw new SdkCallError('sdk.http.bad_file');
+                    sendJson = structuredClone(sendJson);
+                    const keys = request.jsonFile.path.split('.');
+                    let cur = sendJson;
+                    for (const k of keys.slice(0, -1))
+                        cur = cur?.[Array.isArray(cur) ? Number(k) : k];
+                    if (!cur || typeof cur !== 'object')
+                        throw new SdkCallError('sdk.http.bad_file');
+                    cur[Array.isArray(cur) ? Number(keys.at(-1)) : keys.at(-1)] = f.data;
+                }
                 if (request.saveAs !== undefined && request.saveAs !== 'file')
                     throw new SdkCallError('sdk.http.bad_save_as');
                 let sentFile;
@@ -438,7 +458,7 @@ export function createTestContext(options = {}) {
                 const server = options.web?.[u.hostname];
                 if (!server)
                     throw new SdkCallError('sdk.http.failed');
-                const req = { method, url: u.toString(), query: Object.fromEntries(u.searchParams), json: request.json, headers, ...(sentFile ? { file: sentFile, fields: { ...(request.fields ?? {}) } } : {}) };
+                const req = { method, url: u.toString(), query: Object.fromEntries(u.searchParams), json: sendJson, headers, ...(sentFile ? { file: sentFile, fields: { ...(request.fields ?? {}) } } : {}) };
                 requests.push(structuredClone(req));
                 let timer;
                 const timeout = new Promise((_, reject) => {
@@ -451,6 +471,20 @@ export function createTestContext(options = {}) {
                     for (const [h, value] of Object.entries(reply.headers ?? {}))
                         if (h.toLowerCase() !== 'set-cookie')
                             out[h.toLowerCase()] = value;
+                    if (request.fileFrom !== undefined) {
+                        // Like the bot: the image is base64 inside the JSON answer.
+                        const doc = structuredClone(reply.json ?? JSON.parse(reply.text ?? 'null'));
+                        const keys = request.fileFrom.split('.');
+                        let cur = doc;
+                        for (const k of keys.slice(0, -1))
+                            cur = cur?.[Array.isArray(cur) ? Number(k) : k];
+                        const last = Array.isArray(cur) ? Number(keys.at(-1)) : keys.at(-1);
+                        const raw = cur?.[last];
+                        if (typeof raw !== 'string' || !raw)
+                            throw new SdkCallError('sdk.http.no_file');
+                        cur[last] = null;
+                        return { status, headers: out, file: await putFile(base64Bytes(raw.replace(/^data:[^,]*,/, ''))), json: doc };
+                    }
                     return { status, headers: out, file: await putFile(base64Bytes(reply.base64 ?? btoa(reply.text ?? ''))) };
                 }
                 const hide = [request.auth ? secretOf(request.auth.secret) : null, /^[A-Z][A-Z0-9_]{1,39}$/.test(name) ? secretOf(name) : null].filter((v) => !!v);

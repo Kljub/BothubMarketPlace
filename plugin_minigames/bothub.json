@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "plugin_minigames",
   "name": "Minigames",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Dice duels, 5 dice, higher or lower, scratch cards, double or steal, mastermind, hangman, match pairs, lights out, begging and fishing. Bets and rewards use the Economy module.",
   "developer": {
     "name": "BotHub"

@@ -1,6 +1,6 @@
 // Field clicks and 🔥 cash out; only the player of the round may click.
 import { embed } from './blocks.js';
-import { money, pay } from './econ.js';
+import { money, pay, wallet } from './econ.js';
 import { board, GRID, multiplierAt } from './game.js';
 import { readJson, setting, writeJson } from './util.js';
 
@@ -40,7 +40,7 @@ export const components = {
     if (!(i >= 0 && i < GRID) || r.revealed.includes(i)) return ctx.interaction.update(ev.handle, { embeds: [embed(ctx, r)], components: board(r) });
     if (r.mines.includes(i)) {
       await finish(ctx, r);
-      const balance = await ctx.economy.get(r.guild, r.user);
+      const balance = await wallet(ctx).get(r.guild, r.user);
       return ctx.interaction.update(ev.handle, { embeds: [embed(ctx, r, 'boom', `Bet lost. Balance: ${money(ctx, balance)}`)], components: board(r, true) });
     }
     r.revealed.push(i);

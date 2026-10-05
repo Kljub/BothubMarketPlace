@@ -103,10 +103,8 @@
       "hint": true
     },
     {
-      "key": "currency",
-      "type": "text",
-      "max": 32,
-      "default": "coins",
+      "key": "currencyKey",
+      "type": "currency",
       "hint": true
     }
   ]

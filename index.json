@@ -90,7 +90,14 @@
       "version": "1.1.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_arcenciel-1.1.0/plugin_arcenciel-1.1.0.zip",
       "sha256": "355edfad26d5a2120a9bcf4e0d2a1a18f74b1ec4b205c26f072ebc7bd6a56427",
-      "size": 18054,
+      "size": 18054
+    },
+    {
+      "id": "plugin_arcenciel",
+      "version": "1.1.1",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_arcenciel-1.1.1/plugin_arcenciel-1.1.1.zip",
+      "sha256": "f3ca1880dedeacec619e8ddfb6c2a96d7f3c80cf976e54de96ffedf36654f69e",
+      "size": 18077,
       "name": "ArcEnCiel",
       "description": "AI images from arcenciel.io in Discord: /imagine, /img2img and /autotag.",
       "developer": {
@@ -127,7 +134,14 @@
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_casino-1.0.0/plugin_casino-1.0.0.zip",
       "sha256": "c7e9547363bb5bc5a19e3c309dee949178613a6655e605e23e9b9249dfbcba1e",
-      "size": 17868,
+      "size": 17868
+    },
+    {
+      "id": "plugin_casino",
+      "version": "1.1.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_casino-1.1.0/plugin_casino-1.1.0.zip",
+      "sha256": "3f568c8d59fc4859c6f6afe122d7a5b8b5340b9f412cd7e8dfac5cf01adaacae",
+      "size": 18516,
       "name": "Casino",
       "description": "Coinflip, dice, slots, roulette and blackjack with bets from the Economy module; the payout rate (RTP) is set per bot.",
       "developer": {
@@ -167,7 +181,14 @@
       "version": "1.1.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_criminal-1.1.0/plugin_criminal-1.1.0.zip",
       "sha256": "459ecaaf188cff21f7eca0b5889ac6113a91227171051e130bac09d98588a93c",
-      "size": 11832,
+      "size": 11832
+    },
+    {
+      "id": "plugin_criminal",
+      "version": "1.2.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_criminal-1.2.0/plugin_criminal-1.2.0.zip",
+      "sha256": "766a77415458358033c0460000ca403b0067af15140873d05a69fc02a1a176f3",
+      "size": 12515,
       "name": "Criminal",
       "description": "/steal: rob another member's wallet; /rob-bank: a crew robs a member's bank. Chances, loot, fines and cooldowns per bot; balances from the Economy module.",
       "developer": {
@@ -275,7 +296,14 @@
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_minesweeper-1.0.0/plugin_minesweeper-1.0.0.zip",
       "sha256": "559c38e9a8bb784a06daead14e2720905b1d10b43ccff58cb6488737277cb179",
-      "size": 9609,
+      "size": 9609
+    },
+    {
+      "id": "plugin_minesweeper",
+      "version": "1.1.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_minesweeper-1.1.0/plugin_minesweeper-1.1.0.zip",
+      "sha256": "be7794afefd743f58feac28cdd2a071a51dd8e12541b05f4ec8edeab8afae2cb",
+      "size": 10260,
       "name": "Minesweeper",
       "description": "A 24-field mine bet: the member picks the number of mines, every diamond raises the multiplier, 🔥 cashes out. RTP per bot.",
       "developer": {
@@ -308,7 +336,14 @@
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_minigames-1.0.0/plugin_minigames-1.0.0.zip",
       "sha256": "8d91004168088144ff8a6757c2536bb13d226e23410d476b4a020936ee1e1f39",
-      "size": 34333,
+      "size": 34333
+    },
+    {
+      "id": "plugin_minigames",
+      "version": "1.1.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_minigames-1.1.0/plugin_minigames-1.1.0.zip",
+      "sha256": "bed5963ed6b3fbbff274c82bf9e9d210e41aa83cd339072226ea82ff16a95346",
+      "size": 34983,
       "name": "Minigames",
       "description": "Dice duels, 5 dice, higher or lower, scratch cards, double or steal, mastermind, hangman, match pairs, lights out, begging and fishing. Bets and rewards use the Economy module.",
       "developer": {

@@ -3,7 +3,7 @@
 // the multiplier, cash out any time) and /scratchcard (bought at a fixed
 // price; the prize is drawn at purchase, the nine fields are scratched by
 // button).
-import { betOf, money, take } from './econ.js';
+import { betOf, money, take, wallet } from './econ.js';
 import { endGame, loadGame, newGame, no, roll, rng, saveGame, say, shuffle, who } from './core.js';
 import { setting } from './util.js';
 
@@ -40,7 +40,7 @@ export async function fivedice(ctx, { config, vars, interaction }) {
   const hand = handOf(dice);
   const [, name, times] = FIVE_DICE.find((h) => h[0] === hand);
   const win = Math.floor(bet * times);
-  if (win) await ctx.economy.add(guild, user, win);
+  if (win) await wallet(ctx).add(guild, user, win);
   const table = FIVE_DICE.filter((h) => h[2]).map((h) => `${h[1]} ${h[2]}×`).join(' · ');
   await ctx.interaction.reply(interaction, { embeds: [{ color: win > bet ? '#22c55e' : win ? '#f0c040' : '#ef4444', title: '🎲 5 Dice',
     description: `${dice.map((d) => DIE[d]).join(' ')}\n**${name}**\n\n${win ? `You get ${money(ctx, win)} (bet ${money(ctx, bet)}).` : `Bet lost: ${money(ctx, bet)}.`}\n-# ${table}` }] });
@@ -85,7 +85,7 @@ export async function highlow(ctx, { config, vars, interaction }) {
 /** Pays the current value (end of the game, also when it expires). */
 export async function cashOut(ctx, g) {
   const win = g.round ? Math.floor(g.bet * g.mult) : g.bet;
-  await ctx.economy.add(g.guild, g.user, win);
+  await wallet(ctx).add(g.guild, g.user, win);
   return win;
 }
 
@@ -138,7 +138,7 @@ export async function scratchcard(ctx, { vars, interaction }) {
 export async function scratchPrize(ctx, g) {
   const x = SCRATCH.find((s) => s[0] === g.win)?.[2] ?? 0;
   const prize = g.price * x;
-  if (prize) await ctx.economy.add(g.guild, g.user, prize);
+  if (prize) await wallet(ctx).add(g.guild, g.user, prize);
   return prize;
 }
 

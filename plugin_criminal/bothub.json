@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "plugin_criminal",
   "name": "Criminal",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "/steal: rob another member's wallet; /rob-bank: a crew robs a member's bank. Chances, loot, fines and cooldowns per bot; balances from the Economy module.",
   "developer": {
     "name": "BotHub"

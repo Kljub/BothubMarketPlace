@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "plugin_casino",
   "name": "Casino",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Coinflip, dice, slots, roulette and blackjack with bets from the Economy module; the payout rate (RTP) is set per bot.",
   "developer": {
     "name": "BotHub"

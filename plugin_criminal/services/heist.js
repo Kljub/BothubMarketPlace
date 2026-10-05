@@ -6,7 +6,7 @@
 // wallet. A heist lives in storage "h:<id>" = { id, guild, leader, target,
 // crew, at }; open ones in "heists"; the victim is safe for a while after
 // a heist ("hcd:<guild>:<target>").
-import { money } from './econ.js';
+import { money, wallet } from './econ.js';
 import { readJson, setting, writeJson } from './util.js';
 
 const MAX_CREW = 10;
@@ -51,7 +51,7 @@ export async function heist(ctx, { config, vars, interaction }) {
   if (!victim || victim.bot) return no(ctx, interaction, '❌ Choose a member (no bot).');
   const safe = Number((await ctx.storage.get(`hcd:${guild}:${target}`)) ?? 0);
   if (safe > Date.now()) return no(ctx, interaction, `🚓 The bank of <@${target}> is guarded: try again <t:${Math.floor(safe / 1000)}:R>.`);
-  if ((await ctx.economy.bank(guild, target)) <= 0) return no(ctx, interaction, `❌ <@${target}> has nothing in the bank.`);
+  if ((await wallet(ctx).bank(guild, target)) <= 0) return no(ctx, interaction, `❌ <@${target}> has nothing in the bank.`);
   const h = { id: ctx.utils.uuid().replace(/-/g, '').slice(0, 12), guild, leader: user, target, crew: [user], at: Date.now() };
   await writeJson(ctx, `h:${h.id}`, h);
   await writeJson(ctx, 'heists', [...(await readJson(ctx, 'heists', [])), h.id]);
@@ -61,21 +61,21 @@ export async function heist(ctx, { config, vars, interaction }) {
 
 /** Runs the heist: true when it worked. */
 export async function runHeist(ctx, h, rng = Math.random) {
-  const bank = await ctx.economy.bank(h.guild, h.target);
+  const bank = await wallet(ctx).bank(h.guild, h.target);
   await ctx.storage.set(`hcd:${h.guild}:${h.target}`, String(Date.now() + num(ctx, 'heist_cooldown_minutes', 120) * 60_000));
   if (bank > 0 && rng() * 100 < chanceOf(ctx, h.crew.length)) {
     let loot = Math.floor(bank * (num(ctx, 'heist_percent', 30) / 100));
     const cap = num(ctx, 'heist_max', '');
     if (cap) loot = Math.min(loot, cap);
     const share = Math.floor(loot / h.crew.length);
-    if (share > 0) for (const u of h.crew) await ctx.economy.bankTransfer(h.guild, h.target, u, share);
+    if (share > 0) for (const u of h.crew) await wallet(ctx).bankTransfer(h.guild, h.target, u, share);
     return { ok: true, text: share > 0 ? `💰 The crew got away with ${money(ctx, share * h.crew.length)}: ${money(ctx, share)} each.` : '💨 The vault was nearly empty: nothing worth taking.' };
   }
   const pct = num(ctx, 'heist_fine_percent', 10) / 100;
   const fines = [];
   for (const u of h.crew) {
-    const fine = Math.floor((await ctx.economy.get(h.guild, u)) * pct);
-    if (fine > 0) await ctx.economy.remove(h.guild, u, fine);
+    const fine = Math.floor((await wallet(ctx).get(h.guild, u)) * pct);
+    if (fine > 0) await wallet(ctx).remove(h.guild, u, fine);
     fines.push(`<@${u}> −${money(ctx, fine)}`);
   }
   return { ok: false, text: `🚨 Caught by the police!\nFines: ${fines.join(', ')}` };
