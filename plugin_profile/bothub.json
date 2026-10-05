@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_profile",
+  "name": "Profile",
+  "version": "1.0.0",
+  "description": "Profile cards for members: about me, pronouns, hobbies and favorites with /profile and /profile-edit.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "icon": "📇",
+  "category": "fun",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "data.variables",
+      "discord.interactions.reply",
+      "discord.modals",
+      "discord.members.read"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/profile.json",
+    "commands/profile-edit.json"
+  ],
+  "nodes": [
+    "show",
+    "edit"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

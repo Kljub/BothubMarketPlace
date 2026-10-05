@@ -1,0 +1,72 @@
+{
+  "name": "profile",
+  "description": "Shows your profile card or the one of another member",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "profile",
+          "description": "Shows your profile card or the one of another member"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt",
+        "type": "option.user",
+        "typeVersion": 1,
+        "config": {
+          "name": "user",
+          "description": "The member (you when empty)",
+          "required": false,
+          "variable": "user"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "block",
+        "type": "plugin.plugin_profile.show",
+        "typeVersion": 1,
+        "config": {
+          "user": "{option_user}",
+          "variable": "profile"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "block",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

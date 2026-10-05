@@ -1,0 +1,73 @@
+{
+  "name": "profile-edit",
+  "description": "Edits your profile card",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "profile-edit",
+          "description": "Edits your profile card"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "section",
+          "description": "What to edit (about you when empty)",
+          "required": false,
+          "choices": "about\nfavorites",
+          "variable": "section"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "block",
+        "type": "plugin.plugin_profile.edit",
+        "typeVersion": 1,
+        "config": {
+          "section": "{option_section}",
+          "variable": "edit"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "block",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

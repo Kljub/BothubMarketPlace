@@ -1,0 +1,46 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_profile.node.edit.label",
+  "descriptionKey": "plugin.plugin_profile.node.edit.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "opened",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": ".error",
+      "labelKey": "plugin.plugin_profile.node.edit.result_error"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "section": {
+        "type": "string",
+        "enum": [
+          "about",
+          "favorites"
+        ],
+        "default": "about"
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

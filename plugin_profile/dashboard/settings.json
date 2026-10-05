@@ -1,0 +1,9 @@
+{
+  "fields": [
+    {
+      "key": "color",
+      "type": "color",
+      "default": "#e879f9"
+    }
+  ]
+}

@@ -507,6 +507,38 @@
       "voice": false
     },
     {
+      "id": "plugin_profile",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_profile-1.0.0/plugin_profile-1.0.0.zip",
+      "sha256": "a38c141b46acf4baf65c87cc53478cc4a063a7a4461835146df55e4c504f1680",
+      "size": 9496,
+      "name": "Profile",
+      "description": "Profile cards for members: about me, pronouns, hobbies and favorites with /profile and /profile-edit.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "📇",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "data.variables",
+          "discord.interactions.reply",
+          "discord.modals",
+          "discord.members.read"
+        ]
+      },
+      "layers": {
+        "commands": 2,
+        "events": 0,
+        "services": 0,
+        "nodes": 2,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_rps",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_rps-1.0.0/plugin_rps-1.0.0.zip",
