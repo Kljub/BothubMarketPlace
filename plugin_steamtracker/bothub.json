@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_steamtracker",
+  "name": "Steam Game Tracker",
+  "version": "1.0.0",
+  "description": "Watches Steam games: sales, games becoming free and patch notes in a channel; /steam-game shows price, players and reviews.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "icon": "🎮",
+  "category": "social",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "scheduler",
+      "secrets.use",
+      "discord.messages.send",
+      "discord.interactions.reply"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/steam-game.json"
+  ],
+  "services": {
+    "hosts": [
+      "api.steampowered.com",
+      "store.steampowered.com"
+    ],
+    "tasks": [
+      {
+        "name": "tick",
+        "every": "30m"
+      }
+    ]
+  },
+  "nodes": [
+    "game"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

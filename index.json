@@ -747,6 +747,72 @@
       "voice": true
     },
     {
+      "id": "plugin_steamcalc",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_steamcalc-1.0.0/plugin_steamcalc-1.0.0.zip",
+      "sha256": "183bb8a1bcf47bca51c1c8c7428d99052916a9bd0a73df5430e0e49d241017e9",
+      "size": 12323,
+      "name": "Steam Calc & Stats",
+      "description": "What a Steam account is worth (/steam-calc) and a player's Steam profile (/steam-profile), from the Steam Web API and store.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🧮",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "secrets.use",
+          "discord.interactions.reply"
+        ]
+      },
+      "secrets": [
+        "STEAM_API_KEY"
+      ],
+      "layers": {
+        "commands": 2,
+        "events": 0,
+        "services": 1,
+        "nodes": 2,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
+      "id": "plugin_steamtracker",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_steamtracker-1.0.0/plugin_steamtracker-1.0.0.zip",
+      "sha256": "d8c2f5c1d29361fffd1fa0eb8a7be0a5d13a61c9ac2820928f6029f56e48a4b0",
+      "size": 12085,
+      "name": "Steam Game Tracker",
+      "description": "Watches Steam games: sales, games becoming free and patch notes in a channel; /steam-game shows price, players and reviews.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🎮",
+      "category": "social",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "scheduler",
+          "secrets.use",
+          "discord.messages.send",
+          "discord.interactions.reply"
+        ]
+      },
+      "layers": {
+        "commands": 1,
+        "events": 0,
+        "services": 1,
+        "nodes": 1,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_stocks",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_stocks-1.0.0/plugin_stocks-1.0.0.zip",

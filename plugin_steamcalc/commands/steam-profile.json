@@ -1,0 +1,72 @@
+{
+  "name": "steam-profile",
+  "description": "Shows the Steam profile of a player",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "steam-profile",
+          "description": "Shows the Steam profile of a player"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_player",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "player",
+          "description": "Steam custom URL name, profile link or SteamID64",
+          "required": true,
+          "variable": "player"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "profile",
+        "type": "plugin.plugin_steamcalc.profile",
+        "typeVersion": 1,
+        "config": {
+          "player": "{option_player}",
+          "variable": "steam"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_player",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "profile",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

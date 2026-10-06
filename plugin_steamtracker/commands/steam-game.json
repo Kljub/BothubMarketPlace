@@ -1,0 +1,72 @@
+{
+  "name": "steam-game",
+  "description": "Shows a Steam game: price, sale, players, reviews",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "steam-game",
+          "description": "Shows a Steam game: price, sale, players, reviews"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_game",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "game",
+          "description": "Name, store link or app ID",
+          "required": true,
+          "variable": "game"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "game",
+        "type": "plugin.plugin_steamtracker.game",
+        "typeVersion": 1,
+        "config": {
+          "game": "{option_game}",
+          "variable": "steam"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_game",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "game",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

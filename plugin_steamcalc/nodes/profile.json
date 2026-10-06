@@ -1,0 +1,82 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_steamcalc.node.profile.label",
+  "descriptionKey": "plugin.plugin_steamcalc.node.profile.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "not_found",
+      "type": "flow"
+    },
+    {
+      "name": "private",
+      "type": "flow"
+    },
+    {
+      "name": "not_set_up",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_steamcalc.node.profile.result"
+    },
+    {
+      "suffix": ".steamid",
+      "labelKey": "plugin.plugin_steamcalc.node.profile.result_steamid"
+    },
+    {
+      "suffix": ".value",
+      "labelKey": "plugin.plugin_steamcalc.node.profile.result_value"
+    },
+    {
+      "suffix": ".games",
+      "labelKey": "plugin.plugin_steamcalc.node.profile.result_games"
+    },
+    {
+      "suffix": ".playtime",
+      "labelKey": "plugin.plugin_steamcalc.node.profile.result_playtime"
+    },
+    {
+      "suffix": ".level",
+      "labelKey": "plugin.plugin_steamcalc.node.profile.result_level"
+    },
+    {
+      "suffix": ".error",
+      "labelKey": "plugin.plugin_steamcalc.node.profile.result_error"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "player": {
+        "type": "string",
+        "maxLength": 200
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

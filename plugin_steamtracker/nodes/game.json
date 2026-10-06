@@ -1,0 +1,78 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_steamtracker.node.game.label",
+  "descriptionKey": "plugin.plugin_steamtracker.node.game.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "not_found",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_steamtracker.node.game.result"
+    },
+    {
+      "suffix": ".appid",
+      "labelKey": "plugin.plugin_steamtracker.node.game.result_appid"
+    },
+    {
+      "suffix": ".price",
+      "labelKey": "plugin.plugin_steamtracker.node.game.result_price"
+    },
+    {
+      "suffix": ".discount",
+      "labelKey": "plugin.plugin_steamtracker.node.game.result_discount"
+    },
+    {
+      "suffix": ".players",
+      "labelKey": "plugin.plugin_steamtracker.node.game.result_players"
+    },
+    {
+      "suffix": ".reviews",
+      "labelKey": "plugin.plugin_steamtracker.node.game.result_reviews"
+    },
+    {
+      "suffix": ".url",
+      "labelKey": "plugin.plugin_steamtracker.node.game.result_url"
+    },
+    {
+      "suffix": ".error",
+      "labelKey": "plugin.plugin_steamtracker.node.game.result_error"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "game": {
+        "type": "string",
+        "maxLength": 200
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

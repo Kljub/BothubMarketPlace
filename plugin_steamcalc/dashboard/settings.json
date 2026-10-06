@@ -1,0 +1,31 @@
+{
+  "fields": [
+    {
+      "key": "country",
+      "type": "select",
+      "options": [
+        "us",
+        "de",
+        "gb",
+        "fr",
+        "at",
+        "ch",
+        "nl",
+        "pl",
+        "tr",
+        "ru",
+        "br",
+        "ca",
+        "au",
+        "jp"
+      ],
+      "default": "de",
+      "hint": true
+    },
+    {
+      "key": "color",
+      "type": "color",
+      "default": "#1b2838"
+    }
+  ]
+}

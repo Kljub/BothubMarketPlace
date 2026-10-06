@@ -28,6 +28,8 @@ Policies**.
 | ❌ **Tic Tac Toe** | Against the bot or as a duel, optional bets | `/tictactoe` |
 | 🌤️ **Weather** | Current weather from OpenWeatherMap | `/weather` |
 | 📡 **Website Status Check** | Watches websites and keeps a status board in a channel | — |
+| 🧮 **Steam Calc & Stats** | What a Steam account is worth (/steam-calc) and Steam profiles (/steam-profile) | Steam Web API key |
+| 🎮 **Steam Game Tracker** | Sales, free games and patch notes of Steam games; /steam-game | — |
 | 💼 **Work** | A job system: jobs with pay range and cooldown | `/job-…`, `/work` |
 
 Each plugin folder has its own `README.md` with setup, settings and the SDK

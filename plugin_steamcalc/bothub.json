@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_steamcalc",
+  "name": "Steam Calc & Stats",
+  "version": "1.0.0",
+  "description": "What a Steam account is worth (/steam-calc) and a player's Steam profile (/steam-profile), from the Steam Web API and store.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "icon": "🧮",
+  "category": "fun",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "secrets.use",
+      "discord.interactions.reply"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/steam-calc.json",
+    "commands/steam-profile.json"
+  ],
+  "services": {
+    "secrets": [
+      "STEAM_API_KEY"
+    ],
+    "hosts": [
+      "api.steampowered.com",
+      "store.steampowered.com"
+    ]
+  },
+  "nodes": [
+    "calc",
+    "profile"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

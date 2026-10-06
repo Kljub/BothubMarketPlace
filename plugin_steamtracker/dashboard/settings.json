@@ -1,0 +1,95 @@
+{
+  "fields": [
+    {
+      "key": "channel",
+      "type": "channel",
+      "channelTypes": [
+        "text",
+        "announcement"
+      ],
+      "hint": true
+    },
+    {
+      "key": "mention_roles",
+      "type": "roles",
+      "max": 5
+    },
+    {
+      "key": "notify_sales",
+      "type": "bool",
+      "default": true
+    },
+    {
+      "key": "min_discount",
+      "type": "number",
+      "min": 1,
+      "max": 50,
+      "default": 20,
+      "hint": true
+    },
+    {
+      "key": "notify_free",
+      "type": "bool",
+      "default": true
+    },
+    {
+      "key": "notify_news",
+      "type": "bool",
+      "default": true,
+      "hint": true
+    },
+    {
+      "key": "country",
+      "type": "select",
+      "options": [
+        "us",
+        "de",
+        "gb",
+        "fr",
+        "at",
+        "ch",
+        "nl",
+        "pl",
+        "tr",
+        "ru",
+        "br",
+        "ca",
+        "au",
+        "jp"
+      ],
+      "default": "de",
+      "hint": true
+    },
+    {
+      "key": "color",
+      "type": "color",
+      "default": "#1b2838"
+    },
+    {
+      "key": "games",
+      "type": "list",
+      "max": 50,
+      "titleField": "game",
+      "hint": true,
+      "unique": [
+        "game"
+      ],
+      "item": [
+        {
+          "key": "game",
+          "type": "text",
+          "max": 200,
+          "required": true
+        },
+        {
+          "key": "channel",
+          "type": "channel",
+          "channelTypes": [
+            "text",
+            "announcement"
+          ]
+        }
+      ]
+    }
+  ]
+}
