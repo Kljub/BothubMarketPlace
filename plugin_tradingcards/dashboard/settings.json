@@ -1,0 +1,88 @@
+{
+  "fields": [
+    {
+      "key": "cards",
+      "type": "list",
+      "max": 0,
+      "titleField": "name",
+      "hint": true,
+      "unique": [
+        "name"
+      ],
+      "drop": {
+        "file": "file",
+        "name": "name"
+      },
+      "item": [
+        {
+          "key": "name",
+          "type": "text",
+          "max": 60,
+          "required": true
+        },
+        {
+          "key": "rarity",
+          "type": "select",
+          "options": [
+            "common",
+            "uncommon",
+            "rare",
+            "epic",
+            "legendary"
+          ],
+          "default": "common"
+        },
+        {
+          "key": "file",
+          "type": "image"
+        },
+        {
+          "key": "image",
+          "type": "text",
+          "max": 500,
+          "pattern": "^https://\\S+$",
+          "hint": true
+        },
+        {
+          "key": "set",
+          "type": "text",
+          "max": 40
+        },
+        {
+          "key": "description",
+          "type": "text",
+          "max": 300,
+          "multiline": true
+        }
+      ]
+    },
+    {
+      "key": "pack_size",
+      "type": "number",
+      "min": 1,
+      "max": 10,
+      "default": 3
+    },
+    {
+      "key": "free_pack_hours",
+      "type": "number",
+      "min": 0,
+      "max": 168,
+      "default": 24,
+      "hint": true
+    },
+    {
+      "key": "pack_price",
+      "type": "number",
+      "min": 0,
+      "max": 2000,
+      "default": 0,
+      "hint": true
+    },
+    {
+      "key": "color",
+      "type": "color",
+      "default": "#f59e0b"
+    }
+  ]
+}

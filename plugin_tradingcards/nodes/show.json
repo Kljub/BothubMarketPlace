@@ -1,0 +1,58 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_tradingcards.node.show.label",
+  "descriptionKey": "plugin.plugin_tradingcards.node.show.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_tradingcards.node.show.result"
+    },
+    {
+      "suffix": ".rarity",
+      "labelKey": "plugin.plugin_tradingcards.node.show.result_rarity"
+    },
+    {
+      "suffix": ".owned",
+      "labelKey": "plugin.plugin_tradingcards.node.show.result_owned"
+    },
+    {
+      "suffix": ".error",
+      "labelKey": "plugin.plugin_tradingcards.node.show.result_error"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "card": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

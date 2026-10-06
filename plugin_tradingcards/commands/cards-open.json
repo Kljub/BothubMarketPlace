@@ -1,0 +1,46 @@
+{
+  "name": "cards open",
+  "description": "Opens a pack of trading cards",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "cards open",
+          "description": "Opens a pack of trading cards"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "open",
+        "type": "plugin.plugin_tradingcards.open",
+        "typeVersion": 1,
+        "config": {
+          "variable": "cards"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "open",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

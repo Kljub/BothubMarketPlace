@@ -26,6 +26,7 @@ Policies**.
 | 🖌️ **Stable Diffusion Forge** | Images from your own Forge server: text and image to image, upscale and regenerate buttons, progress, model dropdowns | `/forge-imagine`, `/forge-img2img` |
 | 📎 **Temp Attachments** | Files or texts behind an access button: password, dates, max. uses, roles | `/tempfile-…` |
 | ❌ **Tic Tac Toe** | Against the bot or as a duel, optional bets | `/tictactoe` |
+| 🎴 **Trading Cards** | Collect cards: packs, collection, trading and gifts | `/cards …` |
 | 🌤️ **Weather** | Current weather from OpenWeatherMap | `/weather` |
 | 📡 **Website Status Check** | Watches websites and keeps a status board in a channel | — |
 | 🧮 **Steam Calc & Stats** | Account value, profiles, achievements and an achievement tracker (Steam Web API key) | `/steam-calc`, `/steam-profile`, `/steam-achievements` |

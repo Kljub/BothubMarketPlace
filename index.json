@@ -925,6 +925,38 @@
       "voice": false
     },
     {
+      "id": "plugin_tradingcards",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_tradingcards-1.0.0/plugin_tradingcards-1.0.0.zip",
+      "sha256": "d563d4741a61ffd5ac0a3304025b3db7bcec07a32a9f1e2a812420935ce480b0",
+      "size": 16758,
+      "name": "Trading Cards",
+      "description": "Collect trading cards: open packs (free every few hours or for coins), show your collection, trade and gift cards. The cards with pictures and rarities are set on the dashboard.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🎴",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "storage.files",
+          "discord.interactions.reply",
+          "modules.economy.balance.write"
+        ]
+      },
+      "layers": {
+        "commands": 5,
+        "events": 0,
+        "services": 0,
+        "nodes": 5,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_weather",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_weather-1.0.0/plugin_weather-1.0.0.zip",

@@ -1,0 +1,124 @@
+{
+  "name": "cards trade",
+  "description": "Offers one of your cards for a card of another member",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "cards trade",
+          "description": "Offers one of your cards for a card of another member"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_member",
+        "type": "option.user",
+        "typeVersion": 1,
+        "config": {
+          "name": "member",
+          "description": "Who to trade with",
+          "required": true,
+          "variable": "member"
+        },
+        "position": {
+          "x": 100,
+          "y": -100
+        }
+      },
+      {
+        "id": "opt_give",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "give",
+          "description": "Your card",
+          "required": true,
+          "variable": "give"
+        },
+        "position": {
+          "x": 300,
+          "y": -100
+        }
+      },
+      {
+        "id": "opt_want",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "want",
+          "description": "Their card",
+          "required": true,
+          "variable": "want"
+        },
+        "position": {
+          "x": 500,
+          "y": -100
+        }
+      },
+      {
+        "id": "trade",
+        "type": "plugin.plugin_tradingcards.trade",
+        "typeVersion": 1,
+        "config": {
+          "target": "{option_member}",
+          "give": "{option_give}",
+          "want": "{option_want}",
+          "variable": "cards"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_member",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_give",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_want",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "trade",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

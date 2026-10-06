@@ -1,0 +1,98 @@
+{
+  "name": "cards gift",
+  "description": "Gives one of your cards to another member",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "cards gift",
+          "description": "Gives one of your cards to another member"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_member",
+        "type": "option.user",
+        "typeVersion": 1,
+        "config": {
+          "name": "member",
+          "description": "Who gets it",
+          "required": true,
+          "variable": "member"
+        },
+        "position": {
+          "x": 100,
+          "y": -100
+        }
+      },
+      {
+        "id": "opt_card",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "card",
+          "description": "Your card",
+          "required": true,
+          "variable": "card"
+        },
+        "position": {
+          "x": 300,
+          "y": -100
+        }
+      },
+      {
+        "id": "gift",
+        "type": "plugin.plugin_tradingcards.gift",
+        "typeVersion": 1,
+        "config": {
+          "target": "{option_member}",
+          "card": "{option_card}",
+          "variable": "cards"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_member",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_card",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "gift",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

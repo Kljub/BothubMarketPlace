@@ -1,0 +1,72 @@
+{
+  "name": "cards show",
+  "description": "Shows a trading card",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "cards show",
+          "description": "Shows a trading card"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_card",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "card",
+          "description": "Name of the card",
+          "required": true,
+          "variable": "card"
+        },
+        "position": {
+          "x": 100,
+          "y": -100
+        }
+      },
+      {
+        "id": "show",
+        "type": "plugin.plugin_tradingcards.show",
+        "typeVersion": 1,
+        "config": {
+          "card": "{option_card}",
+          "variable": "cards"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_card",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "show",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

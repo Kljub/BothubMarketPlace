@@ -1,0 +1,72 @@
+{
+  "name": "cards collection",
+  "description": "Shows a trading card collection",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "cards collection",
+          "description": "Shows a trading card collection"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_user",
+        "type": "option.user",
+        "typeVersion": 1,
+        "config": {
+          "name": "user",
+          "description": "Whose collection (empty: yours)",
+          "required": false,
+          "variable": "user"
+        },
+        "position": {
+          "x": 100,
+          "y": -100
+        }
+      },
+      {
+        "id": "collection",
+        "type": "plugin.plugin_tradingcards.collection",
+        "typeVersion": 1,
+        "config": {
+          "user": "{option_user}",
+          "variable": "cards"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_user",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "collection",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

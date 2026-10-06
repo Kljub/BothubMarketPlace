@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_tradingcards",
+  "name": "Trading Cards",
+  "version": "1.0.0",
+  "description": "Collect trading cards: open packs (free every few hours or for coins), show your collection, trade and gift cards. The cards with pictures and rarities are set on the dashboard.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "icon": "🎴",
+  "category": "fun",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "storage.files",
+      "discord.interactions.reply",
+      "modules.economy.balance.write"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/cards-open.json",
+    "commands/cards-collection.json",
+    "commands/cards-show.json",
+    "commands/cards-trade.json",
+    "commands/cards-gift.json"
+  ],
+  "nodes": [
+    "open",
+    "collection",
+    "show",
+    "trade",
+    "gift"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}
