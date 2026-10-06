@@ -23,6 +23,9 @@ the settings page.
 - **Server emojis**: also offer the server's own custom emojis.
 - Show who sent it, embed color.
 
+`/emoji-menu list` shows every emoji the bot can use (privately): the list
+and the own emojis of every server the bot is on, one section per server.
+
 There is no limit to the list. The menu shows select menus of 25 emojis
 (Discord's limit per menu), 100 per page, with buttons to the other pages;
 every emoji also works by name. On the settings page image files can be
@@ -33,6 +36,7 @@ counted per server.
 
 `storage` (use counts), `storage.files` (uploaded images),
 `discord.messages.send`, `discord.messages.files` (posts uploaded images),
+`discord.guilds.read` (the servers for /emoji-menu list),
 `discord.interactions.reply`, `discord.emojis.read` (server emojis).
 
 ## Blocks

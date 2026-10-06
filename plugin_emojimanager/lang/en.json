@@ -53,5 +53,12 @@
   "plugin.plugin_emojimanager.node.manage.config.action.delete": "Delete",
   "plugin.plugin_emojimanager.node.manage.config.name": "Emoji name",
   "plugin.plugin_emojimanager.node.manage.config.image": "Image (attachment or https link)",
-  "plugin.plugin_emojimanager.node.manage.config.variable": "Variable"
+  "plugin.plugin_emojimanager.node.manage.config.variable": "Variable",
+  "plugin.plugin_emojimanager.node.list.label": "List all emojis",
+  "plugin.plugin_emojimanager.node.list.description": "Every emoji the bot can use: the list and the own emojis of all its servers.",
+  "plugin.plugin_emojimanager.node.list.result": "Number of emojis",
+  "plugin.plugin_emojimanager.node.list.result_list": "Emojis of the list",
+  "plugin.plugin_emojimanager.node.list.result_server": "Server emojis",
+  "plugin.plugin_emojimanager.node.list.port.replied": "Answered",
+  "plugin.plugin_emojimanager.node.list.port.empty": "No emojis"
 }

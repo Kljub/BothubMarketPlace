@@ -5,9 +5,10 @@
 import menu, { page, pick } from './nodes/menu.js';
 import send from './nodes/send.js';
 import manage from './nodes/manage.js';
+import list from './nodes/list.js';
 
 /** @type {import('@bothub/sdk').PluginDefinition} */
 export default {
-  blocks: { menu, send, manage },
+  blocks: { menu, send, manage, list },
   components: { pick, page },
 };

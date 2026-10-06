@@ -302,7 +302,14 @@
       "version": "1.2.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_emojimanager-1.2.0/plugin_emojimanager-1.2.0.zip",
       "sha256": "84b256d1987d3758d361e70da915b9ec5b80d51f5d54fdc4eabe3365ae518c62",
-      "size": 15405,
+      "size": 15405
+    },
+    {
+      "id": "plugin_emojimanager",
+      "version": "1.3.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_emojimanager-1.3.0/plugin_emojimanager-1.3.0.zip",
+      "sha256": "85ec8e5b13604414733ddb327973f5ab543918d89c7266dde117cec7a789916e",
+      "size": 18131,
       "name": "Emoji Manager",
       "description": "Members pick an emoji image from a private menu (/emoji-menu show); the bot posts it big in the channel. Images are uploaded on the dashboard or with /emoji-menu add.",
       "developer": {
@@ -319,14 +326,15 @@
           "discord.messages.send",
           "discord.messages.files",
           "discord.interactions.reply",
-          "discord.emojis.read"
+          "discord.emojis.read",
+          "discord.guilds.read"
         ]
       },
       "layers": {
-        "commands": 3,
+        "commands": 4,
         "events": 0,
         "services": 0,
-        "nodes": 3,
+        "nodes": 4,
         "dashboard": 1
       },
       "voice": false

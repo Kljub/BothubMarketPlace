@@ -75,3 +75,18 @@ test('menu: no limit; 25 per select menu, 100 per page, page buttons only for th
   await runComponent(plugin, 'page', ctx, { handle: 'h-other', data: next.data, user: { id: OTHER }, guildId: GUILD });
   assert.equal(ctx.answers.at(-1).ephemeral, true, 'someone else gets a private note');
 });
+
+test('list: the list and the emojis of every server of the bot, current server first', async () => {
+  const guilds = [{ id: '200000000000000002', name: 'Alpha', memberCount: 5 }, { id: GUILD, name: 'Zeta', memberCount: 9 }];
+  const perGuild = { [GUILD]: [{ id: '1', name: 'Wave', animated: false, available: true, url: 'u', mention: '<:Wave:1>' }], '200000000000000002': [{ id: '2', name: 'Dance', animated: true, available: true, url: 'u', mention: '<a:Dance:2>' }, { id: '3', name: 'Gone', available: false, url: 'u', mention: '<:Gone:3>' }] };
+  const ctx = createTestContext({ id: 'plugin_emojimanager', permissions: [...permissions, 'discord.guilds.read'], config: { emojis }, guilds, discord: { 'emoji.list': (g) => perGuild[g] ?? [] } });
+  const out = await runBlock(plugin, 'list', ctx, { vars, interaction: 'cmd-l' });
+  assert.equal(out.port, 'replied');
+  assert.deepEqual([out.results['.list'], out.results['.server']], ['1', '2']);
+  const { embeds } = ctx.answers[0].message;
+  assert.deepEqual(embeds.map((e) => e.title), ['📋 Emoji list (1)', '🖥️ Zeta (1)', '🖥️ Alpha (1)']);
+  assert.match(embeds[2].description, /<a:Dance:2>/);
+  assert.equal(ctx.answers[0].ephemeral, true);
+  const none = createTestContext({ id: 'plugin_emojimanager', permissions: [...permissions, 'discord.guilds.read'], config: { emojis: [] }, guilds: [] });
+  assert.equal((await runBlock(plugin, 'list', none, { vars, interaction: 'cmd-n' })).port, 'empty');
+});
