@@ -9,6 +9,11 @@ SteamID64):
   five most played games. Link to the SteamDB calculator.
 - **/steam-profile**: status (or the game being played), level, member
   since, friends, games, bans and the games of the last two weeks.
+- **/steam-achievements**: progress of a player in a game (unlocked of
+  all), the latest, the rarest unlocked and the easiest still missing (with
+  how many players have each).
+- **Achievement tracker**: players of the settings are checked every 30
+  minutes; new achievements in their recently played games are posted.
 
 The numbers come from the official Steam Web API and the Steam store. Games,
 playtime and friends need a public profile ("Game details" public). Prices
@@ -17,7 +22,7 @@ requests).
 
 ## Settings (per bot)
 
-Store country (prices and currency) and embed color.
+Store country (prices and currency), embed color, tracker channel and players.
 
 ## Setup
 
@@ -35,4 +40,5 @@ requests; the plugin never sees it.
 ## SDK permissions
 
 `secrets.use` (requests to api.steampowered.com and store.steampowered.com,
-the key added by the bot), `discord.interactions.reply`.
+the key added by the bot), `discord.interactions.reply`, `storage` (newest
+unlock per player and game), `scheduler` (the tracker), `discord.messages.send`.

@@ -26,6 +26,33 @@
       "key": "color",
       "type": "color",
       "default": "#1b2838"
+    },
+    {
+      "key": "achievement_channel",
+      "type": "channel",
+      "channelTypes": [
+        "text",
+        "announcement"
+      ],
+      "hint": true
+    },
+    {
+      "key": "achievement_players",
+      "type": "list",
+      "max": 25,
+      "titleField": "player",
+      "hint": true,
+      "unique": [
+        "player"
+      ],
+      "item": [
+        {
+          "key": "player",
+          "type": "text",
+          "max": 200,
+          "required": true
+        }
+      ]
     }
   ]
 }

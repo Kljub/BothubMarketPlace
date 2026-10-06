@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "plugin_steamcalc",
   "name": "Steam Calc & Stats",
-  "version": "1.0.0",
-  "description": "What a Steam account is worth (/steam-calc) and a player's Steam profile (/steam-profile), from the Steam Web API and store.",
+  "version": "1.1.0",
+  "description": "What a Steam account is worth (/steam-calc), Steam profiles (/steam-profile) and achievements (/steam-achievements, tracker posting new unlocks).",
   "developer": {
     "name": "BotHub"
   },
@@ -14,13 +14,17 @@
     "version": 1,
     "permissions": [
       "secrets.use",
-      "discord.interactions.reply"
+      "discord.interactions.reply",
+      "storage",
+      "scheduler",
+      "discord.messages.send"
     ]
   },
   "main": "index.js",
   "commands": [
     "commands/steam-calc.json",
-    "commands/steam-profile.json"
+    "commands/steam-profile.json",
+    "commands/steam-achievements.json"
   ],
   "services": {
     "secrets": [
@@ -29,11 +33,18 @@
     "hosts": [
       "api.steampowered.com",
       "store.steampowered.com"
+    ],
+    "tasks": [
+      {
+        "name": "tick",
+        "every": "30m"
+      }
     ]
   },
   "nodes": [
     "calc",
-    "profile"
+    "profile",
+    "achievements"
   ],
   "dashboard": {
     "settings": "dashboard/settings.json"

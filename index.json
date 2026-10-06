@@ -751,9 +751,16 @@
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_steamcalc-1.0.0/plugin_steamcalc-1.0.0.zip",
       "sha256": "183bb8a1bcf47bca51c1c8c7428d99052916a9bd0a73df5430e0e49d241017e9",
-      "size": 12323,
+      "size": 12323
+    },
+    {
+      "id": "plugin_steamcalc",
+      "version": "1.1.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_steamcalc-1.1.0/plugin_steamcalc-1.1.0.zip",
+      "sha256": "cf2bf19270f95ba01077b536b8ae2fbfce781d5a4f3cad5ed3d05431d803694a",
+      "size": 19075,
       "name": "Steam Calc & Stats",
-      "description": "What a Steam account is worth (/steam-calc) and a player's Steam profile (/steam-profile), from the Steam Web API and store.",
+      "description": "What a Steam account is worth (/steam-calc), Steam profiles (/steam-profile) and achievements (/steam-achievements, tracker posting new unlocks).",
       "developer": {
         "name": "BotHub"
       },
@@ -764,17 +771,20 @@
         "version": 1,
         "permissions": [
           "secrets.use",
-          "discord.interactions.reply"
+          "discord.interactions.reply",
+          "storage",
+          "scheduler",
+          "discord.messages.send"
         ]
       },
       "secrets": [
         "STEAM_API_KEY"
       ],
       "layers": {
-        "commands": 2,
+        "commands": 3,
         "events": 0,
-        "services": 1,
-        "nodes": 2,
+        "services": 2,
+        "nodes": 3,
         "dashboard": 1
       },
       "voice": false

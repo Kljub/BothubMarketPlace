@@ -28,7 +28,7 @@ Policies**.
 | ❌ **Tic Tac Toe** | Against the bot or as a duel, optional bets | `/tictactoe` |
 | 🌤️ **Weather** | Current weather from OpenWeatherMap | `/weather` |
 | 📡 **Website Status Check** | Watches websites and keeps a status board in a channel | — |
-| 🧮 **Steam Calc & Stats** | What a Steam account is worth and Steam profiles (Steam Web API key) | `/steam-calc`, `/steam-profile` |
+| 🧮 **Steam Calc & Stats** | Account value, profiles, achievements and an achievement tracker (Steam Web API key) | `/steam-calc`, `/steam-profile`, `/steam-achievements` |
 | 🎮 **Steam Game Tracker** | Sales, free games and patch notes of Steam games in a channel | `/steam-game` |
 | 💼 **Work** | A job system: jobs with pay range and cooldown | `/job-…`, `/work` |
 
