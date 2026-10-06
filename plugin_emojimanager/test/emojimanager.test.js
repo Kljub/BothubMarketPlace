@@ -26,7 +26,7 @@ test('menu: private select of list and server emojis', async () => {
   assert.equal(answer.ephemeral, true);
   const select = answer.message.components[0][0];
   assert.deepEqual(select.options.map((o) => o.value), ['pogchamp', 'wave']);
-  assert.equal(select.data, USER);
+  assert.equal(select.data, `${USER}:0`);
 });
 
 test('pick: only the opener; posts the emoji big and counts it', async () => {
@@ -56,4 +56,22 @@ test('send: by name, server emojis optional, not_found', async () => {
   const sent = await runBlock(plugin, 'menu', quick, { vars, interaction: 'cmd-2', config: { name: 'pogchamp' } });
   assert.deepEqual([sent.port, quick.sent.length, quick.answers[0].ephemeral], ['sent', 1, true], 'a name sends right away');
   assert.equal((await runBlock(plugin, 'menu', quick, { vars, config: { name: 'nope' } })).port, 'not_found');
+});
+
+test('menu: no limit; 25 per select menu, 100 per page, page buttons only for the opener', async () => {
+  const many = Array.from({ length: 230 }, (_, i) => ({ name: `e${String(i).padStart(3, '0')}`, image: `https://cdn.example.test/${i}.png` }));
+  const ctx = ctxWith({ emojis: many, server_emojis: false });
+  const out = await runBlock(plugin, 'menu', ctx, { vars, interaction: 'cmd-2' });
+  assert.equal(out.results['.count'], '230');
+  const first = ctx.answers[0].message;
+  assert.equal(first.components.length, 5, '4 select menus and the page buttons');
+  assert.deepEqual(first.components.slice(0, 4).map((r) => r[0].options.length), [25, 25, 25, 25]);
+  assert.match(first.content, /page 1 of 3/);
+  const next = first.components[4][1];
+  await runComponent(plugin, 'page', ctx, { handle: 'h-next', data: next.data, user: { id: USER }, guildId: GUILD });
+  const second = ctx.answers.at(-1).message;
+  assert.match(second.content, /page 2 of 3/);
+  assert.equal(second.components[0][0].options[0].value, 'e100');
+  await runComponent(plugin, 'page', ctx, { handle: 'h-other', data: next.data, user: { id: OTHER }, guildId: GUILD });
+  assert.equal(ctx.answers.at(-1).ephemeral, true, 'someone else gets a private note');
 });

@@ -3,7 +3,7 @@
     {
       "key": "emojis",
       "type": "list",
-      "max": 50,
+      "max": 0,
       "hint": true,
       "titleField": "name",
       "unique": [
@@ -29,7 +29,11 @@
           "pattern": "^https://\\S+$",
           "hint": true
         }
-      ]
+      ],
+      "drop": {
+        "file": "file",
+        "name": "name"
+      }
     },
     {
       "key": "server_emojis",

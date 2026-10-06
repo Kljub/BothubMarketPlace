@@ -8,7 +8,7 @@
 import { setting } from './util.js';
 
 export const MENU_MAX = 25; // Discord: 25 options per select menu
-export const LIST_MAX = 50; // "max" of the list field in dashboard/settings.json
+export const PAGE_SIZE = 100; // one menu message: 4 select menus of 25, then page buttons
 export const NAME = /^[a-z0-9_-]{1,32}$/;
 const LINK = /^https:\/\/\S+$/;
 const FILE = /^[0-9a-f]{16}\.(png|gif|webp|jpg)$/;
@@ -93,7 +93,6 @@ export async function addEmoji(ctx, name, image) {
   if (!NAME.test(clean)) throw Object.assign(new Error('bad_name'), { reason: 'bad_name' });
   const list = listEntries(ctx);
   if (list.some((e) => cleanName(e?.name) === clean)) throw Object.assign(new Error('exists'), { reason: 'exists' });
-  if (list.length >= LIST_MAX) throw Object.assign(new Error('full'), { reason: 'full' });
   const url = String(image ?? '').trim();
   let entry;
   if (/^https:\/\/(cdn\.discordapp\.com|media\.discordapp\.net)\/(ephemeral-)?attachments\//.test(url)) {

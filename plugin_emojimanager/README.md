@@ -23,8 +23,11 @@ the settings page.
 - **Server emojis**: also offer the server's own custom emojis.
 - Show who sent it, embed color.
 
-The menu shows the first 25 (Discord's limit per menu); every emoji works
-by name. Uses are counted per server.
+There is no limit to the list. The menu shows select menus of 25 emojis
+(Discord's limit per menu), 100 per page, with buttons to the other pages;
+every emoji also works by name. On the settings page image files can be
+dropped on the list: each becomes an emoji named after the file. Uses are
+counted per server.
 
 ## SDK permissions
 

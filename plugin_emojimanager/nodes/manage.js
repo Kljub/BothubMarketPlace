@@ -11,7 +11,7 @@ const TEXTS = {
   denied: '⛔ You may not manage the emojis here.',
   exists: '❌ An emoji named **:{name}:** already exists.',
   not_found: '❓ No emoji named **:{name}:** in the list.',
-  full: '❌ The list is full (50 emojis). Delete one first.',
+  full: '❌ The list is full. Delete one first.',
   bad_name: '❌ Names use a-z, 0-9, _ and - (max. 32).',
   bad_image: '❌ That is no usable image (PNG, GIF, WEBP or JPEG, max. 2 MB).',
   added: '✅ **:{name}:** added. Send it with /emoji-menu show.',
