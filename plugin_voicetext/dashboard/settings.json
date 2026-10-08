@@ -1,0 +1,52 @@
+{
+  "fields": [
+    {
+      "key": "links",
+      "type": "list",
+      "max": 25,
+      "titleField": "name",
+      "hint": true,
+      "item": [
+        { "key": "name", "type": "text", "max": 50 },
+        { "key": "voice", "type": "channel", "channelTypes": ["voice"], "required": true },
+        { "key": "text", "type": "channel", "channelTypes": ["text"], "required": true }
+      ]
+    },
+    {
+      "key": "auto",
+      "type": "bool",
+      "default": false,
+      "hint": true
+    },
+    {
+      "key": "auto_channels",
+      "type": "channels",
+      "max": 50,
+      "channelTypes": ["voice", "category"],
+      "hint": true,
+      "showIf": { "auto": ["true"] }
+    },
+    {
+      "key": "auto_name",
+      "type": "text",
+      "default": "{voice}-text",
+      "max": 90,
+      "hint": true,
+      "showIf": { "auto": ["true"] }
+    },
+    {
+      "key": "auto_delete",
+      "type": "bool",
+      "default": true,
+      "showIf": { "auto": ["true"] }
+    },
+    {
+      "key": "greeting",
+      "type": "text",
+      "default": "",
+      "max": 300,
+      "multiline": true,
+      "hint": true
+    }
+  ]
+}

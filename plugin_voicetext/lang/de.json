@@ -1,0 +1,18 @@
+{
+  "plugin.plugin_voicetext.name": "Sprach-Text-Verknüpfung",
+  "plugin.plugin_voicetext.description": "Öffnet einen Textkanal für die Mitglieder eines Sprachkanals: verknüpfte Kanäle oder ein temporärer Textkanal pro Sprachkanal.",
+  "plugin.plugin_voicetext.setting.links": "Verknüpfte Kanäle",
+  "plugin.plugin_voicetext.setting.links_hint": "Wer im Sprachkanal ist, sieht den Textkanal; wer den Sprachkanal verlässt, sieht ihn nicht mehr. Stelle den Textkanal selbst für @everyone unsichtbar.",
+  "plugin.plugin_voicetext.setting.links.name": "Name (nur für dich)",
+  "plugin.plugin_voicetext.setting.links.voice": "Sprachkanal",
+  "plugin.plugin_voicetext.setting.links.text": "Textkanal",
+  "plugin.plugin_voicetext.setting.auto": "Textkanäle automatisch erstellen",
+  "plugin.plugin_voicetext.setting.auto_hint": "Sprachkanäle ohne Verknüpfung bekommen beim ersten Beitritt einen versteckten Textkanal neben dem Sprachkanal; nur die Mitglieder im Sprachkanal sehen ihn.",
+  "plugin.plugin_voicetext.setting.auto_channels": "Nur für diese Sprachkanäle oder Kategorien",
+  "plugin.plugin_voicetext.setting.auto_channels_hint": "Leer: jeder Sprachkanal.",
+  "plugin.plugin_voicetext.setting.auto_name": "Name des Textkanals",
+  "plugin.plugin_voicetext.setting.auto_name_hint": "{voice} ist der Name des Sprachkanals, {user} das erste Mitglied.",
+  "plugin.plugin_voicetext.setting.auto_delete": "Löschen, wenn der Sprachkanal leer ist",
+  "plugin.plugin_voicetext.setting.greeting": "Nachricht beim Beitritt",
+  "plugin.plugin_voicetext.setting.greeting_hint": "Wird in den Textkanal gepostet; {user} erwähnt das Mitglied, {voice} ist der Sprachkanal. Leer: keine Nachricht."
+}

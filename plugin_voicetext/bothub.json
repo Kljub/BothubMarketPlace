@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_voicetext",
+  "name": "Voice Text Link",
+  "version": "1.0.0",
+  "description": "Opens a text channel for the members of a voice channel: linked channels or a temporary text channel per voice channel.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "discord.events.voice",
+      "discord.channels.read",
+      "discord.channels.write",
+      "discord.channels.permissions",
+      "discord.messages.send"
+    ]
+  },
+  "main": "index.js",
+  "events": [
+    "voiceStateUpdate"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  },
+  "icon": "🔊",
+  "category": "utility"
+}

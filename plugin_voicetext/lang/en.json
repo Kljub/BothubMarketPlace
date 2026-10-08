@@ -1,0 +1,18 @@
+{
+  "plugin.plugin_voicetext.name": "Voice Text Link",
+  "plugin.plugin_voicetext.description": "Opens a text channel for the members of a voice channel: linked channels or a temporary text channel per voice channel.",
+  "plugin.plugin_voicetext.setting.links": "Linked channels",
+  "plugin.plugin_voicetext.setting.links_hint": "Whoever is in the voice channel sees the text channel; leaving the voice channel hides it again. Make the text channel hidden for @everyone yourself.",
+  "plugin.plugin_voicetext.setting.links.name": "Name (only for you)",
+  "plugin.plugin_voicetext.setting.links.voice": "Voice channel",
+  "plugin.plugin_voicetext.setting.links.text": "Text channel",
+  "plugin.plugin_voicetext.setting.auto": "Create text channels automatically",
+  "plugin.plugin_voicetext.setting.auto_hint": "Voice channels without a link get a hidden text channel on the first join, next to the voice channel; only the members in the voice channel see it.",
+  "plugin.plugin_voicetext.setting.auto_channels": "Only for these voice channels or categories",
+  "plugin.plugin_voicetext.setting.auto_channels_hint": "Empty: every voice channel.",
+  "plugin.plugin_voicetext.setting.auto_name": "Name of the text channel",
+  "plugin.plugin_voicetext.setting.auto_name_hint": "{voice} is the name of the voice channel, {user} the member who came first.",
+  "plugin.plugin_voicetext.setting.auto_delete": "Delete it when the voice channel is empty",
+  "plugin.plugin_voicetext.setting.greeting": "Message when someone joins",
+  "plugin.plugin_voicetext.setting.greeting_hint": "Posted into the text channel; {user} mentions the member, {voice} is the voice channel. Empty: no message."
+}

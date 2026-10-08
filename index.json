@@ -957,6 +957,40 @@
       "voice": false
     },
     {
+      "id": "plugin_voicetext",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_voicetext-1.0.0/plugin_voicetext-1.0.0.zip",
+      "sha256": "0bfad6b82a3a3c708c3d6e6a35db2343db227eb47cef4840d3def8b1d92b6179",
+      "size": 6216,
+      "name": "Voice Text Link",
+      "description": "Opens a text channel for the members of a voice channel: linked channels or a temporary text channel per voice channel.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🔊",
+      "category": "utility",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "discord.events.voice",
+          "discord.channels.read",
+          "discord.channels.write",
+          "discord.channels.permissions",
+          "discord.messages.send"
+        ]
+      },
+      "layers": {
+        "commands": 0,
+        "events": 1,
+        "services": 0,
+        "nodes": 0,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_weather",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_weather-1.0.0/plugin_weather-1.0.0.zip",
