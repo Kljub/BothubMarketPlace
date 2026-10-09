@@ -414,6 +414,41 @@
       "voice": false
     },
     {
+      "id": "plugin_globalbans",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_globalbans-1.0.0/plugin_globalbans-1.0.0.zip",
+      "sha256": "68764213feeea750567bc6a5537de75383f7d331ca1082fd738689575f186a63",
+      "size": 10917,
+      "name": "Global Bans",
+      "description": "A member banned on one server is banned on every server of the bot too; unbans can follow. /globalban and /globalunban by hand.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🌐",
+      "category": "security",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "scheduler",
+          "discord.events.members",
+          "discord.guilds.read",
+          "discord.members.ban",
+          "discord.messages.send",
+          "discord.interactions.reply"
+        ]
+      },
+      "layers": {
+        "commands": 2,
+        "events": 2,
+        "services": 1,
+        "nodes": 2,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_lootcraft",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_lootcraft-1.0.0/plugin_lootcraft-1.0.0.zip",

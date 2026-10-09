@@ -1,0 +1,20 @@
+{
+  "plugin.plugin_globalbans.name": "Global Bans",
+  "plugin.plugin_globalbans.description": "A member banned on one server is banned on every server of the bot too; unbans can follow. /globalban and /globalunban by hand.",
+  "plugin.plugin_globalbans.setting.sources": "Source servers (IDs)",
+  "plugin.plugin_globalbans.setting.sources_hint": "Bans on these servers are spread to all others. Empty: a ban on any server of the bot counts.",
+  "plugin.plugin_globalbans.setting.exclude": "Servers left out (IDs)",
+  "plugin.plugin_globalbans.setting.exclude_hint": "These servers never get global bans.",
+  "plugin.plugin_globalbans.setting.trusted": "Never ban globally (user IDs)",
+  "plugin.plugin_globalbans.setting.trusted_hint": "E.g. your staff: a ban of them stays on its own server.",
+  "plugin.plugin_globalbans.setting.sync_unban": "Unbans follow",
+  "plugin.plugin_globalbans.setting.sync_unban_hint": "Unbanning a globally banned user on a source server unbans them everywhere.",
+  "plugin.plugin_globalbans.setting.log_channel": "Log channel",
+  "plugin.plugin_globalbans.setting.log_channel_hint": "Gets a report after each global ban or unban: on how many servers, and where it was not possible.",
+  "plugin.plugin_globalbans.node.ban.label": "Global Ban",
+  "plugin.plugin_globalbans.node.ban.description": "Bans a user on every server of the bot.",
+  "plugin.plugin_globalbans.node.ban.result": "Result",
+  "plugin.plugin_globalbans.node.unban.label": "Global Unban",
+  "plugin.plugin_globalbans.node.unban.description": "Unbans a user on every server of the bot.",
+  "plugin.plugin_globalbans.node.unban.result": "Result"
+}

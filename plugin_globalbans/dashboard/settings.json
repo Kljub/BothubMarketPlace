@@ -1,0 +1,37 @@
+{
+  "fields": [
+    {
+      "key": "sources",
+      "type": "words",
+      "max": 50,
+      "maxLength": 20,
+      "hint": true
+    },
+    {
+      "key": "exclude",
+      "type": "words",
+      "max": 50,
+      "maxLength": 20,
+      "hint": true
+    },
+    {
+      "key": "trusted",
+      "type": "words",
+      "max": 50,
+      "maxLength": 20,
+      "hint": true
+    },
+    {
+      "key": "sync_unban",
+      "type": "bool",
+      "default": false,
+      "hint": true
+    },
+    {
+      "key": "log_channel",
+      "type": "channel",
+      "channelTypes": ["text"],
+      "hint": true
+    }
+  ]
+}

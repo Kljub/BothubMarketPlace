@@ -1,0 +1,150 @@
+{
+  "name": "globalban",
+  "description": "Bans a user on every server of the bot",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "globalban",
+          "description": "Bans a user on every server of the bot",
+          "permissions": {
+            "allowed_roles": [
+              {
+                "id": "everyone"
+              }
+            ],
+            "banned_roles": [],
+            "required_permissions": [
+              "ban_members"
+            ],
+            "banned_channels": [],
+            "hide_without_permission": true
+          }
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_globalbans.ban",
+        "typeVersion": 1,
+        "config": {
+          "user": "{option_user}",
+          "reason": "{option_reason}",
+          "variable": "gb"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 400,
+          "y": 700
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 720,
+          "y": 700
+        }
+      },
+      {
+        "id": "option_user",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "user",
+          "description": "Member mention or user ID",
+          "required": true,
+          "variable": "user"
+        },
+        "position": {
+          "x": -200,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_reason",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "reason",
+          "description": "Reason",
+          "required": false,
+          "variable": "reason"
+        },
+        "position": {
+          "x": 60,
+          "y": 40
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "option_user",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_reason",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      }
+    ]
+  }
+}

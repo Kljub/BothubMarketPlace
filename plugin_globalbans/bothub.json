@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_globalbans",
+  "name": "Global Bans",
+  "version": "1.0.0",
+  "description": "A member banned on one server is banned on every server of the bot too; unbans can follow. /globalban and /globalunban by hand.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "scheduler",
+      "discord.events.members",
+      "discord.guilds.read",
+      "discord.members.ban",
+      "discord.messages.send",
+      "discord.interactions.reply"
+    ]
+  },
+  "main": "index.js",
+  "events": [
+    "guildBanAdd",
+    "guildBanRemove"
+  ],
+  "commands": [
+    "commands/globalban.json",
+    "commands/globalunban.json"
+  ],
+  "nodes": [
+    "ban",
+    "unban"
+  ],
+  "services": {
+    "tasks": [
+      {
+        "name": "work",
+        "every": "1m"
+      }
+    ]
+  },
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  },
+  "icon": "🌐",
+  "category": "security"
+}
