@@ -1,0 +1,79 @@
+{
+  "name": "potatopirates",
+  "description": "Potato Pirates: the coding card game, with friends or against bots",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "potatopirates",
+          "description": "Potato Pirates: the coding card game, with friends or against bots"
+        },
+        "position": { "x": 400, "y": 240 }
+      },
+      {
+        "id": "option_bots",
+        "type": "option.number",
+        "typeVersion": 1,
+        "config": {
+          "name": "bots",
+          "description": "Play at once against 1-5 bots (empty: open a lobby)",
+          "required": false,
+          "variable": "bots"
+        },
+        "position": { "x": 140, "y": 40 }
+      },
+      {
+        "id": "option_difficulty",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "difficulty",
+          "description": "Bot level",
+          "required": false,
+          "variable": "difficulty",
+          "choices": "easy\nmedium\nhard"
+        },
+        "position": { "x": 400, "y": 40 }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_potatopirates.start",
+        "typeVersion": 1,
+        "config": {
+          "bots": "{option_bots}",
+          "difficulty": "{option_difficulty}",
+          "variable": "res"
+        },
+        "position": { "x": 400, "y": 420 }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": { "variable": "error" },
+        "position": { "x": 400, "y": 700 }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": { "mode": "normal", "content": "❌ {error}" },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": { "x": 720, "y": 700 }
+      }
+    ],
+    "edges": [
+      { "from": { "node": "option_bots", "port": "option" }, "to": { "node": "trigger", "port": "options" } },
+      { "from": { "node": "option_difficulty", "port": "option" }, "to": { "node": "trigger", "port": "options" } },
+      { "from": { "node": "trigger", "port": "next" }, "to": { "node": "step", "port": "in" } },
+      { "from": { "node": "error", "port": "next" }, "to": { "node": "error_reply", "port": "in" } }
+    ]
+  }
+}

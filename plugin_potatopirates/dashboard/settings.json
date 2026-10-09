@@ -1,0 +1,87 @@
+{
+  "fields": [
+    {
+      "key": "language",
+      "type": "select",
+      "options": ["en", "de"],
+      "default": "en"
+    },
+    {
+      "key": "kings_to_win",
+      "type": "number",
+      "min": 1,
+      "max": 7,
+      "default": 7,
+      "hint": true
+    },
+    {
+      "key": "max_ships",
+      "type": "number",
+      "min": 2,
+      "max": 5,
+      "default": 3
+    },
+    {
+      "key": "crystals",
+      "type": "bool",
+      "default": true,
+      "hint": true
+    },
+    {
+      "key": "crystals_start",
+      "type": "number",
+      "min": 0,
+      "max": 30,
+      "default": 3
+    },
+    {
+      "key": "crystals_turn",
+      "type": "number",
+      "min": 1,
+      "max": 30,
+      "default": 3
+    },
+    {
+      "key": "crystals_max",
+      "type": "number",
+      "min": 3,
+      "max": 30,
+      "default": 10
+    },
+    {
+      "key": "promo_cards",
+      "type": "bool",
+      "default": false,
+      "hint": true
+    },
+    {
+      "key": "short_game",
+      "type": "bool",
+      "default": false,
+      "hint": true
+    },
+    {
+      "key": "deny_seconds",
+      "type": "number",
+      "min": 5,
+      "max": 120,
+      "default": 20,
+      "hint": true
+    },
+    {
+      "key": "salute_seconds",
+      "type": "number",
+      "min": 5,
+      "max": 60,
+      "default": 15
+    },
+    {
+      "key": "turn_minutes",
+      "type": "number",
+      "min": 1,
+      "max": 30,
+      "default": 5,
+      "hint": true
+    }
+  ]
+}

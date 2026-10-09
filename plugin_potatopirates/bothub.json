@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_potatopirates",
+  "name": "Potato Pirates",
+  "version": "1.0.0",
+  "description": "The coding card game Potato Pirates: program your ships with loops and conditions, sink the other crews or collect all 7 Potato Kings. Multiplayer or against bots (easy, medium, hard).",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "icon": "🥔",
+  "category": "fun",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "scheduler",
+      "discord.messages.send",
+      "discord.messages.edit",
+      "discord.interactions.reply"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/potatopirates.json"
+  ],
+  "services": {
+    "tasks": [
+      {
+        "name": "tick",
+        "every": "1m"
+      }
+    ]
+  },
+  "nodes": [
+    "start"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}
