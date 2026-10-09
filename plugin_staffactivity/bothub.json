@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_staffactivity",
+  "name": "Staff Activity",
+  "version": "1.0.0",
+  "description": "Who of the staff is on duty right now: /duty-on, /duty-idle and /duty-off, shown on a live status board (green, yellow, red) by team.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "scheduler",
+      "discord.messages.send",
+      "discord.messages.edit",
+      "discord.members.read",
+      "discord.interactions.reply"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/duty-on.json",
+    "commands/duty-idle.json",
+    "commands/duty-off.json"
+  ],
+  "nodes": [
+    "set_status"
+  ],
+  "services": {
+    "tasks": [
+      {
+        "name": "tick",
+        "every": "5m"
+      }
+    ]
+  },
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  },
+  "icon": "🟢",
+  "category": "utility"
+}

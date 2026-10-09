@@ -1,0 +1,22 @@
+{
+  "plugin.plugin_staffactivity.name": "Team-Aktivität",
+  "plugin.plugin_staffactivity.description": "Wer vom Team gerade im Dienst ist: /duty-on, /duty-idle und /duty-off, angezeigt auf einem Live-Status-Board (grün, gelb, rot) nach Teams.",
+  "plugin.plugin_staffactivity.setting.channel": "Board-Kanal",
+  "plugin.plugin_staffactivity.setting.channel_hint": "Der Bot hält hier ein Status-Board und bearbeitet es bei jeder Änderung.",
+  "plugin.plugin_staffactivity.setting.title": "Titel des Boards",
+  "plugin.plugin_staffactivity.setting.teams": "Teams",
+  "plugin.plugin_staffactivity.setting.teams_hint": "Z. B. Support und Admins, je mit ihrer Rolle. Nur Mitglieder mit einer Team-Rolle können einen Dienst-Status setzen. Keine Teams: jeder kann es, als eine Liste.",
+  "plugin.plugin_staffactivity.setting.teams.name": "Name",
+  "plugin.plugin_staffactivity.setting.teams.role": "Rolle",
+  "plugin.plugin_staffactivity.setting.teams.description": "Text unter dem Namen (optional)",
+  "plugin.plugin_staffactivity.setting.show_off": "Mitglieder außer Dienst zeigen",
+  "plugin.plugin_staffactivity.setting.show_off_hint": "Aus: das Board zeigt nur, wer im Dienst oder abwesend ist.",
+  "plugin.plugin_staffactivity.setting.auto_off_hours": "Außer Dienst nach (Stunden)",
+  "plugin.plugin_staffactivity.setting.auto_off_hours_hint": "Ein älterer Status geht von selbst auf außer Dienst (vergessenes /duty-off). 0 = nie.",
+  "plugin.plugin_staffactivity.setting.language": "Sprache des Boards",
+  "plugin.plugin_staffactivity.setting.language.en": "Englisch",
+  "plugin.plugin_staffactivity.setting.language.de": "Deutsch",
+  "plugin.plugin_staffactivity.node.set_status.label": "Dienst-Status setzen",
+  "plugin.plugin_staffactivity.node.set_status.description": "Setzt das Mitglied in den Dienst, abwesend oder außer Dienst und aktualisiert das Board.",
+  "plugin.plugin_staffactivity.node.set_status.result": "Ergebnis"
+}

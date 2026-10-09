@@ -1,0 +1,22 @@
+{
+  "plugin.plugin_staffactivity.name": "Staff Activity",
+  "plugin.plugin_staffactivity.description": "Who of the staff is on duty right now: /duty-on, /duty-idle and /duty-off, shown on a live status board (green, yellow, red) by team.",
+  "plugin.plugin_staffactivity.setting.channel": "Board channel",
+  "plugin.plugin_staffactivity.setting.channel_hint": "The bot keeps one status board here and edits it on every change.",
+  "plugin.plugin_staffactivity.setting.title": "Title of the board",
+  "plugin.plugin_staffactivity.setting.teams": "Teams",
+  "plugin.plugin_staffactivity.setting.teams_hint": "E.g. Support and Admins, each with its role. Only members with a team role can set a duty status. No teams: everyone can, shown as one list.",
+  "plugin.plugin_staffactivity.setting.teams.name": "Name",
+  "plugin.plugin_staffactivity.setting.teams.role": "Role",
+  "plugin.plugin_staffactivity.setting.teams.description": "Text under the name (optional)",
+  "plugin.plugin_staffactivity.setting.show_off": "Show members who are off duty",
+  "plugin.plugin_staffactivity.setting.show_off_hint": "Off: the board lists only who is on duty or idle.",
+  "plugin.plugin_staffactivity.setting.auto_off_hours": "Off duty after (hours)",
+  "plugin.plugin_staffactivity.setting.auto_off_hours_hint": "A status older than this turns off by itself (forgotten /duty-off). 0 = never.",
+  "plugin.plugin_staffactivity.setting.language": "Language of the board",
+  "plugin.plugin_staffactivity.setting.language.en": "English",
+  "plugin.plugin_staffactivity.setting.language.de": "German",
+  "plugin.plugin_staffactivity.node.set_status.label": "Set Duty Status",
+  "plugin.plugin_staffactivity.node.set_status.description": "Sets the member on duty, idle or off duty and updates the board.",
+  "plugin.plugin_staffactivity.node.set_status.result": "Result"
+}

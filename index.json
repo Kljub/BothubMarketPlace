@@ -817,6 +817,40 @@
       "voice": true
     },
     {
+      "id": "plugin_staffactivity",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_staffactivity-1.0.0/plugin_staffactivity-1.0.0.zip",
+      "sha256": "7f1edd4d5c7dec932d45d9434b871832ee020b330b0c2736116471f19a4f0a26",
+      "size": 10516,
+      "name": "Staff Activity",
+      "description": "Who of the staff is on duty right now: /duty-on, /duty-idle and /duty-off, shown on a live status board (green, yellow, red) by team.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🟢",
+      "category": "utility",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "scheduler",
+          "discord.messages.send",
+          "discord.messages.edit",
+          "discord.members.read",
+          "discord.interactions.reply"
+        ]
+      },
+      "layers": {
+        "commands": 3,
+        "events": 0,
+        "services": 1,
+        "nodes": 1,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_steamcalc",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_steamcalc-1.0.0/plugin_steamcalc-1.0.0.zip",

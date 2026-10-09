@@ -1,0 +1,49 @@
+{
+  "fields": [
+    {
+      "key": "channel",
+      "type": "channel",
+      "channelTypes": ["text", "announcement"],
+      "required": true,
+      "hint": true
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "default": "Staff Status",
+      "max": 100
+    },
+    {
+      "key": "teams",
+      "type": "list",
+      "max": 10,
+      "titleField": "name",
+      "hint": true,
+      "item": [
+        { "key": "name", "type": "text", "max": 50, "required": true },
+        { "key": "role", "type": "role", "required": true },
+        { "key": "description", "type": "text", "max": 200 }
+      ]
+    },
+    {
+      "key": "show_off",
+      "type": "bool",
+      "default": true,
+      "hint": true
+    },
+    {
+      "key": "auto_off_hours",
+      "type": "number",
+      "min": 0,
+      "max": 72,
+      "default": 12,
+      "hint": true
+    },
+    {
+      "key": "language",
+      "type": "select",
+      "options": ["en", "de"],
+      "default": "en"
+    }
+  ]
+}
