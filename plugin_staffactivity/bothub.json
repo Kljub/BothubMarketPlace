@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "plugin_staffactivity",
   "name": "Staff Activity",
-  "version": "1.0.0",
-  "description": "Who of the staff is on duty right now: /duty-on, /duty-idle and /duty-off, shown on a live status board (green, yellow, red) by team.",
+  "version": "1.1.0",
+  "description": "Who of the staff is on duty right now: /duty-on, /duty-idle and /duty-off, shown on a live status board (green, yellow, red) by team. Bots of a team show their Discord status.",
   "developer": {
     "name": "BotHub"
   },
@@ -13,6 +13,7 @@
     "permissions": [
       "storage",
       "scheduler",
+      "discord.events.members",
       "discord.messages.send",
       "discord.messages.edit",
       "discord.members.read",
@@ -20,6 +21,10 @@
     ]
   },
   "main": "index.js",
+  "events": [
+    "guildMemberUpdate",
+    "presenceUpdate"
+  ],
   "commands": [
     "commands/duty-on.json",
     "commands/duty-idle.json",

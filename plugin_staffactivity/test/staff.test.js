@@ -76,3 +76,38 @@ test('German board', async () => {
   await duty(ctx, ANN, 'on');
   assert.match(board(ctx).title, /1 im Dienst/);
 });
+
+test('settings save posts the board at once, role changes refresh it', async () => {
+  const ctx = ctxWith();
+  await plugin.onConfigChange(ctx);
+  assert.equal(ctx.sent.length, 1);
+  assert.equal(ctx.sent[0].channelId ?? ctx.sent[0].channel ?? BOARD, BOARD);
+  await plugin.events.guildMemberUpdate(ctx, { 'server.id': GUILD, 'user.id': GUEST, 'user.bot': false });
+  assert.equal(ctx.actions.filter((a) => a.call === 'message.edit').length, 1);
+  // Another server: nothing.
+  await plugin.events.guildMemberUpdate(ctx, { 'server.id': '1', 'user.id': GUEST, 'user.bot': false });
+  assert.equal(ctx.actions.filter((a) => a.call === 'message.edit').length, 1);
+});
+
+test('bots of a team show their Discord status: online on, idle idle, dnd off', async () => {
+  const BOT = '900000000000000020';
+  const list = [...members, { id: BOT, bot: true, roles: [SUPPORT], status: 'online' }];
+  const ctx = createTestContext({
+    id: 'plugin_staffactivity',
+    permissions: ['storage', 'scheduler', 'discord.events.members', 'discord.messages.send', 'discord.messages.edit', 'discord.members.read', 'discord.interactions.reply'],
+    config: { channel: { id: BOARD, guild: GUILD }, teams: [{ _id: '1', name: 'Support', role: { id: SUPPORT, guild: GUILD } }] },
+    discord: { 'member.list': () => list, 'member.get': (g, id) => list.find((m) => m.id === id) ?? null },
+  });
+  await plugin.events.presenceUpdate(ctx, { 'server.id': GUILD, 'user.id': BOT, 'user.bot': true, old_status: 'offline', new_status: 'online' });
+  assert.match(board(ctx).description, new RegExp(`🟢 \\*\\*<@${BOT}>\\*\\* 🤖 - On duty · since`));
+  list.at(-1).status = 'idle';
+  await plugin.events.presenceUpdate(ctx, { 'server.id': GUILD, 'user.id': BOT, 'user.bot': true, old_status: 'online', new_status: 'idle' });
+  assert.match(board(ctx).description, new RegExp(`🟡 \\*\\*<@${BOT}>\\*\\* 🤖 - Idle`));
+  list.at(-1).status = 'dnd';
+  await plugin.events.presenceUpdate(ctx, { 'server.id': GUILD, 'user.id': BOT, 'user.bot': true, old_status: 'idle', new_status: 'dnd' });
+  assert.match(board(ctx).description, new RegExp(`🔴 \\*\\*<@${BOT}>\\*\\* 🤖 - Off duty`));
+  // A human's status change does not touch the board.
+  const edits = ctx.actions.filter((a) => a.call === 'message.edit').length;
+  await plugin.events.presenceUpdate(ctx, { 'server.id': GUILD, 'user.id': ANN, 'user.bot': false, new_status: 'online' });
+  assert.equal(ctx.actions.filter((a) => a.call === 'message.edit').length, edits);
+});

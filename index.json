@@ -821,9 +821,16 @@
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_staffactivity-1.0.0/plugin_staffactivity-1.0.0.zip",
       "sha256": "7f1edd4d5c7dec932d45d9434b871832ee020b330b0c2736116471f19a4f0a26",
-      "size": 10516,
+      "size": 10516
+    },
+    {
+      "id": "plugin_staffactivity",
+      "version": "1.1.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_staffactivity-1.1.0/plugin_staffactivity-1.1.0.zip",
+      "sha256": "9dcc978c8daf93b701062959bfc736cdac1ff728c490220a1eb6a674d8730717",
+      "size": 12494,
       "name": "Staff Activity",
-      "description": "Who of the staff is on duty right now: /duty-on, /duty-idle and /duty-off, shown on a live status board (green, yellow, red) by team.",
+      "description": "Who of the staff is on duty right now: /duty-on, /duty-idle and /duty-off, shown on a live status board (green, yellow, red) by team. Bots of a team show their Discord status.",
       "developer": {
         "name": "BotHub"
       },
@@ -835,6 +842,7 @@
         "permissions": [
           "storage",
           "scheduler",
+          "discord.events.members",
           "discord.messages.send",
           "discord.messages.edit",
           "discord.members.read",
@@ -843,7 +851,7 @@
       },
       "layers": {
         "commands": 3,
-        "events": 0,
+        "events": 2,
         "services": 1,
         "nodes": 1,
         "dashboard": 1

@@ -8,8 +8,14 @@
 // change and by the task every 5 minutes (which also turns statuses older
 // than "auto_off_hours" off).
 //
+// Bots with a team role have no duty commands: their Discord status counts
+// (online = on, idle = idle, dnd and offline = off), kept up to date by the
+// presenceUpdate event. Role changes (guildMemberUpdate) and a settings save
+// (onConfigChange) refresh the board at once.
+//
 // Storage: "s:<guild>:<user>" = { status, since, note }, "u:<guild>" = list
-// of user IDs with a status, "board:<guild>" = { channel, message }.
+// of user IDs with a status, "p:<guild>:<bot>" = { status, since } (last
+// status change of a bot), "board:<guild>" = { channel, message }.
 import { readJson, writeJson } from './storage.js';
 
 export const STATUS = {
@@ -33,6 +39,18 @@ export const texts = (ctx) => TEXT[setting(ctx, 'language', 'en')] ?? TEXT.en;
 /** Teams of a server (their role is on it). */
 export function teamsOf(ctx, guildId) {
   return setting(ctx, 'teams', []).filter((t) => t?.name && t.role?.guild === guildId && t.role.id);
+}
+
+/** Duty status of a bot from its Discord status. */
+export const fromPresence = (status) => (status === 'online' ? 'on' : status === 'idle' ? 'idle' : 'off');
+
+/** Remembers when a bot's duty status changed (for "since"). */
+export async function botStatusChanged(ctx, guild, user, presence, now = Date.now()) {
+  const status = fromPresence(presence);
+  const prev = await readJson(ctx, `p:${guild}:${user}`, null);
+  if (prev?.status === status) return false;
+  await writeJson(ctx, `p:${guild}:${user}`, { status, since: now });
+  return true;
 }
 
 async function statusOf(ctx, guild, user) {
@@ -65,8 +83,8 @@ export async function isStaff(ctx, guild, user) {
 
 function line(t, entry, userId) {
   const s = STATUS[entry?.status ?? 'off'];
-  const parts = [`${s.emoji} **<@${userId}>** - ${t[entry?.status ?? 'off']}`];
-  if (entry && entry.status !== 'off') parts.push(`${t.since} <t:${Math.floor(entry.since / 1000)}:R>`);
+  const parts = [`${s.emoji} **<@${userId}>**${entry?.bot ? ' 🤖' : ''} - ${t[entry?.status ?? 'off']}`];
+  if (entry && entry.status !== 'off' && entry.since) parts.push(`${t.since} <t:${Math.floor(entry.since / 1000)}:R>`);
   if (entry?.note && entry.status !== 'off') parts.push(entry.note);
   return parts.join(' · ');
 }
@@ -83,6 +101,13 @@ export async function boardEmbed(ctx, guild) {
   const teams = teamsOf(ctx, guild);
   const showOff = setting(ctx, 'show_off', true) !== false;
   const all = teams.length || showOff ? await members(ctx, guild) : [];
+  // Bots of a team: their Discord status, not a duty command.
+  for (const m of all) {
+    if (!m.bot || !teams.some((tm) => m.roles.includes(tm.role.id))) continue;
+    const status = fromPresence(m.status);
+    const seen = await readJson(ctx, `p:${guild}:${m.id}`, null);
+    entries.set(m.id, { status, since: seen?.status === status ? seen.since : null, note: '', bot: true });
+  }
   const sections = [];
   const sorted = (ids) => [...new Set(ids)].sort((a, b) => STATUS[entries.get(a)?.status ?? 'off'].rank - STATUS[entries.get(b)?.status ?? 'off'].rank || (entries.get(b)?.since ?? 0) - (entries.get(a)?.since ?? 0));
   if (teams.length) {
@@ -122,6 +147,37 @@ export async function updateBoard(ctx, guild) {
     await writeJson(ctx, `board:${guild}`, { channel: channel.id, message: id });
   }
   return true;
+}
+
+// One refresh per server at a time; changes during a refresh run it once more.
+const refreshing = new Map();
+
+/** Refreshes the board of a server (events, settings save), bursts merged. */
+export function refreshBoard(ctx, guild) {
+  const state = refreshing.get(guild);
+  if (state) {
+    state.again = true;
+    return state.done;
+  }
+  const next = { again: false, done: null };
+  next.done = (async () => {
+    try {
+      do {
+        next.again = false;
+        await updateBoard(ctx, guild);
+      } while (next.again);
+    } finally {
+      refreshing.delete(guild);
+    }
+  })();
+  refreshing.set(guild, next);
+  return next.done;
+}
+
+/** The server of the board (the board channel's), or null. */
+export function boardGuild(ctx) {
+  const channel = setting(ctx, 'channel', null);
+  return channel?.id && channel.guild ? channel.guild : null;
 }
 
 /** Task: statuses older than "auto_off_hours" go off; the board refreshes. */
