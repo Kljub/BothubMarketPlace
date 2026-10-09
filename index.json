@@ -379,6 +379,41 @@
       "voice": false
     },
     {
+      "id": "plugin_forms",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_forms-1.0.0/plugin_forms-1.0.0.zip",
+      "sha256": "b6e92d169421c46fd1601c8fc6316474e32e22cdbbe4eb60861c85cf77d79beb",
+      "size": 11204,
+      "name": "Forms",
+      "description": "Your own questions for members: a button opens the form, the answers arrive in a channel of your server, to accept or decline.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "📝",
+      "category": "utility",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "discord.messages.send",
+          "discord.messages.edit",
+          "discord.interactions.reply",
+          "discord.modals",
+          "discord.members.read",
+          "discord.roles.assign"
+        ]
+      },
+      "layers": {
+        "commands": 2,
+        "events": 0,
+        "services": 0,
+        "nodes": 2,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_lootcraft",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_lootcraft-1.0.0/plugin_lootcraft-1.0.0.zip",

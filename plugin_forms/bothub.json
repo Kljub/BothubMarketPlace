@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_forms",
+  "name": "Forms",
+  "version": "1.0.0",
+  "description": "Your own questions for members: a button opens the form, the answers arrive in a channel of your server, to accept or decline.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "discord.messages.send",
+      "discord.messages.edit",
+      "discord.interactions.reply",
+      "discord.modals",
+      "discord.members.read",
+      "discord.roles.assign"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/form.json",
+    "commands/form-panel.json"
+  ],
+  "nodes": [
+    "open",
+    "panel"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  },
+  "icon": "📝",
+  "category": "utility"
+}

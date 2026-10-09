@@ -1,0 +1,33 @@
+{
+  "fields": [
+    {
+      "key": "forms",
+      "type": "list",
+      "max": 25,
+      "titleField": "name",
+      "hint": true,
+      "item": [
+        { "key": "name", "type": "text", "max": 32, "required": true },
+        { "key": "title", "type": "text", "max": 45, "required": true },
+        { "key": "questions", "type": "text", "max": 1000, "multiline": true, "required": true },
+        { "key": "channel", "type": "channel", "channelTypes": ["text"], "required": true },
+        { "key": "description", "type": "text", "max": 1000, "multiline": true },
+        { "key": "button", "type": "text", "max": 80 },
+        { "key": "review", "type": "bool", "default": true },
+        { "key": "accept_role", "type": "role" },
+        { "key": "once", "type": "bool", "default": false }
+      ]
+    },
+    {
+      "key": "reviewers",
+      "type": "roles",
+      "max": 10,
+      "hint": true
+    },
+    {
+      "key": "ping_role",
+      "type": "role",
+      "hint": true
+    }
+  ]
+}
