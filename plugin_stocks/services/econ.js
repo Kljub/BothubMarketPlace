@@ -25,6 +25,9 @@ async function loadNames(ctx) {
   }
 }
 
+/** Loads the currency names (the price board has no member to ask for). */
+export const loadCurrency = loadNames;
+
 /** Name of the chosen currency, e.g. "🪙 Coins". */
 export const currencyName = (ctx) => names.get(currencyKey(ctx) ?? '') ?? 'coins';
 

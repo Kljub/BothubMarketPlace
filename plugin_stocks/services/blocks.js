@@ -5,7 +5,7 @@
 // the Economy currency (setting currencyKey), a fee in percent goes away.
 // Storage: "market:<guild>" = { SYMBOL: { price, prev, step } },
 // "pf:<guild>:<user>" = { SYMBOL: { shares, invested } }.
-import { money, wallet } from './econ.js';
+import { loadCurrency, money, wallet } from './econ.js';
 import { readJson, setting, writeJson } from './util.js';
 
 export const DEFAULT_STOCKS = [
@@ -76,14 +76,50 @@ async function answer(ctx, interaction, ok, message, result = '') {
 const who = (vars) => (vars['server.id'] && vars['user.id'] ? [vars['server.id'], vars['user.id']] : null);
 const feeOf = (ctx, n) => Math.ceil((n * int(setting(ctx, 'fee_percent', 1), 0, 50, 0)) / 100);
 
+/** The market of a server as a message (the /stocks answer and the price board). */
+export async function marketMessage(ctx, guild, now = Date.now()) {
+  await loadCurrency(ctx);
+  const m = await market(ctx, guild, now);
+  const next = (stepNow(ctx, now) + 1) * int(setting(ctx, 'update_minutes', 60), 5, 1440, 60) * 60;
+  const lines = stockList(ctx).map((s) => `\`${s.symbol.padEnd(6)}\` **${s.name}** · ${money(ctx, m[s.symbol].price)} · ${change(m[s.symbol])}`);
+  return { lines, message: { embeds: [{ color: '#0ea5e9', title: '🏦 Stock market', description: `${lines.join('\n')}\n\nNext prices <t:${next}:R> · /stock-buy · /stock-sell · /portfolio` }] } };
+}
+
 export async function stocks(ctx, { vars, interaction }) {
   const id = who(vars);
   if (!id) return answer(ctx, interaction, false, '❌ Only on a server.');
-  const m = await market(ctx, id[0]);
   await wallet(ctx).get(...id); // loads the currency name
-  const next = (stepNow(ctx, Date.now()) + 1) * int(setting(ctx, 'update_minutes', 60), 5, 1440, 60) * 60;
-  const lines = stockList(ctx).map((s) => `\`${s.symbol.padEnd(6)}\` **${s.name}** · ${money(ctx, m[s.symbol].price)} · ${change(m[s.symbol])}`);
-  return answer(ctx, interaction, true, { embeds: [{ color: '#0ea5e9', title: '🏦 Stock market', description: `${lines.join('\n')}\n\nNext prices <t:${next}:R> · /stock-buy · /stock-sell · /portfolio` }] }, String(lines.length));
+  const { lines, message } = await marketMessage(ctx, id[0]);
+  return answer(ctx, interaction, true, message, String(lines.length));
+}
+
+/**
+ * Price board (setting board_channel): one message in that channel with the
+ * current market. Saving the settings posts it at once; afterwards the same
+ * message is updated after every price change (task board_update). A
+ * deleted board, or another channel, gets a new message.
+ * Storage: "board" = { channel, message, step }.
+ */
+export async function syncBoard(ctx, { force = false, now = Date.now() } = {}) {
+  const channel = setting(ctx, 'board_channel', null);
+  if (!channel?.id || !channel?.guild) return null;
+  const board = await readJson(ctx, 'board', null);
+  const step = stepNow(ctx, now);
+  const same = board?.channel === channel.id && board?.message;
+  if (same && !force && board.step === step) return board.message;
+  const { message } = await marketMessage(ctx, channel.guild, now);
+  if (same) {
+    try {
+      await ctx.message.edit(channel.id, board.message, message);
+      await writeJson(ctx, 'board', { channel: channel.id, message: board.message, step });
+      return board.message;
+    } catch {
+      // Deleted or no longer reachable: post a new board.
+    }
+  }
+  const id = await ctx.message.send(channel.id, message);
+  await writeJson(ctx, 'board', { channel: channel.id, message: id, step });
+  return id;
 }
 
 export async function buy(ctx, { config, vars, interaction }) {

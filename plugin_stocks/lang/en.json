@@ -1,6 +1,6 @@
 {
   "plugin.plugin_stocks.name": "Stock Market",
-  "plugin.plugin_stocks.description": "A fictional stock market per server: prices move every interval, members buy and sell shares with Economy money.",
+  "plugin.plugin_stocks.description": "A fictional stock market per server: prices move every interval, members buy and sell shares with Economy money; a live price board in a channel of your choice.",
   "plugin.plugin_stocks.node.stocks.label": "Stock market",
   "plugin.plugin_stocks.node.stocks.description": "Shows the market.",
   "plugin.plugin_stocks.node.stocks.result": "Number of stocks",
@@ -25,6 +25,8 @@
   "plugin.plugin_stocks.node.portfolio.result": "Worth",
   "plugin.plugin_stocks.node.portfolio.port.replied": "Answered",
   "plugin.plugin_stocks.node.portfolio.port.failed": "Failed",
+  "plugin.plugin_stocks.setting.board_channel": "Price board channel",
+  "plugin.plugin_stocks.setting.board_channel_hint": "The bot posts the current market there as soon as you save, and keeps that one message up to date after every price change. Empty: no board.",
   "plugin.plugin_stocks.setting.stocks": "Stocks",
   "plugin.plugin_stocks.setting.stocks_hint": "Empty: five built-in stocks. A changed list starts a new market for the changed stocks.",
   "plugin.plugin_stocks.setting.stocks.symbol": "Symbol (A-Z, 0-9)",

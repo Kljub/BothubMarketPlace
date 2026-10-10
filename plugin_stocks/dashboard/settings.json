@@ -1,6 +1,15 @@
 {
   "fields": [
     {
+      "key": "board_channel",
+      "type": "channel",
+      "channelTypes": [
+        "text",
+        "announcement"
+      ],
+      "hint": true
+    },
+    {
       "key": "stocks",
       "type": "list",
       "max": 25,

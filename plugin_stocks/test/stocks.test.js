@@ -1,12 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createTestContext, runBlock } from '#sdk-testing';
+import { createTestContext, runBlock, runTask } from '#sdk-testing';
 import plugin from '../index.js';
 import { market, nextPrice, seeded } from '../services/blocks.js';
 
 const GUILD = '100000000000000001';
 const ANN = '200000000000000001';
-const permissions = ['storage', 'discord.interactions.reply', 'modules.economy.balance.read', 'modules.economy.balance.write'];
+const permissions = ['storage', 'discord.interactions.reply', 'modules.economy.balance.read', 'modules.economy.balance.write', 'discord.messages.send', 'discord.messages.edit', 'scheduler'];
 const vars = { 'server.id': GUILD, 'user.id': ANN };
 const ctxWith = (config = {}) => createTestContext({ id: 'plugin_stocks', permissions, config, balances: { [`${GUILD}:${ANN}`]: 1000 } });
 
@@ -35,4 +35,34 @@ test('buy with fee, sell all, portfolio', async () => {
   assert.equal(await ctx.economy.get(GUILD, ANN), 980);
   assert.equal((await runBlock(plugin, 'sell', ctx, { vars, config: { symbol: 'ABC' } })).port, 'failed');
   assert.equal((await runBlock(plugin, 'stocks', ctx, { vars, interaction: 'c' })).results[''], '1');
+});
+
+test('price board: posted on save, the same message updated after a price change, a new one when deleted', async () => {
+  const CH = '300000000000000001';
+  let deleted = false;
+  const ctx = createTestContext({
+    id: 'plugin_stocks', permissions,
+    config: { board_channel: { id: CH, guild: GUILD }, stocks: [{ symbol: 'ABC', name: 'Abc', price: '100', volatility: 10 }] },
+    discord: { 'message.edit': (...args) => { if (deleted) throw new Error('sdk.discord.not_found'); ctx.actions.push({ call: 'message.edit', args }); } },
+  });
+  await plugin.onConfigChange(ctx);
+  assert.equal(ctx.sent.length, 1);
+  assert.equal(ctx.sent[0].channelId, CH);
+  assert.match(ctx.sent[0].message.embeds[0].description, /ABC/);
+  await runTask(plugin, 'board_update', ctx);
+  assert.equal(ctx.sent.length, 1, 'same interval: nothing new');
+  const { syncBoard } = await import('../services/blocks.js');
+  await syncBoard(ctx, { now: Date.now() + 2 * 3_600_000 });
+  assert.equal(ctx.sent.length, 1, 'edited, not sent again');
+  assert.equal(ctx.actions.filter((a) => a.call === 'message.edit').length, 1);
+  deleted = true;
+  await syncBoard(ctx, { now: Date.now() + 4 * 3_600_000 });
+  assert.equal(ctx.sent.length, 2, 'deleted board: a new one');
+});
+
+test('price board: nothing without a channel', async () => {
+  const ctx = ctxWith();
+  await plugin.onConfigChange(ctx);
+  await runTask(plugin, 'board_update', ctx);
+  assert.equal(ctx.sent.length, 0);
 });

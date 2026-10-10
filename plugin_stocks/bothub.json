@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "plugin_stocks",
   "name": "Stock Market",
-  "version": "1.0.0",
-  "description": "A fictional stock market per server: prices move every interval, members buy and sell shares with Economy money.",
+  "version": "1.1.0",
+  "description": "A fictional stock market per server: prices move every interval, members buy and sell shares with Economy money; a live price board in a channel of your choice.",
   "developer": {
     "name": "BotHub"
   },
@@ -14,7 +14,10 @@
       "storage",
       "discord.interactions.reply",
       "modules.economy.balance.read",
-      "modules.economy.balance.write"
+      "modules.economy.balance.write",
+      "discord.messages.send",
+      "discord.messages.edit",
+      "scheduler"
     ]
   },
   "main": "index.js",
@@ -24,6 +27,14 @@
     "commands/stock-sell.json",
     "commands/portfolio.json"
   ],
+  "services": {
+    "tasks": [
+      {
+        "name": "board_update",
+        "every": "5m"
+      }
+    ]
+  },
   "nodes": [
     "stocks",
     "buy",

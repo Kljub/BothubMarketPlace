@@ -1016,9 +1016,16 @@
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_stocks-1.0.0/plugin_stocks-1.0.0.zip",
       "sha256": "bdf710a6be89edea7bb00c55493cc75675d0a314eea656edccf1a254373ed2c8",
-      "size": 12875,
+      "size": 12875
+    },
+    {
+      "id": "plugin_stocks",
+      "version": "1.1.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_stocks-1.1.0/plugin_stocks-1.1.0.zip",
+      "sha256": "1a1a10a65cba95179404fae9623ee28ad084471afb22e0f909455f1623cba42f",
+      "size": 14285,
       "name": "Stock Market",
-      "description": "A fictional stock market per server: prices move every interval, members buy and sell shares with Economy money.",
+      "description": "A fictional stock market per server: prices move every interval, members buy and sell shares with Economy money; a live price board in a channel of your choice.",
       "developer": {
         "name": "BotHub"
       },
@@ -1031,13 +1038,16 @@
           "storage",
           "discord.interactions.reply",
           "modules.economy.balance.read",
-          "modules.economy.balance.write"
+          "modules.economy.balance.write",
+          "discord.messages.send",
+          "discord.messages.edit",
+          "scheduler"
         ]
       },
       "layers": {
         "commands": 4,
         "events": 0,
-        "services": 0,
+        "services": 1,
         "nodes": 4,
         "dashboard": 1
       },

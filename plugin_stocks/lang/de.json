@@ -1,6 +1,6 @@
 {
   "plugin.plugin_stocks.name": "Stock Market",
-  "plugin.plugin_stocks.description": "Ein erfundener Aktienmarkt pro Server: Kurse ändern sich in jedem Intervall, Mitglieder kaufen und verkaufen Aktien mit Economy-Geld.",
+  "plugin.plugin_stocks.description": "Ein erfundener Aktienmarkt pro Server: Kurse ändern sich in jedem Intervall, Mitglieder kaufen und verkaufen Aktien mit Economy-Geld; eine Live-Kurstafel in einem Channel deiner Wahl.",
   "plugin.plugin_stocks.node.stocks.label": "Aktienmarkt",
   "plugin.plugin_stocks.node.stocks.description": "Zeigt den Markt.",
   "plugin.plugin_stocks.node.stocks.result": "Anzahl Aktien",
@@ -25,6 +25,8 @@
   "plugin.plugin_stocks.node.portfolio.result": "Wert",
   "plugin.plugin_stocks.node.portfolio.port.replied": "Beantwortet",
   "plugin.plugin_stocks.node.portfolio.port.failed": "Fehlgeschlagen",
+  "plugin.plugin_stocks.setting.board_channel": "Channel für die Kurstafel",
+  "plugin.plugin_stocks.setting.board_channel_hint": "Der Bot postet den aktuellen Markt dort, sobald du speicherst, und hält diese eine Nachricht nach jeder Kursänderung aktuell. Leer: keine Tafel.",
   "plugin.plugin_stocks.setting.stocks": "Aktien",
   "plugin.plugin_stocks.setting.stocks_hint": "Leer: fünf eingebaute Aktien. Eine geänderte Liste startet für die geänderten Aktien einen neuen Markt.",
   "plugin.plugin_stocks.setting.stocks.symbol": "Kürzel (A-Z, 0-9)",
