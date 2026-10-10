@@ -1,0 +1,92 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_riotstats.node.stats.label",
+  "descriptionKey": "plugin.plugin_riotstats.node.stats.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "not_found",
+      "type": "flow"
+    },
+    {
+      "name": "not_set_up",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_riotstats.node.stats.result"
+    },
+    {
+      "suffix": ".rank",
+      "labelKey": "plugin.plugin_riotstats.node.stats.result_rank"
+    },
+    {
+      "suffix": ".points",
+      "labelKey": "plugin.plugin_riotstats.node.stats.result_points"
+    },
+    {
+      "suffix": ".winrate",
+      "labelKey": "plugin.plugin_riotstats.node.stats.result_winrate"
+    },
+    {
+      "suffix": ".kda",
+      "labelKey": "plugin.plugin_riotstats.node.stats.result_kda"
+    },
+    {
+      "suffix": ".games",
+      "labelKey": "plugin.plugin_riotstats.node.stats.result_games"
+    },
+    {
+      "suffix": ".error",
+      "labelKey": "plugin.plugin_riotstats.node.stats.result_error"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "game": {
+        "type": "string",
+        "enum": [
+          "valorant",
+          "lol",
+          "tft",
+          "lor"
+        ],
+        "default": "valorant"
+      },
+      "player": {
+        "type": "string",
+        "maxLength": 200
+      },
+      "member": {
+        "type": "string",
+        "maxLength": 40
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

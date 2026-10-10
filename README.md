@@ -21,6 +21,7 @@ Policies**.
 | 💣 **Minesweeper** | A mine bet on 24 fields with a rising multiplier | `/minesweeper` |
 | 🎬 **Plex** | Plex for Discord: library search with posters, now playing, random picks, Overseerr requests, account linking, new-content notices | 12 |
 | 🥔 **Potato Pirates** | The coding card game: program ships with loops and if/else, sink crews or collect 7 Potato Kings; multiplayer or vs. bots (3 levels) | `/potatopirates` |
+| 🎮 **Riot Games Stats Tracker** | Valorant, League of Legends, TFT and Legends of Runeterra: ranks, recent matches, linked Riot IDs, a tracker for new matches and rank changes, leaderboards (HenrikDev and Riot API keys) | 10 |
 | ✂️ **Rock Paper Scissors** | Against the bot or as a duel, optional bets | `/rps`, `/rps-duel` |
 | 💾 **Server Backup** | Backups of a whole server by command or schedule; restore or clone into another server | `/backup …` |
 | 🔊 **Soundboard** | Sound clips in your voice channel: panel with buttons, uploads in the dashboard | `/soundboard …` |

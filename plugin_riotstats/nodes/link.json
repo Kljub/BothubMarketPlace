@@ -1,0 +1,70 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_riotstats.node.link.label",
+  "descriptionKey": "plugin.plugin_riotstats.node.link.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "not_found",
+      "type": "flow"
+    },
+    {
+      "name": "not_set_up",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_riotstats.node.link.result"
+    },
+    {
+      "suffix": ".games",
+      "labelKey": "plugin.plugin_riotstats.node.link.result_games"
+    },
+    {
+      "suffix": ".error",
+      "labelKey": "plugin.plugin_riotstats.node.link.result_error"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": [
+          "link",
+          "unlink"
+        ],
+        "default": "link"
+      },
+      "player": {
+        "type": "string",
+        "maxLength": 200
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

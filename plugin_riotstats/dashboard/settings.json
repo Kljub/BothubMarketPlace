@@ -1,0 +1,129 @@
+{
+  "fields": [
+    {
+      "key": "language",
+      "type": "select",
+      "options": [
+        "en",
+        "de"
+      ],
+      "default": "en"
+    },
+    {
+      "key": "color",
+      "type": "color",
+      "default": "#ff4655"
+    },
+    {
+      "key": "riot_region",
+      "type": "select",
+      "options": [
+        "europe",
+        "americas",
+        "asia"
+      ],
+      "default": "europe",
+      "hint": true
+    },
+    {
+      "key": "platform",
+      "type": "select",
+      "options": [
+        "pc",
+        "console"
+      ],
+      "default": "pc",
+      "hint": true
+    },
+    {
+      "key": "matches_window",
+      "type": "number",
+      "min": 5,
+      "max": 50,
+      "default": 20,
+      "hint": true
+    },
+    {
+      "key": "channel",
+      "type": "channel",
+      "channelTypes": [
+        "text",
+        "announcement"
+      ],
+      "hint": true
+    },
+    {
+      "key": "track_valorant",
+      "type": "bool",
+      "default": true
+    },
+    {
+      "key": "track_lol",
+      "type": "bool",
+      "default": true
+    },
+    {
+      "key": "track_tft",
+      "type": "bool",
+      "default": true
+    },
+    {
+      "key": "notify_matches",
+      "type": "bool",
+      "default": true
+    },
+    {
+      "key": "notify_rank",
+      "type": "bool",
+      "default": true,
+      "hint": true
+    },
+    {
+      "key": "ping_members",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "key": "max_tracked",
+      "type": "number",
+      "min": 1,
+      "max": 100,
+      "default": 30,
+      "hint": true
+    },
+    {
+      "key": "players",
+      "type": "list",
+      "max": 50,
+      "titleField": "riot_id",
+      "hint": true,
+      "item": [
+        {
+          "key": "riot_id",
+          "type": "text",
+          "max": 40,
+          "required": true
+        },
+        {
+          "key": "game",
+          "type": "select",
+          "options": [
+            "all",
+            "valorant",
+            "lol",
+            "tft"
+          ],
+          "default": "all"
+        },
+        {
+          "key": "channel",
+          "type": "channel",
+          "channelTypes": [
+            "text",
+            "announcement"
+          ]
+        }
+      ]
+    }
+  ]
+}

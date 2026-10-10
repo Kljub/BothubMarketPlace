@@ -1,0 +1,47 @@
+{
+  "name": "riot-unlink",
+  "description": "Remove your linked Riot ID",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "riot-unlink",
+          "description": "Remove your linked Riot ID"
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_riotstats.link",
+        "typeVersion": 1,
+        "config": {
+          "action": "unlink",
+          "variable": "riot"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "name": "riot-leaderboard",
+  "description": "The linked members of this server by rank",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "riot-leaderboard",
+          "description": "The linked members of this server by rank"
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "opt_game",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "game",
+          "description": "Game (default: valorant)",
+          "required": false,
+          "variable": "game",
+          "choices": "valorant\nlol\ntft"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_riotstats.leaderboard",
+        "typeVersion": 1,
+        "config": {
+          "game": "{option_game}",
+          "variable": "riot"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_game",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

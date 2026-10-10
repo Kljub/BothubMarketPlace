@@ -1,0 +1,59 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_riotstats.node.leaderboard.label",
+  "descriptionKey": "plugin.plugin_riotstats.node.leaderboard.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_riotstats.node.leaderboard.result"
+    },
+    {
+      "suffix": ".count",
+      "labelKey": "plugin.plugin_riotstats.node.leaderboard.result_count"
+    },
+    {
+      "suffix": ".error",
+      "labelKey": "plugin.plugin_riotstats.node.leaderboard.result_error"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "game": {
+        "type": "string",
+        "enum": [
+          "valorant",
+          "lol",
+          "tft"
+        ],
+        "default": "valorant"
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

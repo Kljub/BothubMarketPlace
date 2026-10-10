@@ -1,0 +1,126 @@
+{
+  "name": "lol-matches",
+  "description": "The last League of Legends matches of a Riot ID",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "lol-matches",
+          "description": "The last League of Legends matches of a Riot ID"
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "opt_player",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "player",
+          "description": "Riot ID with tag, e.g. Name#EUW (empty: your linked one)",
+          "required": false,
+          "variable": "player"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_member",
+        "type": "option.user",
+        "typeVersion": 1,
+        "config": {
+          "name": "member",
+          "description": "Show the linked Riot ID of this member",
+          "required": false,
+          "variable": "member"
+        },
+        "position": {
+          "x": 380,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_mode",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "mode",
+          "description": "Queue (default: all)",
+          "required": false,
+          "variable": "mode",
+          "choices": "all\nranked\nflex\nnormal\nquickplay\naram\narena"
+        },
+        "position": {
+          "x": 640,
+          "y": 40
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_riotstats.matches",
+        "typeVersion": 1,
+        "config": {
+          "game": "lol",
+          "player": "{option_player}",
+          "member": "{option_member}",
+          "mode": "{option_mode}",
+          "variable": "riot"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_player",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_member",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_mode",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

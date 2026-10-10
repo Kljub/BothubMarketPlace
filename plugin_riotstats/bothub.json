@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_riotstats",
+  "name": "Riot Games Stats Tracker",
+  "version": "1.0.0",
+  "description": "Stats of Riot games: Valorant, League of Legends, TFT and Legends of Runeterra. Ranks, recent matches, linked members, a tracker for new matches and rank changes, server leaderboards.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "icon": "🎮",
+  "category": "fun",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "scheduler",
+      "secrets.use",
+      "discord.messages.send",
+      "discord.interactions.reply"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/valorant.json",
+    "commands/valorant-matches.json",
+    "commands/lol.json",
+    "commands/lol-matches.json",
+    "commands/tft.json",
+    "commands/tft-matches.json",
+    "commands/lor.json",
+    "commands/riot-link.json",
+    "commands/riot-unlink.json",
+    "commands/riot-leaderboard.json"
+  ],
+  "services": {
+    "secrets": [
+      "HENRIKDEV_API_KEY",
+      "RIOT_API_KEY",
+      "RIOT_TFT_API_KEY"
+    ],
+    "hosts": [
+      "api.henrikdev.xyz",
+      "americas.api.riotgames.com",
+      "asia.api.riotgames.com",
+      "europe.api.riotgames.com",
+      "sea.api.riotgames.com",
+      "apac.api.riotgames.com",
+      "na1.api.riotgames.com",
+      "br1.api.riotgames.com",
+      "la1.api.riotgames.com",
+      "la2.api.riotgames.com",
+      "kr.api.riotgames.com",
+      "jp1.api.riotgames.com",
+      "euw1.api.riotgames.com",
+      "eun1.api.riotgames.com",
+      "tr1.api.riotgames.com",
+      "ru.api.riotgames.com",
+      "me1.api.riotgames.com",
+      "oc1.api.riotgames.com",
+      "sg2.api.riotgames.com",
+      "tw2.api.riotgames.com",
+      "vn2.api.riotgames.com"
+    ],
+    "tasks": [
+      {
+        "name": "tick",
+        "every": "5m"
+      }
+    ]
+  },
+  "nodes": [
+    "stats",
+    "matches",
+    "link",
+    "leaderboard"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

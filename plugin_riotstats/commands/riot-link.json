@@ -1,0 +1,73 @@
+{
+  "name": "riot-link",
+  "description": "Link your Riot ID on this server (all Riot games)",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "riot-link",
+          "description": "Link your Riot ID on this server (all Riot games)"
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "opt_player",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "player",
+          "description": "Your Riot ID with tag, e.g. Name#EUW",
+          "required": true,
+          "variable": "player"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_riotstats.link",
+        "typeVersion": 1,
+        "config": {
+          "action": "link",
+          "player": "{option_player}",
+          "variable": "riot"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_player",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}
