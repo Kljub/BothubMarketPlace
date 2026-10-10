@@ -1,0 +1,49 @@
+{
+  "name": "AI: answer mentions",
+  "description": "Answers with the AI when someone mentions the bot or replies to it",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.event",
+        "typeVersion": 1,
+        "config": {
+          "event": "bot_mention",
+          "event_name": "AI: answer mentions"
+        },
+        "position": {
+          "x": 400,
+          "y": 120
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_aichat.ask",
+        "typeVersion": 1,
+        "config": {
+          "question": "{mention_text}",
+          "web": "no",
+          "reply": "yes",
+          "variable": "res"
+        },
+        "position": {
+          "x": 400,
+          "y": 320
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

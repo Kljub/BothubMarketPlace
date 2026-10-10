@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "plugin_aichat",
   "name": "AI Chat",
-  "version": "1.0.0",
-  "description": "Chat with an AI (OpenAI, Anthropic, Groq, NVIDIA, Ollama or any OpenAI-compatible server): /ask, answers to mentions, conversation memory, persona prompts, optional web search.",
+  "version": "1.1.0",
+  "description": "Chat with an AI (OpenAI, Anthropic, Groq, NVIDIA, Ollama or any OpenAI-compatible server): /ask, an event that answers mentions, conversation memory, persona prompts, optional web search.",
   "developer": {
     "name": "BotHub"
   },
@@ -14,14 +14,14 @@
       "secrets.use",
       "storage",
       "discord.interactions.reply",
-      "discord.events.messages",
       "discord.messages.send"
     ]
   },
   "main": "index.js",
   "commands": [
     "commands/ask.json",
-    "commands/ask-reset.json"
+    "commands/ask-reset.json",
+    "commands/mention.json"
   ],
   "nodes": [
     "ask",
@@ -33,9 +33,6 @@
   },
   "icon": "🤖",
   "category": "utility",
-  "events": [
-    "messageCreate"
-  ],
   "services": {
     "secrets": [
       "AI_API_KEY",

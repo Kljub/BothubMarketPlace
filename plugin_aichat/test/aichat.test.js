@@ -1,12 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createTestContext, runBlock, runEvent } from '#sdk-testing';
+import { createTestContext, runBlock } from '#sdk-testing';
 import plugin from '../index.js';
 import manifest from '../bothub.json' with { type: 'json' };
 
 const USER = '200000000000000001';
 const CHANNEL = '300000000000000001';
-const permissions = ['secrets.use', 'storage', 'discord.interactions.reply', 'discord.events.messages', 'discord.messages.send'];
+const permissions = ['secrets.use', 'storage', 'discord.interactions.reply', 'discord.messages.send'];
 const openai = (seen) => ({
   'api.openai.com': (req) => {
     seen.push(req);
@@ -21,7 +21,7 @@ const openai = (seen) => ({
 const ctxWith = (config = {}, seen = []) => createTestContext({
   id: 'plugin_aichat', permissions, manifest: { id: 'plugin_aichat', secrets: manifest.services.secrets }, hosts: manifest.services.hosts,
   secrets: { AI_API_KEY: 'sk-test' }, web: openai(seen),
-  config: { provider: 'openai', model: '', system_prompt: 'Be short.', positive_prompt: 'friendly', negative_prompt: 'swearing', max_tokens: 500, temperature: 70, history_length: 2, session_minutes: 30, web_search: false, mention_enabled: true, mention_channels: [], ...config },
+  config: { provider: 'openai', model: '', system_prompt: 'Be short.', positive_prompt: 'friendly', negative_prompt: 'swearing', max_tokens: 500, temperature: 70, history_length: 2, session_minutes: 30, web_search: false, ...config },
 });
 const vars = { 'user.id': USER };
 
@@ -53,18 +53,13 @@ test('anthropic format; command answers later by editing', async () => {
   assert.equal(ctx.answers.at(-1).message, '🤖 Claude: Yo');
 });
 
-test('mentions and replies to own answers', async () => {
+test('mention event: the block posts the answer in the channel', async () => {
   const ctx = ctxWith();
-  await runEvent(plugin, 'messageCreate', ctx, { 'user.id': USER, 'user.bot': false, 'channel.id': CHANNEL, 'message.content': '<@999> what time?', 'message.mentions_bot': true, 'message.reply_to': '' });
+  const out = await runBlock(plugin, 'ask', ctx, { vars: { ...vars, 'channel.id': CHANNEL }, config: { question: 'what time?', reply: 'yes' } });
+  assert.equal(out.port, 'replied');
+  await new Promise((r) => setTimeout(r, 20));
   assert.equal(ctx.sent.length, 1);
   assert.equal(ctx.sent[0].message, `🤖 <@${USER}> Answer to: what time?`);
-  await runEvent(plugin, 'messageCreate', ctx, { 'user.id': USER, 'user.bot': false, 'channel.id': CHANNEL, 'message.content': 'and now?', 'message.mentions_bot': false, 'message.reply_to': ctx.sent[0].id });
-  assert.equal(ctx.sent.length, 2, 'a reply to an AI answer counts');
-  await runEvent(plugin, 'messageCreate', ctx, { 'user.id': USER, 'user.bot': false, 'channel.id': CHANNEL, 'message.content': 'hello all', 'message.mentions_bot': false, 'message.reply_to': '' });
-  assert.equal(ctx.sent.length, 2, 'plain messages are ignored');
-  const off = ctxWith({ mention_channels: [{ id: '300000000000000009', guild: '1' }] });
-  await runEvent(plugin, 'messageCreate', off, { 'user.id': USER, 'user.bot': false, 'channel.id': CHANNEL, 'message.content': '<@1> hi', 'message.mentions_bot': true, 'message.reply_to': '' });
-  assert.equal(off.sent.length, 0, 'other channels are ignored');
 });
 
 test('missing key: a readable error', async () => {

@@ -84,26 +84,6 @@
           "true"
         ]
       }
-    },
-    {
-      "key": "mention_enabled",
-      "type": "bool",
-      "default": false,
-      "hint": true
-    },
-    {
-      "key": "mention_channels",
-      "type": "channels",
-      "channelTypes": [
-        "text",
-        "announcement"
-      ],
-      "max": 25,
-      "showIf": {
-        "mention_enabled": [
-          "true"
-        ]
-      }
     }
   ]
 }

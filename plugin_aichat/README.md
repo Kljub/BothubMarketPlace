@@ -5,8 +5,11 @@ Chat with an AI from Discord.
 - `/ask question [web]`: answers in the channel (the bot shows "thinking"
   and edits the answer in when it arrives, up to 60 seconds).
 - `/ask-reset`: the AI forgets your conversation.
-- With "Answer mentions" the bot answers when someone mentions it, or
-  replies to one of its AI answers (optionally only in chosen channels).
+- Event **AI: answer mentions** (Custom Events, starts switched off): when
+  someone mentions the bot (`@Bot …`) or replies to one of its messages,
+  the AI answers in that channel. It is a normal builder event (trigger
+  "When someone mentions the bot"), so you can add conditions, e.g. only
+  certain channels or roles. Switch it on on the plugin page.
 
 Providers: OpenAI, Anthropic (Claude), Groq, NVIDIA, Ollama (own server) or
 any OpenAI-compatible server. Set it up under **Settings → API / Secrets**:
@@ -17,11 +20,11 @@ for web search through Brave (else DuckDuckGo instant answers).
 
 Settings: provider, model, system prompt plus "behave like this" and "never
 do this", max. tokens, creativity, memory length and timeout, web search,
-answers to mentions and their channels.
+the mention event (on the plugin page).
 
 SDK permissions: `secrets.use` (the bot adds the key; the plugin never sees
 it), `storage` (memory), `discord.interactions.reply`,
-`discord.events.messages`, `discord.messages.send`.
+`discord.messages.send` (the answer to a mention).
 
 Ported from the v2 AI Chat plugin. Not ported: the bot/user presence and the
 day's moderation numbers in the prompt (no SDK access to presences).
