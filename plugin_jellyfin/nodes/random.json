@@ -1,0 +1,86 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_jellyfin.node.random.label",
+  "descriptionKey": "plugin.plugin_jellyfin.node.random.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "empty",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_jellyfin.result.main"
+    },
+    {
+      "suffix": ".year",
+      "labelKey": "plugin.plugin_jellyfin.result.year"
+    },
+    {
+      "suffix": ".summary",
+      "labelKey": "plugin.plugin_jellyfin.result.summary"
+    },
+    {
+      "suffix": ".genres",
+      "labelKey": "plugin.plugin_jellyfin.result.genres"
+    },
+    {
+      "suffix": ".rating",
+      "labelKey": "plugin.plugin_jellyfin.result.rating"
+    },
+    {
+      "suffix": ".duration",
+      "labelKey": "plugin.plugin_jellyfin.result.duration"
+    },
+    {
+      "suffix": ".library",
+      "labelKey": "plugin.plugin_jellyfin.result.library"
+    },
+    {
+      "suffix": ".key",
+      "labelKey": "plugin.plugin_jellyfin.result.key"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "library": {
+        "type": "string",
+        "maxLength": 10
+      },
+      "genre": {
+        "type": "string",
+        "maxLength": 50
+      },
+      "unwatched": {
+        "type": "string",
+        "maxLength": 5
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

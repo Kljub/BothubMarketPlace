@@ -1,0 +1,42 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_jellyfin.node.libraries.label",
+  "descriptionKey": "plugin.plugin_jellyfin.node.libraries.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_jellyfin.result.main"
+    },
+    {
+      "suffix": ".count",
+      "labelKey": "plugin.plugin_jellyfin.result.count"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "name": "jellyfin-libraries",
+  "description": "Lists the Jellyfin libraries and their IDs",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "jellyfin-libraries",
+          "description": "Lists the Jellyfin libraries and their IDs",
+          "permissions": {
+            "allowed_roles": [
+              {
+                "id": "everyone"
+              }
+            ],
+            "banned_roles": [],
+            "required_permissions": [
+              "manage_guild"
+            ],
+            "banned_channels": [],
+            "hide_without_permission": true
+          },
+          "hide_replies": true,
+          "visibility_option": "visibility"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_visibility",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "visibility",
+          "description": "Who sees the answer (empty: the default of the bot)",
+          "required": false,
+          "choices": "Public\nOnly me",
+          "variable": "visibility"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "libs",
+        "type": "plugin.plugin_jellyfin.libraries",
+        "typeVersion": 1,
+        "config": {
+          "variable": "jf"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      },
+      {
+        "id": "ok",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "embeds": [
+              {
+                "color": "#aa5cc3",
+                "title": "📚 Jellyfin libraries ({jf.count})",
+                "description": "{jf}",
+                "footer": {
+                  "text": "✅ = shared · put the IDs in the plugin settings"
+                }
+              }
+            ]
+          },
+          "target": "reply"
+        },
+        "position": {
+          "x": 140,
+          "y": 340
+        }
+      },
+      {
+        "id": "failed",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {jf}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 660,
+          "y": 340
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 1300,
+          "y": 40
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 1300,
+          "y": 190
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "option_visibility",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "libs",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "libs",
+          "port": "next"
+        },
+        "to": {
+          "node": "ok",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "libs",
+          "port": "failed"
+        },
+        "to": {
+          "node": "failed",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

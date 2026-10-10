@@ -6,9 +6,16 @@
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_aichat-1.0.0/plugin_aichat-1.0.0.zip",
       "sha256": "9a790a384f48dfa9f982fb6f403b1613d7ce90fe904da96b1cfe29fbdbb8ced4",
-      "size": 12009,
+      "size": 12009
+    },
+    {
+      "id": "plugin_aichat",
+      "version": "1.1.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_aichat-1.1.0/plugin_aichat-1.1.0.zip",
+      "sha256": "ec150a3be4607d4b6a9054a606b183106a8d03aa185b2742258a662e31272d02",
+      "size": 11577,
       "name": "AI Chat",
-      "description": "Chat with an AI (OpenAI, Anthropic, Groq, NVIDIA, Ollama or any OpenAI-compatible server): /ask, answers to mentions, conversation memory, persona prompts, optional web search.",
+      "description": "Chat with an AI (OpenAI, Anthropic, Groq, NVIDIA, Ollama or any OpenAI-compatible server): /ask, an event that answers mentions, conversation memory, persona prompts, optional web search.",
       "developer": {
         "name": "BotHub"
       },
@@ -21,7 +28,6 @@
           "secrets.use",
           "storage",
           "discord.interactions.reply",
-          "discord.events.messages",
           "discord.messages.send"
         ]
       },
@@ -31,8 +37,8 @@
         "BRAVE_API_KEY"
       ],
       "layers": {
-        "commands": 2,
-        "events": 1,
+        "commands": 3,
+        "events": 0,
         "services": 3,
         "nodes": 2,
         "dashboard": 1
