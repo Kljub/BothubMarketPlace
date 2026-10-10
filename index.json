@@ -672,6 +672,39 @@
       "voice": false
     },
     {
+      "id": "plugin_potatopirates",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_potatopirates-1.0.0/plugin_potatopirates-1.0.0.zip",
+      "sha256": "1850d9253e0f8e11d6d695b0c2718f0b198c1472f5ceca9d91d65d132ecbbcef",
+      "size": 39754,
+      "name": "Potato Pirates",
+      "description": "The coding card game Potato Pirates: program your ships with loops and conditions, sink the other crews or collect all 7 Potato Kings. Multiplayer or against bots (easy, medium, hard).",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🥔",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "scheduler",
+          "discord.messages.send",
+          "discord.messages.edit",
+          "discord.interactions.reply"
+        ]
+      },
+      "layers": {
+        "commands": 1,
+        "events": 0,
+        "services": 1,
+        "nodes": 1,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_profile",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_profile-1.0.0/plugin_profile-1.0.0.zip",
