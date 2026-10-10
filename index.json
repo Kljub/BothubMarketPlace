@@ -737,6 +737,44 @@
       "voice": false
     },
     {
+      "id": "plugin_riotstats",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_riotstats-1.0.0/plugin_riotstats-1.0.0.zip",
+      "sha256": "c73c04e9898812b2282ac0e5f2eb80b3b654f94ff1466190fa8385691b7e9f05",
+      "size": 48705,
+      "name": "Riot Games Stats Tracker",
+      "description": "Stats of Riot games: Valorant, League of Legends, TFT and Legends of Runeterra. Ranks, recent matches, linked members, a tracker for new matches and rank changes, server leaderboards.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🎮",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "scheduler",
+          "secrets.use",
+          "discord.messages.send",
+          "discord.interactions.reply"
+        ]
+      },
+      "secrets": [
+        "HENRIKDEV_API_KEY",
+        "RIOT_API_KEY",
+        "RIOT_TFT_API_KEY"
+      ],
+      "layers": {
+        "commands": 10,
+        "events": 0,
+        "services": 4,
+        "nodes": 4,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_rps",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_rps-1.0.0/plugin_rps-1.0.0.zip",
