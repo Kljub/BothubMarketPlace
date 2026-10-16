@@ -1,0 +1,92 @@
+{
+  "fields": [
+    {
+      "key": "language",
+      "type": "select",
+      "options": [
+        "en",
+        "de"
+      ],
+      "default": "en"
+    },
+    {
+      "key": "tiers",
+      "type": "list",
+      "max": 25,
+      "titleField": "tier",
+      "hint": true,
+      "item": [
+        {
+          "key": "tier",
+          "type": "text",
+          "max": 100,
+          "hint": true
+        },
+        {
+          "key": "min_amount",
+          "type": "number",
+          "min": 0,
+          "max": 2000,
+          "hint": true
+        },
+        {
+          "key": "role",
+          "type": "role",
+          "required": true
+        }
+      ]
+    },
+    {
+      "key": "patron_role",
+      "type": "role",
+      "hint": true
+    },
+    {
+      "key": "former_role",
+      "type": "role",
+      "hint": true
+    },
+    {
+      "key": "remove_roles",
+      "type": "bool",
+      "default": true,
+      "hint": true
+    },
+    {
+      "key": "sync_minutes",
+      "type": "select",
+      "options": [
+        "15",
+        "30",
+        "60",
+        "180"
+      ],
+      "default": "30",
+      "hint": true
+    },
+    {
+      "key": "announce_channel",
+      "type": "channel",
+      "channelTypes": [
+        "text",
+        "announcement"
+      ],
+      "hint": true
+    },
+    {
+      "key": "announce_message",
+      "type": "text",
+      "max": 500,
+      "multiline": true,
+      "hint": true
+    },
+    {
+      "key": "log_channel",
+      "type": "channel",
+      "channelTypes": [
+        "text"
+      ],
+      "hint": true
+    }
+  ]
+}

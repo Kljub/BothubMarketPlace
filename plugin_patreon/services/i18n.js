@@ -1,0 +1,56 @@
+// Service "i18n": texts of the answers and messages (setting "language").
+const TEXT = {
+  en: {
+    'status.title': '🧡 Patreon: {name}',
+    'status.tiers': 'Tier',
+    'status.amount': 'Pledge',
+    'status.since': 'Patron since',
+    'status.lifetime': 'Total support',
+    'status.state': 'Status',
+    'status.none': 'none',
+    'state.active_patron': '✅ active',
+    'state.declined_patron': '⚠️ payment declined',
+    'state.former_patron': '💤 former patron',
+    'state.none': '—',
+    'notfound.self': 'No Patreon pledge is linked to your Discord account. Connect Discord in Patreon (Settings → Connected apps → Discord); the next sync (every {min} minutes) gives the roles.',
+    'notfound.other': '{user} has no Patreon pledge linked to their Discord account.',
+    'sync.started': '🔄 Patreon sync started: {patrons} patrons read so far, {linked} with Discord.',
+    'sync.done': '✅ Patreon sync done: {patrons} patrons, {linked} with Discord, {changed} role changes.',
+    'sync.busy': 'A sync is running already ({patrons} patrons read).',
+    'announce.default': '🎉 {user} is now a patron{tier}! Thank you!',
+    'log.change': '🧡 <@{user}> ({name}): {state}{tier}',
+    'err.token': 'The Patreon token is missing or expired. Add PATREON_CREATOR_TOKEN under Admin → API / Secrets and share it with this plugin.',
+    'err.api': 'Patreon did not answer. Try again later.',
+    'err.no_campaign': 'The Patreon token has no campaign. Use the creator access token of the campaign owner.',
+    'err.server': 'This works on servers only.',
+  },
+  de: {
+    'status.title': '🧡 Patreon: {name}',
+    'status.tiers': 'Stufe',
+    'status.amount': 'Betrag',
+    'status.since': 'Patron seit',
+    'status.lifetime': 'Gesamte Unterstützung',
+    'status.state': 'Status',
+    'status.none': 'keine',
+    'state.active_patron': '✅ aktiv',
+    'state.declined_patron': '⚠️ Zahlung abgelehnt',
+    'state.former_patron': '💤 ehemaliger Patron',
+    'state.none': '—',
+    'notfound.self': 'Mit deinem Discord-Konto ist keine Patreon-Unterstützung verknüpft. Verbinde Discord in Patreon (Einstellungen → Verbundene Apps → Discord); der nächste Abgleich (alle {min} Minuten) vergibt die Rollen.',
+    'notfound.other': '{user} hat keine Patreon-Unterstützung mit dem Discord-Konto verknüpft.',
+    'sync.started': '🔄 Patreon-Abgleich gestartet: bisher {patrons} Patrons gelesen, {linked} mit Discord.',
+    'sync.done': '✅ Patreon-Abgleich fertig: {patrons} Patrons, {linked} mit Discord, {changed} Rollen-Änderungen.',
+    'sync.busy': 'Ein Abgleich läuft schon ({patrons} Patrons gelesen).',
+    'announce.default': '🎉 {user} ist jetzt Patron{tier}! Danke!',
+    'log.change': '🧡 <@{user}> ({name}): {state}{tier}',
+    'err.token': 'Das Patreon-Token fehlt oder ist abgelaufen. Trage PATREON_CREATOR_TOKEN unter Admin → API / Secrets ein und gib es für dieses Plugin frei.',
+    'err.api': 'Patreon hat nicht geantwortet. Versuch es später noch mal.',
+    'err.no_campaign': 'Zum Patreon-Token gehört keine Kampagne. Nimm das Creator Access Token des Kampagnen-Inhabers.',
+    'err.server': 'Das geht nur auf Servern.',
+  },
+};
+
+export function t(lang, key, params = {}) {
+  const text = TEXT[lang]?.[key] ?? TEXT.en[key] ?? key;
+  return String(text).replace(/\{(\w+)\}/g, (all, k) => (k in params ? String(params[k]) : all));
+}

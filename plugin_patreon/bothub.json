@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_patreon",
+  "name": "Patreon Linking",
+  "version": "1.0.0",
+  "description": "Patreon tiers become Discord roles: patrons who connected Discord in Patreon get the role of their tier on every server of the bot, automatically and without signing in again. Sync every few minutes plus webhooks, a role for former patrons, announcements of new patrons.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "icon": "🧡",
+  "category": "utility",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "scheduler",
+      "secrets.use",
+      "discord.roles.assign",
+      "discord.messages.send",
+      "discord.interactions.reply",
+      "webhooks.inbound",
+      "discord.events.members"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/patreon.json",
+    "commands/patreon-sync.json"
+  ],
+  "events": [
+    "guildMemberAdd"
+  ],
+  "services": {
+    "tasks": [
+      {
+        "name": "tick",
+        "every": "1m"
+      }
+    ],
+    "hosts": [
+      "www.patreon.com"
+    ],
+    "secrets": [
+      "PATREON_CREATOR_TOKEN"
+    ],
+    "webhooks": [
+      "patreon"
+    ]
+  },
+  "nodes": [
+    "status",
+    "sync_now"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}
