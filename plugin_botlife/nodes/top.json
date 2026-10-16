@@ -1,0 +1,59 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_botlife.node.top.label",
+  "descriptionKey": "plugin.plugin_botlife.node.top.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_botlife.node.top.result"
+    },
+    {
+      "suffix": ".count",
+      "labelKey": "plugin.plugin_botlife.node.top.result_count"
+    },
+    {
+      "suffix": ".error",
+      "labelKey": "plugin.plugin_botlife.node.top.result_error"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "by": {
+        "type": "string",
+        "enum": [
+          "money",
+          "age",
+          "gen"
+        ],
+        "default": "money"
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

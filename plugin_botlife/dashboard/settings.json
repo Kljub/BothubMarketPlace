@@ -1,0 +1,43 @@
+{
+  "fields": [
+    {
+      "key": "language",
+      "type": "select",
+      "options": [
+        "en",
+        "de"
+      ],
+      "default": "en",
+      "hint": true
+    },
+    {
+      "key": "currency",
+      "type": "text",
+      "max": 3,
+      "default": "$"
+    },
+    {
+      "key": "crime",
+      "type": "bool",
+      "default": true,
+      "hint": true
+    },
+    {
+      "key": "cooldown",
+      "type": "number",
+      "min": 0,
+      "max": 60,
+      "default": 2,
+      "hint": true
+    },
+    {
+      "key": "obituary_channel",
+      "type": "channel",
+      "channelTypes": [
+        "text",
+        "announcement"
+      ],
+      "hint": true
+    }
+  ]
+}

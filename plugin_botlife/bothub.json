@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_botlife",
+  "name": "BotLife",
+  "version": "1.0.0",
+  "description": "A life simulator like BitLife: be born, grow up, study, work, fall in love, buy houses, break the law and die, year by year in a private panel. Continue as your child.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "icon": "🧬",
+  "category": "fun",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "discord.messages.send",
+      "discord.interactions.reply"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/botlife.json",
+    "commands/botlife-profile.json",
+    "commands/botlife-top.json"
+  ],
+  "nodes": [
+    "start",
+    "profile",
+    "top"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

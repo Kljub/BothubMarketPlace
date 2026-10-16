@@ -1,0 +1,70 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_botlife.node.profile.label",
+  "descriptionKey": "plugin.plugin_botlife.node.profile.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "not_found",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_botlife.node.profile.result"
+    },
+    {
+      "suffix": ".age",
+      "labelKey": "plugin.plugin_botlife.node.profile.result_age"
+    },
+    {
+      "suffix": ".money",
+      "labelKey": "plugin.plugin_botlife.node.profile.result_money"
+    },
+    {
+      "suffix": ".alive",
+      "labelKey": "plugin.plugin_botlife.node.profile.result_alive"
+    },
+    {
+      "suffix": ".generation",
+      "labelKey": "plugin.plugin_botlife.node.profile.result_generation"
+    },
+    {
+      "suffix": ".error",
+      "labelKey": "plugin.plugin_botlife.node.profile.result_error"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "member": {
+        "type": "string",
+        "maxLength": 40
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

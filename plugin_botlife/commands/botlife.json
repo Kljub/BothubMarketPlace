@@ -1,0 +1,99 @@
+{
+  "name": "botlife",
+  "description": "Your BotLife: live a life year by year",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "botlife",
+          "description": "Your BotLife: live a life year by year"
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "opt_gender",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "gender",
+          "description": "For a new life (empty: random)",
+          "required": false,
+          "variable": "gender",
+          "choices": "male\nfemale"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_name",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "name",
+          "description": "First name for a new life (empty: random)",
+          "required": false,
+          "variable": "name"
+        },
+        "position": {
+          "x": 380,
+          "y": 40
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_botlife.start",
+        "typeVersion": 1,
+        "config": {
+          "gender": "{option_gender}",
+          "name": "{option_name}",
+          "variable": "life"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_gender",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_name",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

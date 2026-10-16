@@ -1,0 +1,73 @@
+{
+  "name": "botlife-top",
+  "description": "The BotLife ranking of this server",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "botlife-top",
+          "description": "The BotLife ranking of this server"
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "opt_by",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "by",
+          "description": "Ranked by (default: money)",
+          "required": false,
+          "variable": "by",
+          "choices": "money\nage\ngen"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_botlife.top",
+        "typeVersion": 1,
+        "config": {
+          "by": "{option_by}",
+          "variable": "life"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_by",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

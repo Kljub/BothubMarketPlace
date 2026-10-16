@@ -1,0 +1,72 @@
+{
+  "name": "botlife-profile",
+  "description": "Shows the BotLife of a member",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "botlife-profile",
+          "description": "Shows the BotLife of a member"
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "opt_member",
+        "type": "option.user",
+        "typeVersion": 1,
+        "config": {
+          "name": "member",
+          "description": "Whose life (empty: yours)",
+          "required": false,
+          "variable": "member"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_botlife.profile",
+        "typeVersion": 1,
+        "config": {
+          "member": "{option_member}",
+          "variable": "life"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_member",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}
