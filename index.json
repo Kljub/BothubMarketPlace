@@ -57,7 +57,14 @@
       "version": "1.1.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_anisearch-1.1.0/plugin_anisearch-1.1.0.zip",
       "sha256": "572013a1b2e8545b324182b1dff0d148b98480db9b184c3a3f2e2f5045d5678c",
-      "size": 19740,
+      "size": 19740
+    },
+    {
+      "id": "plugin_anisearch",
+      "version": "1.2.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_anisearch-1.2.0/plugin_anisearch-1.2.0.zip",
+      "sha256": "e8548b2089d62a3b53c0aca574bfad91dc7204254b07ce314cfcc89ead103b2b",
+      "size": 21125,
       "name": "AniSearch",
       "description": "Anime and manga search on AniList, plus new-episode notices for tracked anime.",
       "developer": {
@@ -138,6 +145,37 @@
         "events": 0,
         "services": 1,
         "nodes": 4,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
+      "id": "plugin_botlife",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_botlife-1.0.0/plugin_botlife-1.0.0.zip",
+      "sha256": "abb3c6f6bc487cf2f5d91a00b753e89f688b8bf6a94bcc5cd7767c7052b6e31a",
+      "size": 45037,
+      "name": "BotLife",
+      "description": "A life simulator like BitLife: be born, grow up, study, work, fall in love, buy houses, break the law and die, year by year in a private panel. Continue as your child.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🧬",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "discord.messages.send",
+          "discord.interactions.reply"
+        ]
+      },
+      "layers": {
+        "commands": 3,
+        "events": 0,
+        "services": 0,
+        "nodes": 3,
         "dashboard": 1
       },
       "voice": false
@@ -455,6 +493,58 @@
       "voice": false
     },
     {
+      "id": "plugin_jellyfin",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_jellyfin-1.0.0/plugin_jellyfin-1.0.0.zip",
+      "sha256": "59bd6c9a3352564f1951ca73791c42d1937fc0db4c0e380258f9ec7db3174a13",
+      "size": 46301,
+      "name": "Jellyfin",
+      "description": "Jellyfin for Discord: library search with posters, now playing, random picks, recommendations, Jellyseerr requests, account linking with Quick Connect and a role, favorites, music in voice, and new-content notices.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🪼",
+      "category": "social",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "storage.global",
+          "storage.files",
+          "discord.messages.send",
+          "scheduler",
+          "secrets.use",
+          "discord.interactions.reply",
+          "discord.roles.assign",
+          "webhooks.inbound",
+          "modules.music.queue"
+        ]
+      },
+      "secrets": [
+        "JELLYFIN_URL",
+        "JELLYFIN_KEY",
+        "JELLYFIN_URL_2",
+        "JELLYFIN_KEY_2",
+        "JELLYFIN_URL_3",
+        "JELLYFIN_KEY_3",
+        "JELLYFIN_URL_4",
+        "JELLYFIN_KEY_4",
+        "JELLYFIN_URL_5",
+        "JELLYFIN_KEY_5",
+        "JELLYSEERR_URL",
+        "JELLYSEERR_KEY"
+      ],
+      "layers": {
+        "commands": 13,
+        "events": 0,
+        "services": 14,
+        "nodes": 13,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_lootcraft",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_lootcraft-1.0.0/plugin_lootcraft-1.0.0.zip",
@@ -571,6 +661,80 @@
         "events": 0,
         "services": 1,
         "nodes": 16,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
+      "id": "plugin_musicquiz",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_musicquiz-1.0.0/plugin_musicquiz-1.0.0.zip",
+      "sha256": "d9fc3ba3959518d8d4a0d3d143085d8ab66649ed7efc5b5d23b7d217f5097eed",
+      "size": 21926,
+      "name": "Music Quiz",
+      "description": "Guess the song: 30 second clips play in the voice channel, members pick the right title or artist with buttons. Charts, genres, decades or any Deezer playlist, points and a server leaderboard.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🎶",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "scheduler",
+          "http.outbound",
+          "modules.music.queue",
+          "discord.messages.send",
+          "discord.messages.edit",
+          "discord.interactions.reply"
+        ]
+      },
+      "layers": {
+        "commands": 3,
+        "events": 0,
+        "services": 1,
+        "nodes": 3,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
+      "id": "plugin_patreon",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_patreon-1.0.0/plugin_patreon-1.0.0.zip",
+      "sha256": "dbdcd986dd0aa4b7c571db7441be0764c0cdc4396223329fe957835833bcae4b",
+      "size": 17508,
+      "name": "Patreon Linking",
+      "description": "Patreon tiers become Discord roles: patrons who connected Discord in Patreon get the role of their tier on every server of the bot, automatically and without signing in again. Sync every few minutes plus webhooks, a role for former patrons, announcements of new patrons.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🧡",
+      "category": "utility",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "scheduler",
+          "secrets.use",
+          "discord.roles.assign",
+          "discord.messages.send",
+          "discord.interactions.reply",
+          "webhooks.inbound",
+          "discord.events.members"
+        ]
+      },
+      "secrets": [
+        "PATREON_CREATOR_TOKEN"
+      ],
+      "layers": {
+        "commands": 2,
+        "events": 1,
+        "services": 2,
+        "nodes": 2,
         "dashboard": 1
       },
       "voice": false
@@ -776,6 +940,45 @@
         "events": 0,
         "services": 4,
         "nodes": 4,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
+      "id": "plugin_robloxverify",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_robloxverify-1.0.0/plugin_robloxverify-1.0.0.zip",
+      "sha256": "c0a5d10e5232c72b2b6b32d9cd283f5c98a74a42bc13a9266844862d05fa4b7e",
+      "size": 22505,
+      "name": "Roblox Verification",
+      "description": "Roblox account verification: members prove their account with a phrase in their Roblox profile and get a verified role, roles by group rank (rank binds) and game passes, and their Roblox name as nickname. /roblox-profile shows any Roblox profile.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🟥",
+      "category": "utility",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "scheduler",
+          "http.outbound",
+          "discord.roles.assign",
+          "discord.members.nicknames",
+          "discord.members.read",
+          "discord.messages.send",
+          "discord.messages.edit",
+          "discord.interactions.reply",
+          "discord.modals",
+          "discord.events.members"
+        ]
+      },
+      "layers": {
+        "commands": 4,
+        "events": 1,
+        "services": 1,
+        "nodes": 3,
         "dashboard": 1
       },
       "voice": false
@@ -1156,6 +1359,44 @@
       "voice": false
     },
     {
+      "id": "plugin_translation",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_translation-1.0.0/plugin_translation-1.0.0.zip",
+      "sha256": "0079e6b6a3091e3c6e5db5535c45a5ab9e5f705b756875219819500d105c7d39",
+      "size": 13215,
+      "name": "Translation",
+      "description": "Translate messages with DeepL: react with a flag (🇩🇪, 🇫🇷, 🇯🇵 …) to translate a message into that language, or use /translate. 32 languages, chosen channels and roles, a daily limit.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🌐",
+      "category": "utility",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "secrets.use",
+          "discord.events.messages",
+          "discord.messages.read",
+          "discord.messages.send",
+          "discord.members.read",
+          "discord.interactions.reply"
+        ]
+      },
+      "secrets": [
+        "DEEPL_API_KEY"
+      ],
+      "layers": {
+        "commands": 1,
+        "events": 1,
+        "services": 1,
+        "nodes": 1,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_voicetext",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_voicetext-1.0.0/plugin_voicetext-1.0.0.zip",
@@ -1240,9 +1481,16 @@
       "version": "1.1.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_websitestatus-1.1.0/plugin_websitestatus-1.1.0.zip",
       "sha256": "3652dfb3bc0840e9a5d93d8ac8ae390848c6acad3e505c91896d3585d7f3a6bb",
-      "size": 11338,
+      "size": 11338
+    },
+    {
+      "id": "plugin_websitestatus",
+      "version": "1.2.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_websitestatus-1.2.0/plugin_websitestatus-1.2.0.zip",
+      "sha256": "c9cd630eeedf4680936b77bfc6fb9bbdbda076a32d974e9bf5281367f31db952",
+      "size": 29082,
       "name": "Website Status Check",
-      "description": "Watches websites and keeps a status board (online, warning, offline, latency) in a channel. Websites can share one embed per group.",
+      "description": "Watches websites, cloud services, platforms and game servers (AWS, Google Cloud, Azure, Cloudflare, Discord, GitHub, PlayStation, Xbox, Minecraft, Steam …): a status board in a channel and alerts when something goes down.",
       "developer": {
         "name": "BotHub"
       },
@@ -1257,14 +1505,19 @@
           "discord.messages.send",
           "discord.messages.edit",
           "http.check",
-          "discord.interactions.reply"
+          "discord.interactions.reply",
+          "http.outbound",
+          "secrets.use"
         ]
       },
+      "secrets": [
+        "STEAM_API_KEY"
+      ],
       "layers": {
-        "commands": 1,
+        "commands": 3,
         "events": 0,
-        "services": 1,
-        "nodes": 2,
+        "services": 2,
+        "nodes": 4,
         "dashboard": 1
       },
       "voice": false
