@@ -1,0 +1,208 @@
+{
+  "name": "jellyfin-status",
+  "description": "Shows the state of the Jellyfin server",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "jellyfin-status",
+          "description": "Shows the state of the Jellyfin server",
+          "hide_replies": true,
+          "visibility_option": "visibility"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_visibility",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "visibility",
+          "description": "Who sees the answer (empty: the default of the bot)",
+          "required": false,
+          "choices": "Public\nOnly me",
+          "variable": "visibility"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "status",
+        "type": "plugin.plugin_jellyfin.status",
+        "typeVersion": 1,
+        "config": {
+          "variable": "jf"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      },
+      {
+        "id": "online",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "embeds": [
+              {
+                "color": "#2ecc71",
+                "title": "📊 Jellyfin",
+                "fields": [
+                  {
+                    "name": "Connection",
+                    "value": "✅ {jf}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Version",
+                    "value": "{jf.version}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Playing",
+                    "value": "{jf.playing}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Libraries",
+                    "value": "{jf.libraries}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Jellyseerr",
+                    "value": "{jf.jellyseerr}",
+                    "inline": true
+                  },
+                  {
+                    "name": "You",
+                    "value": "{jf.linked}",
+                    "inline": false
+                  }
+                ]
+              }
+            ]
+          },
+          "target": "reply"
+        },
+        "position": {
+          "x": 140,
+          "y": 340
+        }
+      },
+      {
+        "id": "offline",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "embeds": [
+              {
+                "color": "#e74c3c",
+                "title": "📊 Jellyfin",
+                "description": "❌ {jf}\n{jf.linked}"
+              }
+            ]
+          },
+          "target": "reply"
+        },
+        "position": {
+          "x": 660,
+          "y": 340
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 1300,
+          "y": 40
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 1300,
+          "y": 190
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "option_visibility",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "status",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "status",
+          "port": "online"
+        },
+        "to": {
+          "node": "online",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "status",
+          "port": "offline"
+        },
+        "to": {
+          "node": "offline",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,303 @@
+{
+  "name": "jellyfin-random",
+  "description": "A random title from Jellyfin",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "jellyfin-random",
+          "description": "A random title from Jellyfin",
+          "hide_replies": false,
+          "visibility_option": "visibility"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      },
+      {
+        "id": "option_visibility",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "visibility",
+          "description": "Who sees the answer (empty: the default of the bot)",
+          "required": false,
+          "choices": "Public\nOnly me",
+          "variable": "visibility"
+        },
+        "position": {
+          "x": 1180,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_library",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "library",
+          "description": "Library ID (empty: any shared one)",
+          "required": false,
+          "variable": "library"
+        },
+        "position": {
+          "x": -120,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_genre",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "genre",
+          "description": "Genre",
+          "required": false,
+          "variable": "genre"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_unwatched",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "unwatched",
+          "description": "Only unwatched titles",
+          "required": false,
+          "variable": "unwatched",
+          "choices": "yes\nno"
+        },
+        "position": {
+          "x": 920,
+          "y": 40
+        }
+      },
+      {
+        "id": "random",
+        "type": "plugin.plugin_jellyfin.random",
+        "typeVersion": 1,
+        "config": {
+          "library": "{option_library}",
+          "genre": "{option_genre}",
+          "unwatched": "{option_unwatched}",
+          "variable": "jf"
+        },
+        "position": {
+          "x": 400,
+          "y": 340
+        }
+      },
+      {
+        "id": "picked",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "embeds": [
+              {
+                "color": "#aa5cc3",
+                "title": "🎲 {jf}",
+                "description": "{jf.summary}",
+                "fields": [
+                  {
+                    "name": "Year",
+                    "value": "{jf.year}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Rating",
+                    "value": "{jf.rating}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Duration",
+                    "value": "{jf.duration}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Genres",
+                    "value": "{jf.genres}",
+                    "inline": false
+                  }
+                ],
+                "footer": {
+                  "text": "Jellyfin · {jf.library}"
+                }
+              }
+            ]
+          },
+          "target": "reply"
+        },
+        "position": {
+          "x": -120,
+          "y": 490
+        }
+      },
+      {
+        "id": "empty",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "🎲 Nothing found."
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 400,
+          "y": 490
+        }
+      },
+      {
+        "id": "failed",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {jf}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 920,
+          "y": 490
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 1560,
+          "y": 190
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 1560,
+          "y": 340
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "option_visibility",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_library",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_genre",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_unwatched",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "random",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "random",
+          "port": "next"
+        },
+        "to": {
+          "node": "picked",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "random",
+          "port": "empty"
+        },
+        "to": {
+          "node": "empty",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "random",
+          "port": "failed"
+        },
+        "to": {
+          "node": "failed",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

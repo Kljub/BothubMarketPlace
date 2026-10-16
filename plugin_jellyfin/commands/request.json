@@ -1,0 +1,273 @@
+{
+  "name": "jellyfin-request",
+  "description": "Requests a movie or show (Jellyseerr)",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "jellyfin-request",
+          "description": "Requests a movie or show (Jellyseerr)",
+          "hide_replies": false,
+          "visibility_option": "visibility"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      },
+      {
+        "id": "option_visibility",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "visibility",
+          "description": "Who sees the answer (empty: the default of the bot)",
+          "required": false,
+          "choices": "Public\nOnly me",
+          "variable": "visibility"
+        },
+        "position": {
+          "x": 660,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_title",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "title",
+          "description": "Title of the movie or show",
+          "required": true,
+          "variable": "title"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "req",
+        "type": "plugin.plugin_jellyfin.request",
+        "typeVersion": 1,
+        "config": {
+          "title": "{option_title}",
+          "variable": "jf"
+        },
+        "position": {
+          "x": 400,
+          "y": 340
+        }
+      },
+      {
+        "id": "ok",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "✅ Request for **{jf}** created. You get a DM when it is approved or available."
+          },
+          "target": "reply"
+        },
+        "position": {
+          "x": -640,
+          "y": 490
+        }
+      },
+      {
+        "id": "none",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "🔍 Jellyseerr found nothing for \"{option_title}\"."
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": -120,
+          "y": 490
+        }
+      },
+      {
+        "id": "nolink",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ Link your Jellyfin account first: /jellyfin-link"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 400,
+          "y": 490
+        }
+      },
+      {
+        "id": "off",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ Jellyseerr requests are off for this bot."
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 920,
+          "y": 490
+        }
+      },
+      {
+        "id": "failed",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {jf}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 1440,
+          "y": 490
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 2080,
+          "y": 190
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 2080,
+          "y": 340
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "option_visibility",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "option_title",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "req",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "req",
+          "port": "next"
+        },
+        "to": {
+          "node": "ok",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "req",
+          "port": "not_found"
+        },
+        "to": {
+          "node": "none",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "req",
+          "port": "not_linked"
+        },
+        "to": {
+          "node": "nolink",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "req",
+          "port": "not_configured"
+        },
+        "to": {
+          "node": "off",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "req",
+          "port": "failed"
+        },
+        "to": {
+          "node": "failed",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

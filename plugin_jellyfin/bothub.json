@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_jellyfin",
+  "name": "Jellyfin",
+  "version": "1.0.0",
+  "description": "Jellyfin for Discord: library search with posters, now playing, random picks, recommendations, Jellyseerr requests, account linking with Quick Connect and a role, favorites, music in voice, and new-content notices.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "icon": "🪼",
+  "category": "social",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "storage.global",
+      "storage.files",
+      "discord.messages.send",
+      "scheduler",
+      "secrets.use",
+      "discord.interactions.reply",
+      "discord.roles.assign",
+      "webhooks.inbound",
+      "modules.music.queue"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/link.json",
+    "commands/unlink.json",
+    "commands/status.json",
+    "commands/nowplaying.json",
+    "commands/search.json",
+    "commands/random.json",
+    "commands/recommend.json",
+    "commands/request.json",
+    "commands/libraries.json",
+    "commands/favorites.json",
+    "commands/favorites-add.json",
+    "commands/favorites-remove.json",
+    "commands/play.json"
+  ],
+  "services": {
+    "tasks": [
+      {
+        "name": "link_poll",
+        "every": "1m"
+      },
+      {
+        "name": "library_options",
+        "every": "30m"
+      }
+    ],
+    "secrets": [
+      "JELLYFIN_URL",
+      "JELLYFIN_KEY",
+      "JELLYFIN_URL_2",
+      "JELLYFIN_KEY_2",
+      "JELLYFIN_URL_3",
+      "JELLYFIN_KEY_3",
+      "JELLYFIN_URL_4",
+      "JELLYFIN_KEY_4",
+      "JELLYFIN_URL_5",
+      "JELLYFIN_KEY_5",
+      "JELLYSEERR_URL",
+      "JELLYSEERR_KEY"
+    ],
+    "webhooks": [
+      "media",
+      "jellyseerr"
+    ]
+  },
+  "nodes": [
+    "status",
+    "now_playing",
+    "search",
+    "random",
+    "recommend",
+    "request",
+    "link",
+    "unlink_account",
+    "libraries",
+    "favorites",
+    "favorites_add",
+    "favorites_remove",
+    "play"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

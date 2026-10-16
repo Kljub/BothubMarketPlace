@@ -1,0 +1,225 @@
+{
+  "name": "jellyfin-favorites",
+  "description": "Shows your Jellyfin favorites",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "jellyfin-favorites",
+          "description": "Shows your Jellyfin favorites",
+          "hide_replies": true,
+          "visibility_option": "visibility"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_visibility",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "visibility",
+          "description": "Who sees the answer (empty: the default of the bot)",
+          "required": false,
+          "choices": "Public\nOnly me",
+          "variable": "visibility"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "wl",
+        "type": "plugin.plugin_jellyfin.favorites",
+        "typeVersion": 1,
+        "config": {
+          "variable": "fav"
+        },
+        "position": {
+          "x": 400,
+          "y": 190
+        }
+      },
+      {
+        "id": "list",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "embeds": [
+              {
+                "color": "#aa5cc3",
+                "title": "📋 Your favorites ({fav.count})",
+                "description": "{fav}"
+              }
+            ]
+          },
+          "target": "reply"
+        },
+        "position": {
+          "x": -380,
+          "y": 340
+        }
+      },
+      {
+        "id": "empty",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "📋 You have no favorites yet. Add something with /jellyfin-favorites-add."
+          },
+          "target": "reply"
+        },
+        "position": {
+          "x": 140,
+          "y": 340
+        }
+      },
+      {
+        "id": "not_linked",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "ℹ️ Link your Jellyfin account first with /jellyfin-link."
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 660,
+          "y": 340
+        }
+      },
+      {
+        "id": "failed",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {fav}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 1180,
+          "y": 340
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 1820,
+          "y": 40
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 1820,
+          "y": 190
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "option_visibility",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "wl",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "wl",
+          "port": "next"
+        },
+        "to": {
+          "node": "list",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "wl",
+          "port": "empty"
+        },
+        "to": {
+          "node": "empty",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "wl",
+          "port": "not_linked"
+        },
+        "to": {
+          "node": "not_linked",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "wl",
+          "port": "failed"
+        },
+        "to": {
+          "node": "failed",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}
