@@ -55,6 +55,14 @@
     {
       "suffix": ".color",
       "labelKey": "plugin.plugin_websitestatus.node.site_status.result_color"
+    },
+    {
+      "suffix": ".detail",
+      "labelKey": "plugin.plugin_websitestatus.node.site_status.result_detail"
+    },
+    {
+      "suffix": ".reports",
+      "labelKey": "plugin.plugin_websitestatus.node.site_status.result_reports"
     }
   ],
   "config": {

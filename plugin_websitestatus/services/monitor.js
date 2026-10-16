@@ -1,5 +1,6 @@
-// Service "monitor": checks the websites of the settings and keeps one status
-// board in the chosen channel. ctx.http.check ("http.check") answers only
+// Service "monitor": checks the websites and services (downtime detector,
+// services/providers.js) of the settings and keeps one status board in the
+// chosen channel; services/alerts.js posts down / back-up messages. ctx.http.check ("http.check") answers only
 // status and latency, never the page. Websites with the same group share one
 // embed; the others get their own. The board is one message with up to 10
 // embeds (more embeds: more messages), edited on every check, so a check
@@ -7,6 +8,9 @@
 //
 // Storage (per bot): "status:<site _id>" = { status, latencyMs, code, at },
 // "board" = { channel, messages: [ids] }, "last_run" = ms.
+import { alert } from './alerts.js';
+import { CATALOG, checkService, serviceName } from './providers.js';
+import { reportCounts, reportRules } from './reports.js';
 import { readJson, setting, writeJson } from './util.js';
 
 export const STATUS = {
@@ -20,8 +24,14 @@ const EMBEDS_PER_MESSAGE = 10;
 const CHECK_TIMEOUT_MS = 5000;
 
 export const TEXT = {
-  en: { status: 'Status', online: 'Online', warning: 'Warning', offline: 'Offline', next: 'Next check', unchecked: 'Not checked yet', checked: 'Websites checked', none: 'No websites are set up.' },
-  de: { status: 'Status', online: 'Online', warning: 'Warnung', offline: 'Offline', next: 'Nächster Check', unchecked: 'Noch nicht geprüft', checked: 'Websites geprüft', none: 'Es sind keine Websites eingerichtet.' },
+  en: { status: 'Status', online: 'Online', warning: 'Warning', offline: 'Offline', next: 'Next check', unchecked: 'Not checked yet', checked: 'Websites and services checked', none: 'No websites or services are set up.', services: 'Services', page: 'Reports page', reported: '👥 {n} reports',
+    overview: 'Status overview', detail: 'Detail', latency: 'Response time', user_reports: 'User reports', checked_at: 'Checked',
+    unknown: 'No website or service is called "{name}".', reports_off: 'User reports are switched off.',
+    report_thanks: 'Thanks, your report for **{name}** is counted ({count}/{threshold}).', report_again: 'You reported **{name}** already ({count} reports right now).' },
+  de: { status: 'Status', online: 'Online', warning: 'Warnung', offline: 'Offline', next: 'Nächster Check', unchecked: 'Noch nicht geprüft', checked: 'Websites und Dienste geprüft', none: 'Es sind keine Websites oder Dienste eingerichtet.', services: 'Dienste', page: 'Meldeseite', reported: '👥 {n} Meldungen',
+    overview: 'Statusübersicht', detail: 'Detail', latency: 'Antwortzeit', user_reports: 'Nutzermeldungen', checked_at: 'Geprüft',
+    unknown: 'Keine Website und kein Dienst heißt „{name}“.', reports_off: 'Nutzermeldungen sind ausgeschaltet.',
+    report_thanks: 'Danke, deine Meldung für **{name}** zählt ({count}/{threshold}).', report_again: 'Du hast **{name}** schon gemeldet (gerade {count} Meldungen).' },
 };
 
 /** Minutes between two check rounds (setting "interval"). */
@@ -34,6 +44,11 @@ export function sites(ctx) {
   return setting(ctx, 'sites', []).filter((s) => s && String(s.name ?? '').trim() && /^https?:\/\//i.test(String(s.url ?? '')));
 }
 
+/** The services of the settings (downtime detector) with a known kind. */
+export function services(ctx) {
+  return setting(ctx, 'services', []).filter((s) => s && CATALOG[s.service]);
+}
+
 /** Green: answers below 400 within the slow limit; yellow: 4xx or slow; red: 5xx or no answer. */
 export function classify(answer, slowMs) {
   if (!answer || answer.status === null || answer.status >= 500) return 'red';
@@ -41,28 +56,76 @@ export function classify(answer, slowMs) {
   return 'green';
 }
 
-/** Checks every website at once (a task has 10 s) and stores the results. */
+/** Checks every website and service at once (a task has 10 s) and stores the results. */
 export async function checkAll(ctx) {
   const slowMs = Number(setting(ctx, 'slow_ms', '1500')) || 1500;
-  const list = sites(ctx);
-  const results = await Promise.all(
-    list.map(async (site) => {
-      const answer = await ctx.http.check(site.url, { timeoutMs: CHECK_TIMEOUT_MS }).catch(() => null);
-      const result = { status: classify(answer, slowMs), latencyMs: answer?.latencyMs ?? null, code: answer?.status ?? null, at: Date.now() };
-      await writeJson(ctx, `status:${site._id}`, result);
-      return { site, ...result };
-    }),
-  );
+  const checkSite = async (site) => {
+    const answer = await ctx.http.check(site.url, { timeoutMs: CHECK_TIMEOUT_MS }).catch(() => null);
+    const result = { status: classify(answer, slowMs), latencyMs: answer?.latencyMs ?? null, code: answer?.status ?? null, at: Date.now() };
+    await writeJson(ctx, `status:${site._id}`, result);
+    return { site, ...result };
+  };
+  const checkSvc = async (svc) => {
+    const result = { ...(await checkService(ctx, svc)), at: Date.now() };
+    await writeJson(ctx, `status:${svc._id}`, result);
+    return { site: entries(ctx).find((e) => e._id === svc._id), ...result };
+  };
+  const checked = await Promise.all([...sites(ctx).map(checkSite), ...services(ctx).map(checkSvc)]);
+  const results = await withReports(ctx, checked);
   await ctx.storage.set('last_run', String(Date.now()));
   return results;
+}
+
+/**
+ * Adds the user reports (services/reports.js) to the results: enough
+ * reports make a green entry a warning. Stored with the result.
+ */
+async function withReports(ctx, results) {
+  const { threshold } = reportRules(ctx);
+  const counts = await reportCounts(ctx, results.map((r) => r.site._id));
+  return Promise.all(results.map(async (r) => {
+    const reports = counts.get(r.site._id) ?? 0;
+    if (!reports) return r;
+    const next = { ...r, reports, status: reports >= threshold && r.status === 'green' ? 'yellow' : r.status };
+    const { site, ...stored } = next;
+    await writeJson(ctx, `status:${site._id}`, stored);
+    return next;
+  }));
+}
+
+/** Every website and service of the settings as { _id, name, group, url, service, link }. */
+export function entries(ctx) {
+  const link = (s) => (/^https:\/\/\S+$/.test(String(s.link ?? '').trim()) ? String(s.link).trim() : '');
+  return [
+    ...sites(ctx).map((s) => ({ _id: s._id, name: String(s.name).trim(), group: s.group ?? '', url: s.url, service: false, link: '' })),
+    ...services(ctx).map((s) => ({ _id: s._id, name: serviceName(s), group: s.group ?? '', url: CATALOG[s.service].url, service: true, link: link(s) })),
+  ];
+}
+
+/** The entry with that name (no case); else the only one whose name contains it. */
+export function findEntry(ctx, query) {
+  const q = String(query ?? '').trim().toLowerCase();
+  if (!q) return null;
+  const all = entries(ctx);
+  const exact = all.find((e) => e.name.toLowerCase() === q);
+  if (exact) return exact;
+  const partial = all.filter((e) => e.name.toLowerCase().includes(q));
+  return partial.length === 1 ? partial[0] : null;
 }
 
 /** One website: "🟢 Status: **Online** - Google - 123 ms" (HTTP code when it failed). */
 export function line(t, r, name) {
   if (!r) return `⚪ ${t.status}: ${t.unchecked} - ${name}`;
   const parts = [`${STATUS[r.status].emoji} ${t.status}: **${t[STATUS[r.status].key]}**`, name];
-  if (r.latencyMs != null) parts.push(`${r.latencyMs} ms`);
-  if (r.code >= 400) parts.push(`HTTP ${r.code}`);
+  // Services: what their status page or the game server says.
+  if (r.site?.service) {
+    if (r.detail) parts.push(r.detail);
+  } else {
+    if (r.latencyMs != null) parts.push(`${r.latencyMs} ms`);
+    if (r.code >= 400) parts.push(`HTTP ${r.code}`);
+  }
+  if (r.reports) parts.push(t.reported.replace('{n}', r.reports));
+  if (r.site?.link) parts.push(`[${t.page}](${r.site.link})`);
   return parts.join(' - ');
 }
 
@@ -76,13 +139,14 @@ export function boardEmbeds(ctx, results, nextAt, lang = 'en') {
   const blocks = [];
   const byGroup = new Map();
   for (const r of results) {
-    const group = String(r.site.group ?? '').trim();
+    // Services without a group share one embed.
+    const group = String(r.site.group ?? '').trim() || (r.site.service ? `🛰️ ${t.services}` : '');
     if (!group) {
       blocks.push({ title: r.site.name, items: [r] });
       continue;
     }
     if (!byGroup.has(group)) {
-      byGroup.set(group, { title: `📡 ${group}`, group, items: [] });
+      byGroup.set(group, { title: group.startsWith('🛰️') ? group : `📡 ${group}`, group, items: [] });
       blocks.push(byGroup.get(group));
     }
     byGroup.get(group).items.push(r);
@@ -123,6 +187,7 @@ export async function runRound(ctx, lang) {
   const results = await checkAll(ctx);
   const nextAt = Date.now() + intervalMinutes(ctx) * 60_000;
   await postBoard(ctx, boardEmbeds(ctx, results, nextAt, lang));
+  await alert(ctx, results, lang);
   return results;
 }
 
@@ -130,6 +195,6 @@ export async function runRound(ctx, lang) {
 export async function due(ctx, now = Date.now()) {
   const last = Number((await ctx.storage.get('last_run')) ?? 0);
   if (now - last >= intervalMinutes(ctx) * 60_000) return true;
-  for (const s of sites(ctx)) if (!(await ctx.storage.has(`status:${s._id}`))) return true;
+  for (const s of [...sites(ctx), ...services(ctx)]) if (!(await ctx.storage.has(`status:${s._id}`))) return true;
   return false;
 }

@@ -6,7 +6,7 @@ import { setting } from './util.js';
 
 export const tasks = {
   async tick(ctx) {
-    if (!setting(ctx, 'channel', null)?.id || !(await due(ctx))) return;
+    if (!(setting(ctx, 'channel', null)?.id || setting(ctx, 'alert_channel', null)?.id) || !(await due(ctx))) return;
     await runRound(ctx, setting(ctx, 'language', 'en'));
   },
 };
