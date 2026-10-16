@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_translation",
+  "name": "Translation",
+  "version": "1.0.0",
+  "description": "Translate messages with DeepL: react with a flag (🇩🇪, 🇫🇷, 🇯🇵 …) to translate a message into that language, or use /translate. 32 languages, chosen channels and roles, a daily limit.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "icon": "🌐",
+  "category": "utility",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "secrets.use",
+      "discord.events.messages",
+      "discord.messages.read",
+      "discord.messages.send",
+      "discord.members.read",
+      "discord.interactions.reply"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/translate.json"
+  ],
+  "events": [
+    "reactionAdd"
+  ],
+  "services": {
+    "hosts": [
+      "api-free.deepl.com",
+      "api.deepl.com"
+    ],
+    "secrets": [
+      "DEEPL_API_KEY"
+    ]
+  },
+  "nodes": [
+    "translate"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

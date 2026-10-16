@@ -32,6 +32,7 @@ Policies**.
 | 🖌️ **Stable Diffusion Forge** | Images from your own Forge server: text and image to image, upscale and regenerate buttons, progress, model dropdowns | `/forge-imagine`, `/forge-img2img` |
 | 📎 **Temp Attachments** | Files or texts behind an access button: password, dates, max. uses, roles | `/tempfile-…` |
 | ❌ **Tic Tac Toe** | Against the bot or as a duel, optional bets | `/tictactoe` |
+| 🌐 **Translation** | DeepL translations: react with a flag to translate a message into that language, or /translate; channels, roles, daily limit | `/translate` |
 | 🎴 **Trading Cards** | Collect cards: packs, collection, trading and gifts | `/cards …` |
 | 🌤️ **Weather** | Current weather from OpenWeatherMap | `/weather` |
 | 📡 **Website Status Check** | Status board for websites plus a downtime detector for services (AWS, Google Cloud, Azure, Cloudflare, Discord, GitHub, PlayStation, Xbox, Minecraft and Steam game servers …) with down / back-up alerts, user reports from members | `/sitestatus`, `/sitereport`, `/sitecheck` |

@@ -1,0 +1,97 @@
+{
+  "fields": [
+    {
+      "key": "language",
+      "type": "select",
+      "options": [
+        "en",
+        "de"
+      ],
+      "default": "en"
+    },
+    {
+      "key": "tier",
+      "type": "select",
+      "options": [
+        "free",
+        "paid"
+      ],
+      "default": "free",
+      "hint": true
+    },
+    {
+      "key": "daily_limit",
+      "type": "number",
+      "min": 0,
+      "max": 2000,
+      "default": 0,
+      "hint": true
+    },
+    {
+      "key": "char_limit",
+      "type": "number",
+      "min": 50,
+      "max": 2000,
+      "default": 1000,
+      "hint": true
+    },
+    {
+      "key": "flags",
+      "type": "bool",
+      "default": true,
+      "hint": true
+    },
+    {
+      "key": "trigger_emojis",
+      "type": "emojis",
+      "max": 10,
+      "hint": true
+    },
+    {
+      "key": "target",
+      "type": "text",
+      "max": 40,
+      "default": "EN-GB",
+      "hint": true
+    },
+    {
+      "key": "quick_channels",
+      "type": "channels",
+      "channelTypes": [
+        "text",
+        "announcement",
+        "forum"
+      ],
+      "max": 50,
+      "hint": true
+    },
+    {
+      "key": "quick_roles",
+      "type": "roles",
+      "max": 25,
+      "hint": true
+    },
+    {
+      "key": "quick_reply",
+      "type": "select",
+      "options": [
+        "channel",
+        "dm"
+      ],
+      "default": "channel"
+    },
+    {
+      "key": "default_target",
+      "type": "text",
+      "max": 40,
+      "default": "EN-GB",
+      "hint": true
+    },
+    {
+      "key": "private_replies",
+      "type": "bool",
+      "default": false,
+      "hint": true
+    }
+  ]
+}
