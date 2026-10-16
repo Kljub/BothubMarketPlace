@@ -55,45 +55,35 @@
             "mode": "normal",
             "embeds": [
               {
-                "color": "#ff6740",
+                "color": "#02a9ff",
                 "title": "{ani}",
                 "url": "{ani.url}",
-                "description": "{ani.description}",
-                "image_url": "{ani.cover}",
+                "thumbnail_url": "{ani.cover}",
+                "description": "**English Name:** {ani.english}\n**Japanese Name:** {ani.japanese}\n\n**Rating:** {ani.rating}/10 ⭐\n**Status:** {ani.status}",
                 "fields": [
                   {
+                    "name": "Published",
+                    "value": "**Start Date:** {ani.start}\n**End Date:** {ani.end}",
+                    "inline": true
+                  },
+                  {
                     "name": "Format",
-                    "value": "{ani.format}",
+                    "value": "**Type:** {ani.type}\n**Chapters:** {ani.chapters}\n**Volumes:** {ani.volumes}",
                     "inline": true
                   },
                   {
-                    "name": "Status",
-                    "value": "{ani.status}",
-                    "inline": true
+                    "name": "Synopsis",
+                    "value": "{ani.synopsis}",
+                    "inline": false
                   },
                   {
-                    "name": "Score",
-                    "value": "{ani.score}",
-                    "inline": true
-                  },
-                  {
-                    "name": "Chapters",
-                    "value": "{ani.chapters}",
-                    "inline": true
-                  },
-                  {
-                    "name": "Volumes",
-                    "value": "{ani.volumes}",
-                    "inline": true
-                  },
-                  {
-                    "name": "Genres",
-                    "value": "{ani.genres}",
+                    "name": "More Information",
+                    "value": "{ani.url}",
                     "inline": false
                   }
                 ],
                 "footer": {
-                  "text": "AniList"
+                  "text": "Age Rating: {ani.age} · Genres: {ani.genres}"
                 }
               }
             ]

@@ -75,6 +75,46 @@
     {
       "suffix": ".next_episode",
       "labelKey": "plugin.plugin_anisearch.node.search.result_next_episode"
+    },
+    {
+      "suffix": ".english",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_english"
+    },
+    {
+      "suffix": ".japanese",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_japanese"
+    },
+    {
+      "suffix": ".romaji",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_romaji"
+    },
+    {
+      "suffix": ".rating",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_rating"
+    },
+    {
+      "suffix": ".type",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_type"
+    },
+    {
+      "suffix": ".start",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_start"
+    },
+    {
+      "suffix": ".end",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_end"
+    },
+    {
+      "suffix": ".synopsis",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_synopsis"
+    },
+    {
+      "suffix": ".trailer",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_trailer"
+    },
+    {
+      "suffix": ".age",
+      "labelKey": "plugin.plugin_anisearch.node.search.result_age"
     }
   ],
   "config": {

@@ -51,5 +51,15 @@
   "plugin.plugin_anisearch.port.in": "Eingang",
   "plugin.plugin_anisearch.port.next": "Weiter",
   "plugin.plugin_anisearch.port.no_channel": "Kein Channel",
-  "plugin.plugin_anisearch.port.not_found": "Nicht gefunden"
+  "plugin.plugin_anisearch.port.not_found": "Nicht gefunden",
+  "plugin.plugin_anisearch.node.search.result_english": "Englischer Name",
+  "plugin.plugin_anisearch.node.search.result_japanese": "Japanischer Name",
+  "plugin.plugin_anisearch.node.search.result_romaji": "Romaji-Name",
+  "plugin.plugin_anisearch.node.search.result_rating": "Bewertung (von 10)",
+  "plugin.plugin_anisearch.node.search.result_type": "Typ (TV, Film …)",
+  "plugin.plugin_anisearch.node.search.result_start": "Startdatum",
+  "plugin.plugin_anisearch.node.search.result_end": "Enddatum",
+  "plugin.plugin_anisearch.node.search.result_synopsis": "Handlung (bis 1000 Zeichen)",
+  "plugin.plugin_anisearch.node.search.result_trailer": "Trailer-Link",
+  "plugin.plugin_anisearch.node.search.result_age": "Altersfreigabe (Erwachsene oder nicht)"
 }

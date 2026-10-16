@@ -33,6 +33,8 @@ test('search: details as results, port not_found without a match', async () => {
   assert.equal(out.results['.score'], '91/100');
   assert.equal(out.results['.status'], 'Releasing');
   assert.equal(out.results['.genres'], 'Adventure, Drama, Fantasy');
+  // The embed layout: names, rating of 10, dates (still running: end '?'), no trailer.
+  assert.deepEqual([out.results['.rating'], out.results['.end'], out.results['.trailer'], out.results['.age']], ['9.1', '?', '—', 'not adult']);
   assert.equal(ctx.web[0].json.variables.type, 'ANIME');
 
   const manga = await runBlock(plugin, 'search', ctx, { config: { title: 'Frieren', media_type: 'manga' } });

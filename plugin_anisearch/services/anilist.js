@@ -15,7 +15,10 @@ const MEDIA_FIELDS = `
   volumes
   genres
   format
-  startDate { year }
+  startDate { year month day }
+  endDate { year month day }
+  trailer { id site }
+  isAdult
   siteUrl
   nextAiringEpisode { episode airingAt }`;
 
@@ -121,8 +124,27 @@ export function plain(text, max = 500) {
   return t.length > max ? `${t.slice(0, max - 1)}…` : t;
 }
 
+const FORMATS = { TV: 'TV', TV_SHORT: 'TV Short', MOVIE: 'Movie', SPECIAL: 'Special', OVA: 'OVA', ONA: 'ONA', MUSIC: 'Music', MANGA: 'Manga', NOVEL: 'Light Novel', ONE_SHOT: 'One Shot' };
+
+/** "2024-03-07", "2024-03", "2024" or "—" for an AniList fuzzy date. */
+export function dateOf(d) {
+  if (!d?.year) return '—';
+  const pad = (n) => String(n).padStart(2, '0');
+  return [d.year, d.month && pad(d.month), d.month && d.day && pad(d.day)].filter(Boolean).join('-');
+}
+
+/** The trailer as a link (YouTube or Dailymotion), '' without one. */
+export function trailerOf(media) {
+  const id = String(media?.trailer?.id ?? '');
+  if (!/^[A-Za-z0-9_-]{1,40}$/.test(id)) return '';
+  if (media.trailer.site === 'youtube') return `https://www.youtube.com/watch?v=${id}`;
+  if (media.trailer.site === 'dailymotion') return `https://www.dailymotion.com/video/${id}`;
+  return '';
+}
+
 /** Block results for one media: {Var1} = title, {Var1.url}, {Var1.cover}, … */
 export function results(media) {
+  const ongoing = media.status === 'RELEASING' || media.status === 'NOT_YET_RELEASED';
   return {
     '': titleOf(media),
     '.id': String(media.id),
@@ -138,5 +160,15 @@ export function results(media) {
     '.genres': (media.genres ?? []).slice(0, 5).join(', ') || '—',
     '.year': media.startDate?.year != null ? String(media.startDate.year) : '—',
     '.next_episode': media.nextAiringEpisode?.episode != null ? String(media.nextAiringEpisode.episode) : '—',
+    '.english': media.title?.english || media.title?.romaji || '—',
+    '.japanese': media.title?.native || '—',
+    '.romaji': media.title?.romaji || '—',
+    '.rating': media.averageScore != null ? (media.averageScore / 10).toFixed(1).replace(/\.0$/, '') : '—',
+    '.type': FORMATS[media.format] ?? media.format ?? '—',
+    '.start': dateOf(media.startDate),
+    '.end': media.endDate?.year ? dateOf(media.endDate) : ongoing ? '?' : '—',
+    '.synopsis': plain(media.description, 1000) || '—',
+    '.trailer': trailerOf(media) || '—',
+    '.age': media.isAdult ? '18+ (adult)' : 'not adult',
   };
 }

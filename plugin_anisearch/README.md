@@ -2,7 +2,7 @@
 
 Anime and manga search on [AniList](https://anilist.co), plus new-episode notices for tracked anime.
 
-Version 1.0.0 · developer: BotHub · license: MIT
+Version 1.2.0 · developer: BotHub · license: MIT
 
 ## Commands
 
@@ -10,8 +10,8 @@ Every command is a graph in the Custom Command Builder (copied to each bot as a 
 
 | Command | What it does |
 |---|---|
-| `/anisearch-anime title` | Embed with format, status, score, episodes, next episode, genres, cover |
-| `/anisearch-manga title` | Same for manga (chapters, volumes) |
+| `/anisearch-anime title` | Embed: English and Japanese name, rating of 10, status, on air (start, end), format (type, episodes), synopsis, trailer, AniList link, age rating and genres |
+| `/anisearch-manga title` | Same for manga: published (start, end), chapters, volumes |
 | `/anisearch-track title` | Follows an anime; new episodes are announced (Manage Server) |
 | `/anisearch-untrack title` | Stops following (title or AniList ID; Manage Server) |
 | `/anisearch-tracked` | The followed anime with their IDs |
@@ -20,7 +20,7 @@ Every command is a graph in the Custom Command Builder (copied to each bot as a 
 
 | Node | Ports | Results |
 |---|---|---|
-| AniList search | found, not_found | title, id, url, description, cover, score, status, format, episodes, chapters, volumes, genres, year, next_episode |
+| AniList search | found, not_found | title, id, url, description, cover, score, status, format, episodes, chapters, volumes, genres, year, next_episode, english, japanese, romaji, rating (of 10), type, start, end, synopsis, trailer, age |
 | Track anime | next, already, not_found, no_channel, full | title, id, url, channel |
 | Stop tracking | next, not_found | title, id |
 | Tracked anime | next, empty | list, count |

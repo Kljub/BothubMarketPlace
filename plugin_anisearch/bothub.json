@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "plugin_anisearch",
   "name": "AniSearch",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Anime and manga search on AniList, plus new-episode notices for tracked anime.",
   "developer": {
     "name": "BotHub"
