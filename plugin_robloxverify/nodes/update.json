@@ -1,0 +1,57 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_robloxverify.node.update.label",
+  "descriptionKey": "plugin.plugin_robloxverify.node.update.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "not_found",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_robloxverify.node.update.result"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "member": {
+        "type": "string",
+        "maxLength": 40
+      },
+      "mode": {
+        "type": "string",
+        "enum": [
+          "update",
+          "unlink"
+        ]
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

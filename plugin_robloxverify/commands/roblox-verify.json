@@ -1,0 +1,111 @@
+{
+  "name": "roblox-verify",
+  "description": "Link your Roblox account and get your roles",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "roblox-verify",
+          "description": "Link your Roblox account and get your roles"
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "opt_username",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "username",
+          "description": "Your Roblox username (empty: check the phrase)",
+          "required": false,
+          "variable": "username"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_robloxverify.verify",
+        "typeVersion": 1,
+        "config": {
+          "username": "{option_username}",
+          "variable": "res"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 400,
+          "y": 700
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 720,
+          "y": 700
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_username",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "name": "roblox-update",
+  "description": "Update the Roblox roles of a member (rank binds, game passes)",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "roblox-update",
+          "description": "Update the Roblox roles of a member (rank binds, game passes)"
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "opt_member",
+        "type": "option.user",
+        "typeVersion": 1,
+        "config": {
+          "name": "member",
+          "description": "The member (empty: you)",
+          "required": false,
+          "variable": "member"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_robloxverify.update",
+        "typeVersion": 1,
+        "config": {
+          "member": "{option_member}",
+          "mode": "update",
+          "variable": "res"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 400,
+          "y": 700
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 720,
+          "y": 700
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_member",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

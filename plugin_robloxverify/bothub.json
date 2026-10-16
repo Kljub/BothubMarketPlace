@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_robloxverify",
+  "name": "Roblox Verification",
+  "version": "1.0.0",
+  "description": "Roblox account verification: members prove their account with a phrase in their Roblox profile and get a verified role, roles by group rank (rank binds) and game passes, and their Roblox name as nickname. /roblox-profile shows any Roblox profile.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "icon": "🟥",
+  "category": "utility",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "scheduler",
+      "http.outbound",
+      "discord.roles.assign",
+      "discord.members.nicknames",
+      "discord.members.read",
+      "discord.messages.send",
+      "discord.messages.edit",
+      "discord.interactions.reply",
+      "discord.modals",
+      "discord.events.members"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/roblox-verify.json",
+    "commands/roblox-profile.json",
+    "commands/roblox-update.json",
+    "commands/roblox-unlink.json"
+  ],
+  "events": [
+    "guildMemberAdd"
+  ],
+  "services": {
+    "tasks": [
+      {
+        "name": "tick",
+        "every": "10m"
+      }
+    ],
+    "hosts": [
+      "users.roblox.com",
+      "groups.roblox.com",
+      "inventory.roblox.com",
+      "thumbnails.roblox.com",
+      "friends.roblox.com"
+    ]
+  },
+  "nodes": [
+    "verify",
+    "profile",
+    "update"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

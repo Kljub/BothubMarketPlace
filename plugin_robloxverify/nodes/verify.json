@@ -1,0 +1,58 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_robloxverify.node.verify.label",
+  "descriptionKey": "plugin.plugin_robloxverify.node.verify.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "pending",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_robloxverify.node.verify.result"
+    },
+    {
+      "suffix": ".linked",
+      "labelKey": "plugin.plugin_robloxverify.node.verify.result_linked"
+    },
+    {
+      "suffix": ".roblox",
+      "labelKey": "plugin.plugin_robloxverify.node.verify.result_roblox"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "username": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

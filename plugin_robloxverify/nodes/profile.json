@@ -1,0 +1,70 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_robloxverify.node.profile.label",
+  "descriptionKey": "plugin.plugin_robloxverify.node.profile.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "not_found",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_robloxverify.node.profile.result"
+    },
+    {
+      "suffix": ".id",
+      "labelKey": "plugin.plugin_robloxverify.node.profile.result_id"
+    },
+    {
+      "suffix": ".display",
+      "labelKey": "plugin.plugin_robloxverify.node.profile.result_display"
+    },
+    {
+      "suffix": ".url",
+      "labelKey": "plugin.plugin_robloxverify.node.profile.result_url"
+    },
+    {
+      "suffix": ".avatar",
+      "labelKey": "plugin.plugin_robloxverify.node.profile.result_avatar"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "member": {
+        "type": "string",
+        "maxLength": 40
+      },
+      "username": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

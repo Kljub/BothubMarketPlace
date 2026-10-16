@@ -1,0 +1,141 @@
+{
+  "fields": [
+    {
+      "key": "language",
+      "type": "select",
+      "options": [
+        "en",
+        "de"
+      ],
+      "default": "en"
+    },
+    {
+      "key": "start",
+      "type": "select",
+      "options": [
+        "command",
+        "button"
+      ],
+      "default": "command",
+      "hint": true
+    },
+    {
+      "key": "panel_channel",
+      "type": "channel",
+      "channelTypes": [
+        "text"
+      ],
+      "hint": true
+    },
+    {
+      "key": "panel_text",
+      "type": "text",
+      "max": 1000,
+      "multiline": true
+    },
+    {
+      "key": "verified_role",
+      "type": "role",
+      "hint": true
+    },
+    {
+      "key": "unverified_role",
+      "type": "role",
+      "hint": true
+    },
+    {
+      "key": "nickname",
+      "type": "select",
+      "options": [
+        "off",
+        "username",
+        "display",
+        "both"
+      ],
+      "default": "off"
+    },
+    {
+      "key": "rankbinds",
+      "type": "list",
+      "max": 25,
+      "titleField": "group",
+      "hint": true,
+      "item": [
+        {
+          "key": "group",
+          "type": "text",
+          "max": 15,
+          "pattern": "^\\d{1,15}$",
+          "required": true,
+          "hint": true
+        },
+        {
+          "key": "min_rank",
+          "type": "number",
+          "min": 0,
+          "max": 255,
+          "default": 1,
+          "hint": true
+        },
+        {
+          "key": "max_rank",
+          "type": "number",
+          "min": 1,
+          "max": 255,
+          "default": 255
+        },
+        {
+          "key": "role",
+          "type": "role",
+          "required": true
+        }
+      ]
+    },
+    {
+      "key": "gamepasses",
+      "type": "list",
+      "max": 10,
+      "titleField": "gamepass",
+      "hint": true,
+      "item": [
+        {
+          "key": "gamepass",
+          "type": "text",
+          "max": 15,
+          "pattern": "^\\d{1,15}$",
+          "required": true
+        },
+        {
+          "key": "role",
+          "type": "role",
+          "required": true
+        }
+      ]
+    },
+    {
+      "key": "remove_roles",
+      "type": "bool",
+      "default": true,
+      "hint": true
+    },
+    {
+      "key": "sync_hours",
+      "type": "select",
+      "options": [
+        "6",
+        "12",
+        "24",
+        "48"
+      ],
+      "default": "12",
+      "hint": true
+    },
+    {
+      "key": "log_channel",
+      "type": "channel",
+      "channelTypes": [
+        "text"
+      ]
+    }
+  ]
+}
