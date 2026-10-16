@@ -1,0 +1,66 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_musicquiz.node.start.label",
+  "descriptionKey": "plugin.plugin_musicquiz.node.start.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_musicquiz.node.start.result"
+    },
+    {
+      "suffix": ".rounds",
+      "labelKey": "plugin.plugin_musicquiz.node.start.result_rounds"
+    },
+    {
+      "suffix": ".error",
+      "labelKey": "plugin.plugin_musicquiz.node.start.result_error"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "genre": {
+        "type": "string",
+        "maxLength": 40
+      },
+      "mode": {
+        "type": "string",
+        "maxLength": 20
+      },
+      "rounds": {
+        "type": "string",
+        "maxLength": 10
+      },
+      "playlist": {
+        "type": "string",
+        "maxLength": 200
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_musicquiz",
+  "name": "Music Quiz",
+  "version": "1.0.0",
+  "description": "Guess the song: 30 second clips play in the voice channel, members pick the right title or artist with buttons. Charts, genres, decades or any Deezer playlist, points and a server leaderboard.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "icon": "🎶",
+  "category": "fun",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "scheduler",
+      "http.outbound",
+      "modules.music.queue",
+      "discord.messages.send",
+      "discord.messages.edit",
+      "discord.interactions.reply"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/musicquiz.json",
+    "commands/musicquiz-stop.json",
+    "commands/musicquiz-top.json"
+  ],
+  "services": {
+    "tasks": [
+      {
+        "name": "tick",
+        "every": "1m"
+      }
+    ],
+    "hosts": [
+      "api.deezer.com",
+      "cdnt-preview.dzcdn.net"
+    ]
+  },
+  "nodes": [
+    "start",
+    "stop",
+    "top"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

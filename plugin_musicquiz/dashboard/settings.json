@@ -1,0 +1,72 @@
+{
+  "fields": [
+    {
+      "key": "language",
+      "type": "select",
+      "options": [
+        "en",
+        "de"
+      ],
+      "default": "en"
+    },
+    {
+      "key": "source",
+      "type": "select",
+      "options": [
+        "charts",
+        "pop",
+        "rap",
+        "rock",
+        "dance",
+        "rnb",
+        "alternative",
+        "electro",
+        "metal",
+        "german",
+        "latin",
+        "country",
+        "jazz",
+        "classical",
+        "soundtrack",
+        "kids",
+        "60s",
+        "70s",
+        "80s",
+        "90s",
+        "2000s",
+        "2010s"
+      ],
+      "default": "charts",
+      "hint": true
+    },
+    {
+      "key": "mode",
+      "type": "select",
+      "options": [
+        "title",
+        "artist",
+        "mixed"
+      ],
+      "default": "title"
+    },
+    {
+      "key": "rounds",
+      "type": "number",
+      "min": 1,
+      "max": 15,
+      "default": 10
+    },
+    {
+      "key": "round_time",
+      "type": "select",
+      "options": [
+        "30",
+        "45",
+        "60",
+        "90"
+      ],
+      "default": "45",
+      "hint": true
+    }
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "name": "musicquiz",
+  "description": "Start a music quiz: guess the songs playing in the voice channel",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "musicquiz",
+          "description": "Start a music quiz: guess the songs playing in the voice channel"
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "opt_genre",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "genre",
+          "description": "Charts, a genre or a decade (default: plugin setting)",
+          "required": false,
+          "variable": "genre",
+          "choices": "charts\npop\nrap\nrock\ndance\nrnb\nalternative\nelectro\nmetal\ngerman\nlatin\ncountry\njazz\nclassical\nsoundtrack\nkids\n60s\n70s\n80s\n90s\n2000s\n2010s"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_rounds",
+        "type": "option.number",
+        "typeVersion": 1,
+        "config": {
+          "name": "rounds",
+          "description": "Number of rounds (1-15)",
+          "required": false,
+          "variable": "rounds"
+        },
+        "position": {
+          "x": 380,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_mode",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "mode",
+          "description": "Guess the song title, the artist or mixed",
+          "required": false,
+          "variable": "mode",
+          "choices": "title\nartist\nmixed"
+        },
+        "position": {
+          "x": 640,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_playlist",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "playlist",
+          "description": "A Deezer playlist link or number instead of the genre",
+          "required": false,
+          "variable": "playlist"
+        },
+        "position": {
+          "x": 900,
+          "y": 40
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_musicquiz.start",
+        "typeVersion": 1,
+        "config": {
+          "genre": "{option_genre}",
+          "rounds": "{option_rounds}",
+          "mode": "{option_mode}",
+          "playlist": "{option_playlist}",
+          "variable": "res"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 400,
+          "y": 700
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 720,
+          "y": 700
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_genre",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_rounds",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_mode",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_playlist",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "step",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}
