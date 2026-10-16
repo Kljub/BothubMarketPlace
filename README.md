@@ -14,14 +14,18 @@ Policies**.
 | 🤖 **AI Chat** | Chat with an AI (OpenAI, Anthropic, Groq, NVIDIA, Ollama, any OpenAI-compatible server): answers to mentions, memory, persona prompts, optional web search | `/ask`, `/ask-reset` |
 | 🔎 **AniSearch** | Anime and manga search, airing schedules and reminders | 6 |
 | 🎨 **ArcEnCiel** | Image generation with Arc en Ciel: text to image, image to image, auto-tagging; upscale and regenerate buttons | `/imagine`, `/img2img`, `/autotag` |
+| 🧬 **BotLife** | A life simulator like BitLife: school, jobs, love, family, houses, crime and prison, death and the next generation, in a private panel | `/botlife`, `/botlife-profile`, `/botlife-top` |
 | 🎰 **Casino** | Coinflip, dice, slots, roulette and blackjack with bets; payout rate (RTP) per bot | 5 |
 | 🕵️ **Criminal** | Rob another member's wallet, or a member's bank with a crew: chance, loot, fine and cooldown per bot | `/steal`, `/rob-bank` |
 | 😀 **Emoji Manager** | Emoji menus and emoji uploads | 3 |
+| 🪼 **Jellyfin** | Jellyfin for Discord: search with posters, now playing, random picks, recommendations, Jellyseerr requests, Quick Connect linking with a role, favorites, music in voice, new-content notices | 13 |
 | 🎮 **Minigames** | Dice duels, 5 dice, higher or lower, scratch cards, double or steal, mastermind, hangman, match pairs, lights out, begging, fishing | 11 |
 | 💣 **Minesweeper** | A mine bet on 24 fields with a rising multiplier | `/minesweeper` |
+| 🎶 **Music Quiz** | Guess the song: 30 second Deezer clips in the voice channel, four answers as buttons; charts, genres, decades or any Deezer playlist, server leaderboard (needs the Music module) | `/musicquiz`, `/musicquiz-stop`, `/musicquiz-top` |
 | 🎬 **Plex** | Plex for Discord: library search with posters, now playing, random picks, Overseerr requests, account linking, new-content notices | 12 |
 | 🥔 **Potato Pirates** | The coding card game: program ships with loops and if/else, sink crews or collect 7 Potato Kings; multiplayer or vs. bots (3 levels) | `/potatopirates` |
 | 🎮 **Riot Games Stats Tracker** | Valorant, League of Legends, TFT and Legends of Runeterra: ranks, recent matches, linked Riot IDs, a tracker for new matches and rank changes, leaderboards (HenrikDev and Riot API keys) | 10 |
+| 🧡 **Patreon Linking** | Patreon tiers become Discord roles for patrons who connected Discord in Patreon: tier, patron and former-patron roles, sync plus webhooks, announcements | `/patreon`, `/patreon-sync` |
 | ✂️ **Rock Paper Scissors** | Against the bot or as a duel, optional bets | `/rps`, `/rps-duel` |
 | 💾 **Server Backup** | Backups of a whole server by command or schedule; restore or clone into another server | `/backup …` |
 | 🔊 **Soundboard** | Sound clips in your voice channel: panel with buttons, uploads in the dashboard | `/soundboard …` |
@@ -30,7 +34,7 @@ Policies**.
 | ❌ **Tic Tac Toe** | Against the bot or as a duel, optional bets | `/tictactoe` |
 | 🎴 **Trading Cards** | Collect cards: packs, collection, trading and gifts | `/cards …` |
 | 🌤️ **Weather** | Current weather from OpenWeatherMap | `/weather` |
-| 📡 **Website Status Check** | Watches websites and keeps a status board in a channel | — |
+| 📡 **Website Status Check** | Status board for websites plus a downtime detector for services (AWS, Google Cloud, Azure, Cloudflare, Discord, GitHub, PlayStation, Xbox, Minecraft and Steam game servers …) with down / back-up alerts, user reports from members | `/sitestatus`, `/sitereport`, `/sitecheck` |
 | 🧮 **Steam Calc & Stats** | Account value, profiles, achievements and an achievement tracker (Steam Web API key) | `/steam-calc`, `/steam-profile`, `/steam-achievements` |
 | 🎮 **Steam Game Tracker** | Sales, free games and patch notes of Steam games in a channel | `/steam-game` |
 | 💼 **Work** | A job system: jobs with pay range and cooldown | `/job-…`, `/work` |
