@@ -46,6 +46,42 @@
       "voice": false
     },
     {
+      "id": "plugin_amp",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_amp-1.0.0/plugin_amp-1.0.0.zip",
+      "sha256": "245599a579a65eb90f65532a9c2daceef0e4450a020d42ed7f9985071790be3f",
+      "size": 33005,
+      "name": "AMP Game Servers",
+      "description": "AMP (CubeCoders) in Discord: log in with a button, list your game servers with state and players, start, stop and restart them, take backups, change settings and create new servers from deployment templates.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🎮",
+      "category": "utility",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "secrets.use",
+          "scheduler",
+          "discord.interactions.reply",
+          "discord.modals"
+        ]
+      },
+      "secrets": [
+        "AMP_URL"
+      ],
+      "layers": {
+        "commands": 7,
+        "events": 0,
+        "services": 2,
+        "nodes": 7,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_anisearch",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_anisearch-1.0.0/plugin_anisearch-1.0.0.zip",
