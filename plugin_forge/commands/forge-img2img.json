@@ -109,12 +109,16 @@
       },
       {
         "id": "opt_model",
-        "type": "option.text",
+        "type": "option.choice",
         "typeVersion": 1,
         "config": {
           "name": "model",
-          "description": "Model: name or number of a model the admin picked (empty: the first)",
+          "description": "Model (the checked models of the settings; empty: the first)",
           "required": false,
+          "source": "plugin",
+          "source_plugin": "plugin_forge",
+          "source_field": "checkpoint",
+          "choices": "",
           "variable": "model"
         },
         "position": {

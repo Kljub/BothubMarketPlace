@@ -2,7 +2,7 @@
   "plugin.plugin_forge.name": "Stable Diffusion Forge",
   "plugin.plugin_forge.description": "AI images from your own Stable Diffusion WebUI Forge server in Discord: /forge-imagine and /forge-img2img with upscale and regenerate buttons.",
   "plugin.plugin_forge.setting.checkpoint": "Checkpoints (models)",
-  "plugin.plugin_forge.setting.checkpoint_hint": "Loaded from your Forge server (every 30 minutes). Pick one or more: the first is the default, members choose another with the option \"model\" or the menu under the image. Empty: the model Forge has loaded.",
+  "plugin.plugin_forge.setting.checkpoint_hint": "Loaded from your Forge server (every 30 minutes). Check up to 25: the first is the default; the option \"model\" of the commands lists the checked ones, and the menu under the image too. Empty: the model Forge has loaded.",
   "plugin.plugin_forge.setting.sampler": "Sampler",
   "plugin.plugin_forge.setting.sampler_hint": "Empty: the Forge default.",
   "plugin.plugin_forge.setting.scheduler": "Scheduler",

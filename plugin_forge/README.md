@@ -32,8 +32,8 @@ answer shows the place in the queue and then the progress in %.
    dropdowns filled from your Forge server (every 30 minutes and when the
    plugin starts); size, steps, CFG, negative prompt, NSFW, hourly limit.
    Checkpoints: pick up to 25 (Discord menus show at most 25). The first is
-   the default; members pick another with the option `model` (its number,
-   name or a part of it) or the menu under the image.
+   the default; members pick another in the option `model` (a list of the checked
+   models in Discord) or the menu under the image.
 
 NSFW: only when allowed and only in age-restricted channels (as spoilers).
 Elsewhere the plugin adds NSFW terms to the negative prompt; that is no
