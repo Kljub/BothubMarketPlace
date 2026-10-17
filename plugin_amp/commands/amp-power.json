@@ -1,0 +1,142 @@
+{
+  "name": "amp-power",
+  "description": "Start, stop or restart a game server (managers)",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "amp-power",
+          "description": "Start, stop or restart a game server (managers)"
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "opt_server",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "server",
+          "description": "Game server (the shared ones of the settings)",
+          "required": true,
+          "source": "plugin",
+          "source_plugin": "plugin_amp",
+          "source_field": "instances",
+          "choices": "",
+          "variable": "server"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_action",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "action",
+          "description": "What to do",
+          "required": true,
+          "choices": "start\nstop\nrestart\nkill\nupdate",
+          "variable": "action"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "block",
+        "type": "plugin.plugin_amp.power",
+        "typeVersion": 1,
+        "config": {
+          "server": "{option_server}",
+          "action": "{option_action}",
+          "variable": "amp"
+        },
+        "position": {
+          "x": 400,
+          "y": 400
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 1100,
+          "y": 240
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 1100,
+          "y": 400
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_server",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_action",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "block",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

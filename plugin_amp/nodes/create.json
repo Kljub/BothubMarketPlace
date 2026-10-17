@@ -1,0 +1,62 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_amp.node.create.label",
+  "descriptionKey": "plugin.plugin_amp.node.create.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_amp.node.create.result"
+    },
+    {
+      "suffix": ".name",
+      "labelKey": "plugin.plugin_amp.node.create.result_name"
+    },
+    {
+      "suffix": ".template",
+      "labelKey": "plugin.plugin_amp.node.create.result_template"
+    },
+    {
+      "suffix": ".error",
+      "labelKey": "plugin.plugin_amp.node.create.result_error"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "template": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "name": {
+        "type": "string",
+        "maxLength": 60
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

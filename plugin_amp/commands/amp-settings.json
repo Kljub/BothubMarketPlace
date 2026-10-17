@@ -1,0 +1,167 @@
+{
+  "name": "amp-settings",
+  "description": "Show or change settings of a game server (managers)",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "amp-settings",
+          "description": "Show or change settings of a game server (managers)"
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "opt_server",
+        "type": "option.choice",
+        "typeVersion": 1,
+        "config": {
+          "name": "server",
+          "description": "Game server (the shared ones of the settings)",
+          "required": true,
+          "source": "plugin",
+          "source_plugin": "plugin_amp",
+          "source_field": "instances",
+          "choices": "",
+          "variable": "server"
+        },
+        "position": {
+          "x": 120,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_setting",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "setting",
+          "description": "Setting name or part of it",
+          "required": true,
+          "variable": "setting"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "opt_value",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "value",
+          "description": "New value (empty: only show)",
+          "required": false,
+          "variable": "value"
+        },
+        "position": {
+          "x": 680,
+          "y": 40
+        }
+      },
+      {
+        "id": "block",
+        "type": "plugin.plugin_amp.settings",
+        "typeVersion": 1,
+        "config": {
+          "server": "{option_server}",
+          "search": "{option_setting}",
+          "value": "{option_value}",
+          "variable": "amp"
+        },
+        "position": {
+          "x": 400,
+          "y": 400
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 1100,
+          "y": 240
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 1100,
+          "y": 400
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "node": "opt_server",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_setting",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_value",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "trigger",
+          "port": "next"
+        },
+        "to": {
+          "node": "block",
+          "port": "in"
+        }
+      },
+      {
+        "from": {
+          "node": "error",
+          "port": "next"
+        },
+        "to": {
+          "node": "error_reply",
+          "port": "in"
+        }
+      }
+    ]
+  }
+}

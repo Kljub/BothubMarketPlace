@@ -1,0 +1,48 @@
+{
+  "fields": [
+    {
+      "key": "language",
+      "type": "select",
+      "options": [
+        "en",
+        "de"
+      ],
+      "default": "en"
+    },
+    {
+      "key": "managers",
+      "type": "permissions",
+      "hint": true,
+      "lists": [
+        "allowed_roles",
+        "banned_roles",
+        "required_permissions",
+        "banned_channels"
+      ],
+      "default": {
+        "allowed_roles": [
+          {
+            "id": "everyone"
+          }
+        ],
+        "required_permissions": [
+          "manage_guild"
+        ]
+      }
+    },
+    {
+      "key": "instances",
+      "type": "choices",
+      "dynamic": true,
+      "max": 25,
+      "hint": true
+    },
+    {
+      "key": "templates",
+      "type": "choices",
+      "dynamic": true,
+      "max": 25,
+      "hint": true
+    }
+  ]
+}

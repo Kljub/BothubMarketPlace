@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_amp",
+  "name": "AMP Game Servers",
+  "version": "1.0.0",
+  "description": "AMP (CubeCoders) in Discord: log in with a button, list your game servers with state and players, start, stop and restart them, take backups, change settings and create new servers from deployment templates.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "icon": "🎮",
+  "category": "utility",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "secrets.use",
+      "scheduler",
+      "discord.interactions.reply",
+      "discord.modals"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/amp-login.json",
+    "commands/amp-servers.json",
+    "commands/amp-info.json",
+    "commands/amp-power.json",
+    "commands/amp-backup.json",
+    "commands/amp-create.json",
+    "commands/amp-settings.json"
+  ],
+  "services": {
+    "tasks": [
+      {
+        "name": "options",
+        "every": "15m"
+      }
+    ],
+    "secrets": [
+      "AMP_URL"
+    ]
+  },
+  "nodes": [
+    "login",
+    "servers",
+    "info",
+    "power",
+    "backup",
+    "create",
+    "settings"
+  ],
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  },
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_amp.node.login.label",
+  "descriptionKey": "plugin.plugin_amp.node.login.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_amp.node.login.result"
+    },
+    {
+      "suffix": ".connected",
+      "labelKey": "plugin.plugin_amp.node.login.result_connected"
+    },
+    {
+      "suffix": ".panel",
+      "labelKey": "plugin.plugin_amp.node.login.result_panel"
+    },
+    {
+      "suffix": ".error",
+      "labelKey": "plugin.plugin_amp.node.login.result_error"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}

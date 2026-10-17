@@ -1,0 +1,82 @@
+{
+  "category": "action",
+  "labelKey": "plugin.plugin_amp.node.info.label",
+  "descriptionKey": "plugin.plugin_amp.node.info.description",
+  "inputs": [
+    {
+      "name": "in",
+      "type": "flow",
+      "multiple": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "replied",
+      "type": "flow"
+    },
+    {
+      "name": "next",
+      "type": "flow"
+    },
+    {
+      "name": "failed",
+      "type": "flow"
+    }
+  ],
+  "results": [
+    {
+      "suffix": "",
+      "labelKey": "plugin.plugin_amp.node.info.result"
+    },
+    {
+      "suffix": ".id",
+      "labelKey": "plugin.plugin_amp.node.info.result_id"
+    },
+    {
+      "suffix": ".state",
+      "labelKey": "plugin.plugin_amp.node.info.result_state"
+    },
+    {
+      "suffix": ".state_text",
+      "labelKey": "plugin.plugin_amp.node.info.result_state_text"
+    },
+    {
+      "suffix": ".players",
+      "labelKey": "plugin.plugin_amp.node.info.result_players"
+    },
+    {
+      "suffix": ".cpu",
+      "labelKey": "plugin.plugin_amp.node.info.result_cpu"
+    },
+    {
+      "suffix": ".ram",
+      "labelKey": "plugin.plugin_amp.node.info.result_ram"
+    },
+    {
+      "suffix": ".game",
+      "labelKey": "plugin.plugin_amp.node.info.result_game"
+    },
+    {
+      "suffix": ".error",
+      "labelKey": "plugin.plugin_amp.node.info.result_error"
+    }
+  ],
+  "config": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "server": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "buttons": {
+        "type": "boolean",
+        "default": true
+      },
+      "variable": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"
+      }
+    }
+  }
+}
