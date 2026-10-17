@@ -388,7 +388,14 @@
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_forge-1.0.0/plugin_forge-1.0.0.zip",
       "sha256": "119eb4e55dae17427fd35dc378851f8501e6f0e8a09073b459fa6e18d3f303b7",
-      "size": 17244,
+      "size": 17244
+    },
+    {
+      "id": "plugin_forge",
+      "version": "1.0.1",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_forge-1.0.1/plugin_forge-1.0.1.zip",
+      "sha256": "d63a16728ed586d8538bc282cc68e4490f511ad58e07f8826f854a37ab3c7391",
+      "size": 17369,
       "name": "Stable Diffusion Forge",
       "description": "AI images from your own Stable Diffusion WebUI Forge server in Discord: /forge-imagine and /forge-img2img with upscale and regenerate buttons.",
       "developer": {
