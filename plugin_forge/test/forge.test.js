@@ -117,6 +117,11 @@ test('login, errors and limits', async () => {
   await runBlock(plugin, 'imagine', none, { vars: vars(), interaction: 'cmd', config: { prompt: 'a' } });
   await settle();
   assert.match(none.answers.at(-1).message, /not set up/);
+  // An address without http(s):// gets its own hint (not "not set up").
+  const bare = ctxWith({ secrets: { FORGE_URL: 'forge.example.com' } });
+  await runBlock(plugin, 'imagine', bare, { vars: vars(), interaction: 'cmd', config: { prompt: 'a' } });
+  await settle();
+  assert.match(bare.answers.at(-1).message, /not a usable address/);
   assert.equal((await runBlock(plugin, 'imagine', none, { vars: vars(), config: { prompt: ' ' } })).port, 'failed');
 });
 

@@ -15,7 +15,8 @@ export const GENERATE_TIMEOUT_MS = 300_000;
 /** A readable problem for the member (no stack, no address). */
 export class ForgeError extends Error {}
 
-export const NOT_SET_UP = 'Forge is not set up yet. An admin enters the address of the Forge server (e.g. http://192.168.1.20:7860) in the secret FORGE_URL under Settings → API / Secrets and shares it with the plugin.';
+export const NOT_SET_UP = 'Forge is not set up yet: the plugin has no access to the secret FORGE_URL. An admin enters the address of the Forge server as the secret FORGE_URL under Settings → API / Secrets and shares that secret with the Forge plugin.';
+export const NOT_A_URL = 'The secret FORGE_URL is not a usable address. It must be the full address with http:// or https:// in front (for example https://forge.example.com or http://192.168.1.20:7860), without user:password in it (the login goes into the secret FORGE_AUTH).';
 
 // FORGE_AUTH is optional: switched off (not shared) means Forge runs
 // without --api-auth. Without it the plugin asks again after 5 minutes.
@@ -45,7 +46,8 @@ export async function call(ctx, request) {
     res = await send(ctx, request);
   } catch (err) {
     const key = String(err?.message ?? err);
-    if (key.includes('sdk.secret.not_shared') || key.includes('sdk.secret.not_a_url')) throw new ForgeError(NOT_SET_UP);
+    if (key.includes('sdk.secret.not_a_url')) throw new ForgeError(NOT_A_URL);
+    if (key.includes('sdk.secret.not_shared')) throw new ForgeError(NOT_SET_UP);
     if (key.includes('sdk.http.timeout')) throw new ForgeError('Forge did not answer in time (5 minutes). Try fewer steps or a smaller size.');
     if (key.includes('sdk.http.failed')) throw new ForgeError('Forge cannot be reached. Is the server running (with --api) and is FORGE_URL right?');
     if (key.includes('sdk.files.too_big')) throw new ForgeError('The image is larger than 8 MB; try a smaller size.');
