@@ -123,6 +123,21 @@
         }
       },
       {
+        "id": "opt_model",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "model",
+          "description": "Model: name or number of a model the admin picked (empty: the first)",
+          "required": false,
+          "variable": "model"
+        },
+        "position": {
+          "x": 1600,
+          "y": 40
+        }
+      },
+      {
         "id": "block",
         "type": "plugin.plugin_forge.imagine",
         "typeVersion": 1,
@@ -134,6 +149,7 @@
           "width": "{option_width}",
           "height": "{option_height}",
           "seed": "{option_seed}",
+          "model": "{option_model}",
           "variable": "img"
         },
         "position": {
@@ -235,6 +251,16 @@
       {
         "from": {
           "node": "opt_seed",
+          "port": "option"
+        },
+        "to": {
+          "node": "trigger",
+          "port": "options"
+        }
+      },
+      {
+        "from": {
+          "node": "opt_model",
           "port": "option"
         },
         "to": {

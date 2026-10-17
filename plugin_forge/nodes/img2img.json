@@ -73,6 +73,10 @@
         "type": "string",
         "maxLength": 20
       },
+      "model": {
+        "type": "string",
+        "maxLength": 100
+      },
       "variable": {
         "type": "string",
         "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$"

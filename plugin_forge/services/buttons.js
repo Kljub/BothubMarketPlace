@@ -4,4 +4,5 @@ import { again } from './flow.js';
 export const components = {
   upscale: (ctx, ev) => again(ctx, ev, 'upscale'),
   regen: (ctx, ev) => again(ctx, ev, 'regen'),
+  model: (ctx, ev) => again(ctx, ev, 'model'),
 };

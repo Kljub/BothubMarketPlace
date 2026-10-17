@@ -4,5 +4,5 @@ import { imagine as run } from '../services/flow.js';
 
 /** @type {import('@bothub/sdk').BlockHandler} */
 export default function imagine(ctx, { config, vars, interaction }) {
-  return run(ctx, { prompt: config.prompt, negative: config.negative, steps: config.steps, cfg: config.cfg, width: config.width, height: config.height, seed: config.seed }, vars, interaction);
+  return run(ctx, { prompt: config.prompt, negative: config.negative, steps: config.steps, cfg: config.cfg, width: config.width, height: config.height, seed: config.seed, model: config.model }, vars, interaction);
 }

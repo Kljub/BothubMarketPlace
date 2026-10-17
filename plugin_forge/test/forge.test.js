@@ -133,3 +133,37 @@ test('dropdowns are filled from the Forge server', async () => {
   assert.deepEqual(ctx.fieldOptions.scheduler, [{ value: 'karras', label: 'Karras' }]);
   assert.equal(requestBody(ctx, { prompt: 'x', width: '9999' }, false).width, 2048);
 });
+
+test('several checkpoints: the first is the default, option "model" by number or name, the select under the image', async () => {
+  const api = forge();
+  const list = ['sdxl/juggernautXL_v9.safetensors [abc1]', 'dreamshaper_8.safetensors [def2]', 'flux1-dev.gguf'];
+  const ctx = ctxWith({ api, config: { checkpoint: list } });
+  const model = async (m) => {
+    await runBlock(plugin, 'imagine', ctx, { vars: vars(), interaction: `c-${m}`, config: { prompt: 'cat', model: m, seed: '5' } });
+    await settle();
+    return gen(api).at(-1).json.override_settings.sd_model_checkpoint;
+  };
+  assert.equal(await model(''), list[0]);
+  assert.equal(await model('2'), list[1]);
+  assert.equal(await model('FLUX'), list[2]);
+  assert.equal(await model('juggernautXL_v9'), list[0]);
+  const res = await runBlock(plugin, 'imagine', ctx, { vars: vars(), interaction: 'c-x', config: { prompt: 'cat', model: 'nope' } });
+  assert.match(res.results['.error'], /Unknown model "nope"\. Models: 1\. juggernautXL_v9, 2\. dreamshaper_8, 3\. flux1-dev/);
+  const post = ctx.sent.at(-1).message;
+  const select = post.components[1][0];
+  assert.equal(select.type, 'select');
+  assert.deepEqual(select.options.map((o) => [o.label, o.default]), [['1. juggernautXL_v9', true], ['2. dreamshaper_8', false], ['3. flux1-dev', false]]);
+  await runComponent(plugin, 'model', ctx, { data: select.data, values: [list[1]], handle: 'h-m', user: { id: USER, name: 'u', displayName: 'u' }, guildId: GUILD, channelId: CHANNEL });
+  await settle();
+  const again = gen(api).at(-1).json;
+  assert.deepEqual([again.seed, again.override_settings.sd_model_checkpoint], [5, list[1]], 'same seed, other model');
+  assert.equal(settings.fields.find((f) => f.key === 'checkpoint').max, 25, 'Discord selects show at most 25');
+});
+
+test('one checkpoint: no model select under the image', async () => {
+  const api = forge();
+  const ctx = ctxWith({ api, config: { checkpoint: ['juggernautXL.safetensors [abc]'] } });
+  await runBlock(plugin, 'imagine', ctx, { vars: vars(), interaction: 'cmd', config: { prompt: 'x' } });
+  await settle();
+  assert.equal(ctx.sent.at(-1).message.components.length, 1);
+});

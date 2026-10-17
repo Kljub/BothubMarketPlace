@@ -4,7 +4,7 @@
       "key": "checkpoint",
       "type": "choices",
       "dynamic": true,
-      "max": 1,
+      "max": 25,
       "hint": true
     },
     {

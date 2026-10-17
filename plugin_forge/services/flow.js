@@ -30,6 +30,34 @@ export const pick = (ctx, key) => {
   return String(Array.isArray(v) ? (v[0] ?? '') : v).trim();
 };
 
+/** The checkpoints the admin picked (setting checkpoint, up to 25; the first is the default). */
+export const models = (ctx) => {
+  const v = setting(ctx, 'checkpoint', []);
+  return (Array.isArray(v) ? v : [v]).map((x) => String(x ?? '').trim()).filter(Boolean);
+};
+
+/** Short name of a checkpoint title: "sdxl/juggernautXL_v9.safetensors [c9e3]" -> "juggernautXL_v9". */
+export const modelName = (title) => String(title).replace(/\s*\[[0-9a-f]+\]$/i, '').split(/[\\/]/).pop().replace(/\.(safetensors|ckpt|pt|pth|gguf)$/i, '') || String(title);
+
+/**
+ * The checkpoint for a request: empty -> the first picked one; else its
+ * number (1, 2 …), its name or a part of it. Only picked checkpoints; with
+ * none picked, Forge keeps the model it has loaded.
+ */
+export function chooseModel(ctx, wanted) {
+  const list = models(ctx);
+  const w = String(wanted ?? '').trim();
+  if (!w) return list[0] ?? '';
+  if (!list.length) throw new ChoiceError('The admin has not picked any models; leave the model empty.');
+  if (/^\d{1,2}$/.test(w) && list[Number(w) - 1]) return list[Number(w) - 1];
+  const low = w.toLowerCase();
+  const found = list.find((t) => t.toLowerCase() === low || modelName(t).toLowerCase() === low) ?? list.find((t) => t.toLowerCase().includes(low));
+  if (!found) throw new ChoiceError(`Unknown model "${w.slice(0, 60)}". Models: ${list.map((t, i) => `${i + 1}. ${modelName(t)}`).join(', ').slice(0, 1500)}`);
+  return found;
+}
+
+export class ChoiceError extends Error {}
+
 /** The request body: settings, overridden by the command options. */
 export function requestBody(ctx, input, safe) {
   const negative = String(input.negative ?? '').trim() || String(setting(ctx, 'negative_prompt', '')).trim();
@@ -48,7 +76,7 @@ export function requestBody(ctx, input, safe) {
   };
   const sampler = pick(ctx, 'sampler');
   const scheduler = pick(ctx, 'scheduler');
-  const model = pick(ctx, 'checkpoint');
+  const model = chooseModel(ctx, input.model);
   if (sampler) body.sampler_name = sampler;
   if (scheduler) body.scheduler = scheduler;
   // The model stays loaded after the image (no reload for every request).
@@ -127,8 +155,18 @@ export function imageMessage(ctx, { title, userId, spoiler, body, seed, jobId, u
     components: [[
       ...(upscaled ? [] : [{ key: 'upscale', data: jobId, label: 'Upscale', emoji: '🔍', style: 'primary' }]),
       { key: 'regen', data: jobId, label: 'Regenerate', emoji: '🔄', style: 'secondary' },
-    ]],
+    ], ...modelRow(ctx, jobId, body.override_settings?.sd_model_checkpoint)],
   };
+}
+
+/** With two or more picked models: a select "Same image with another model" (same seed). */
+function modelRow(ctx, jobId, current) {
+  const list = models(ctx);
+  if (list.length < 2) return [];
+  return [[{
+    type: 'select', key: 'model', data: jobId, placeholder: 'Same image with another model …',
+    options: list.slice(0, 25).map((t, i) => ({ label: `${i + 1}. ${modelName(t)}`.slice(0, 100), value: t.slice(0, 100), default: t === current })),
+  }]];
 }
 
 // ---------- jobs the buttons repeat ----------
@@ -212,6 +250,12 @@ export async function imagine(ctx, input, vars, handle) {
     return { port: handle ? 'replied' : port, results: { '.error': text } };
   };
   if (!String(input.prompt ?? '').trim()) return fail('failed', 'Write a prompt.');
+  try {
+    chooseModel(ctx, input.model);
+  } catch (err) {
+    if (err instanceof ChoiceError) return fail('failed', err.message);
+    throw err;
+  }
   if (!/^\d{17,20}$/.test(channelId)) return fail('failed', 'No channel to post the image in.');
   const quota = await takeQuota(ctx, guildId, userId);
   if (!quota.ok) return fail('limited', `You reached ${quota.limit} images this hour. More at <t:${Math.floor(quota.resetAt / 1000)}:t>.`);
@@ -231,7 +275,10 @@ export async function imagine(ctx, input, vars, handle) {
   return { port: handle ? 'replied' : 'queued', results: { '': id, '.width': String(body.width), '.height': String(body.height) } };
 }
 
-/** The buttons: Upscale (same seed, hires fix) and Regenerate (new seed). */
+/**
+ * The buttons: Upscale (same seed, hires fix), Regenerate (new seed) and the
+ * model select (same seed, the chosen model).
+ */
 export async function again(ctx, ev, kind) {
   const info = await readJson(ctx, `job:${String(ev.data).slice(0, 32)}`, null);
   if (!info?.body) return ctx.interaction.reply(ev.handle, '⌛ This image is too old for that; run the command again.', { ephemeral: true });
@@ -255,6 +302,13 @@ export async function again(ctx, ev, kind) {
       body.denoising_strength = num(setting(ctx, 'upscale_strength', '0.4'), 0.4, 0.05, 1);
       body.hr_second_pass_steps = 0;
     }
+  } else if (kind === 'model') {
+    const model = String(ev.values?.[0] ?? '');
+    if (!models(ctx).includes(model)) return ctx.interaction.reply(ev.handle, '❌ That model is not offered any more.', { ephemeral: true });
+    title = `🧬 ${modelName(model)}`.slice(0, 256);
+    body.seed = info.seed;
+    body.override_settings = { sd_model_checkpoint: model };
+    body.override_settings_restore_afterwards = false;
   } else {
     body.seed = -1;
   }

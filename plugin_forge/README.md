@@ -5,8 +5,8 @@ server in Discord, like the ArcEnCiel plugin.
 
 | Command | What it does |
 |---|---|
-| `/forge-imagine prompt [neg_prompt] [steps] [cfg] [width] [height] [seed]` | Text to image |
-| `/forge-img2img image prompt [strength] [neg_prompt] [steps] [seed]` | A new image from your image |
+| `/forge-imagine prompt [neg_prompt] [steps] [cfg] [width] [height] [seed] [model]` | Text to image |
+| `/forge-img2img image prompt [strength] [neg_prompt] [steps] [seed] [model]` | A new image from your image |
 
 The image comes into the channel with a second embed: prompt, negative
 prompt, seed, size, steps, CFG, sampler and model. Buttons under it:
@@ -14,6 +14,8 @@ prompt, seed, size, steps, CFG, sampler and model. Buttons under it:
 - **🔍 Upscale**: the same image (same seed) again with hires fix, 1.5× or 2×
   (upscaler and strength in the settings). For img2img: the same image bigger.
 - **🔄 Regenerate**: the same request with a new seed.
+- **Model menu** (with two or more checkpoints): the same image (same seed)
+  with another of the picked models.
 
 Forge works on one image at a time: the plugin queues the requests, the
 answer shows the place in the queue and then the progress in %.
@@ -29,6 +31,9 @@ answer shows the place in the queue and then the progress in %.
 3. Plugin settings: checkpoint, sampler, scheduler and upscaler are
    dropdowns filled from your Forge server (every 30 minutes and when the
    plugin starts); size, steps, CFG, negative prompt, NSFW, hourly limit.
+   Checkpoints: pick up to 25 (Discord menus show at most 25). The first is
+   the default; members pick another with the option `model` (its number,
+   name or a part of it) or the menu under the image.
 
 NSFW: only when allowed and only in age-restricted channels (as spoilers).
 Elsewhere the plugin adds NSFW terms to the negative prompt; that is no
