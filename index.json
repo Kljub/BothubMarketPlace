@@ -1580,6 +1580,39 @@
       "voice": false
     },
     {
+      "id": "plugin_wichteln",
+      "version": "1.0.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_wichteln-1.0.0/plugin_wichteln-1.0.0.zip",
+      "sha256": "6a64a3ee5de3295322b4205061010876fb439854bf8a9df5c3a485d1f10f9d55",
+      "size": 11261,
+      "name": "Wichteln",
+      "description": "Wichteln (Secret Santa): members join with a button, the bot draws the names and sends everybody by DM whom they give a present.",
+      "developer": {
+        "name": "BotHub"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "🎁",
+      "category": "fun",
+      "sdk": {
+        "version": 1,
+        "permissions": [
+          "storage",
+          "scheduler",
+          "discord.messages.send",
+          "discord.interactions.reply",
+          "discord.modals"
+        ]
+      },
+      "layers": {
+        "commands": 1,
+        "events": 0,
+        "services": 2,
+        "nodes": 1,
+        "dashboard": 1
+      },
+      "voice": false
+    },
+    {
       "id": "plugin_work",
       "version": "1.0.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_work-1.0.0/plugin_work-1.0.0.zip",
