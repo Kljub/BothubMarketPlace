@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "id": "plugin_wichteln",
+  "name": "Wichteln",
+  "version": "1.0.0",
+  "description": "Wichteln (Secret Santa): members join with a button, the bot draws the names and sends everybody by DM whom they give a present.",
+  "developer": {
+    "name": "BotHub"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "sdk": {
+    "version": 1,
+    "permissions": [
+      "storage",
+      "scheduler",
+      "discord.messages.send",
+      "discord.interactions.reply",
+      "discord.modals"
+    ]
+  },
+  "main": "index.js",
+  "commands": [
+    "commands/wichteln.json"
+  ],
+  "nodes": [
+    "start"
+  ],
+  "lang": {
+    "en": "lang/en.json",
+    "de": "lang/de.json"
+  },
+  "icon": "🎁",
+  "category": "fun",
+  "services": {
+    "tasks": [
+      {
+        "name": "deliver",
+        "every": "1m"
+      },
+      {
+        "name": "cleanup",
+        "every": "6h"
+      }
+    ]
+  },
+  "dashboard": {
+    "settings": "dashboard/settings.json"
+  }
+}

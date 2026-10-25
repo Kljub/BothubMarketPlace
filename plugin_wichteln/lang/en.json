@@ -1,0 +1,16 @@
+{
+  "plugin.plugin_wichteln.name": "Secret Santa",
+  "plugin.plugin_wichteln.description": "Secret Santa: members join with a button, the bot draws the names and sends everybody by DM whom they give a present.",
+  "plugin.plugin_wichteln.setting.language": "Language of the messages",
+  "plugin.plugin_wichteln.setting.language.de": "German",
+  "plugin.plugin_wichteln.setting.language.en": "English",
+  "plugin.plugin_wichteln.setting.color": "Embed color",
+  "plugin.plugin_wichteln.node.start.label": "Start Secret Santa",
+  "plugin.plugin_wichteln.node.start.description": "Posts a Secret Santa round with buttons to join; whoever starts it draws the names.",
+  "plugin.plugin_wichteln.node.start.port.replied": "Replied",
+  "plugin.plugin_wichteln.node.start.port.failed": "Failed",
+  "plugin.plugin_wichteln.node.start.result": "Round ID",
+  "plugin.plugin_wichteln.node.start.config.title": "Name of the round",
+  "plugin.plugin_wichteln.node.start.config.budget": "Budget",
+  "plugin.plugin_wichteln.node.start.config.date": "Gift exchange (date)"
+}

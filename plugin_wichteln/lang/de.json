@@ -1,0 +1,16 @@
+{
+  "plugin.plugin_wichteln.name": "Wichteln",
+  "plugin.plugin_wichteln.description": "Wichteln: Mitglieder machen per Button mit, der Bot zieht die Namen und schickt jedem per DM, wen er beschenkt.",
+  "plugin.plugin_wichteln.setting.language": "Sprache der Nachrichten",
+  "plugin.plugin_wichteln.setting.language.de": "Deutsch",
+  "plugin.plugin_wichteln.setting.language.en": "Englisch",
+  "plugin.plugin_wichteln.setting.color": "Embed-Farbe",
+  "plugin.plugin_wichteln.node.start.label": "Wichteln starten",
+  "plugin.plugin_wichteln.node.start.description": "Postet eine Wichtel-Runde mit Buttons zum Mitmachen; wer sie startet, lost aus.",
+  "plugin.plugin_wichteln.node.start.port.replied": "Beantwortet",
+  "plugin.plugin_wichteln.node.start.port.failed": "Fehlgeschlagen",
+  "plugin.plugin_wichteln.node.start.result": "Runden-ID",
+  "plugin.plugin_wichteln.node.start.config.title": "Name der Runde",
+  "plugin.plugin_wichteln.node.start.config.budget": "Budget",
+  "plugin.plugin_wichteln.node.start.config.date": "Bescherung (Datum)"
+}

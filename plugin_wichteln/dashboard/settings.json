@@ -1,0 +1,18 @@
+{
+  "fields": [
+    {
+      "key": "language",
+      "type": "select",
+      "options": [
+        "de",
+        "en"
+      ],
+      "default": "de"
+    },
+    {
+      "key": "color",
+      "type": "color",
+      "default": "#c0392b"
+    }
+  ]
+}

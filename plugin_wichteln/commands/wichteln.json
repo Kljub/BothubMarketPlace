@@ -1,0 +1,131 @@
+{
+  "name": "wichteln",
+  "description": "Start a Wichteln (Secret Santa) round",
+  "graph": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "trigger",
+        "type": "trigger.slash",
+        "typeVersion": 1,
+        "config": {
+          "command_name": "wichteln",
+          "description": "Start a Wichteln (Secret Santa) round",
+          "permissions": {
+            "allowed_roles": [
+              {
+                "id": "everyone"
+              }
+            ],
+            "banned_roles": [],
+            "required_permissions": [
+              "manage_guild"
+            ],
+            "banned_channels": [],
+            "hide_without_permission": true
+          }
+        },
+        "position": {
+          "x": 400,
+          "y": 240
+        }
+      },
+      {
+        "id": "option_title",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "title",
+          "description": "Name of the round, e.g. Christmas 2026",
+          "required": false,
+          "variable": "title"
+        },
+        "position": {
+          "x": 100,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_budget",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "budget",
+          "description": "Budget per present, e.g. 20 €",
+          "required": false,
+          "variable": "budget"
+        },
+        "position": {
+          "x": 400,
+          "y": 40
+        }
+      },
+      {
+        "id": "option_date",
+        "type": "option.text",
+        "typeVersion": 1,
+        "config": {
+          "name": "date",
+          "description": "When the presents are given, e.g. 24 December",
+          "required": false,
+          "variable": "date"
+        },
+        "position": {
+          "x": 700,
+          "y": 40
+        }
+      },
+      {
+        "id": "step",
+        "type": "plugin.plugin_wichteln.start",
+        "typeVersion": 1,
+        "config": {
+          "title": "{option_title}",
+          "budget": "{option_budget}",
+          "date": "{option_date}",
+          "variable": "wichteln"
+        },
+        "position": {
+          "x": 400,
+          "y": 420
+        }
+      },
+      {
+        "id": "error",
+        "type": "utility.error_handler",
+        "typeVersion": 1,
+        "config": {
+          "variable": "error"
+        },
+        "position": {
+          "x": 400,
+          "y": 700
+        }
+      },
+      {
+        "id": "error_reply",
+        "type": "action.send_message",
+        "typeVersion": 1,
+        "config": {
+          "message": {
+            "mode": "normal",
+            "content": "❌ {error}"
+          },
+          "target": "reply",
+          "ephemeral": true
+        },
+        "position": {
+          "x": 720,
+          "y": 700
+        }
+      }
+    ],
+    "edges": [
+      { "from": { "node": "option_title", "port": "option" }, "to": { "node": "trigger", "port": "options" } },
+      { "from": { "node": "option_budget", "port": "option" }, "to": { "node": "trigger", "port": "options" } },
+      { "from": { "node": "option_date", "port": "option" }, "to": { "node": "trigger", "port": "options" } },
+      { "from": { "node": "trigger", "port": "next" }, "to": { "node": "step", "port": "in" } },
+      { "from": { "node": "error", "port": "next" }, "to": { "node": "error_reply", "port": "in" } }
+    ]
+  }
+}
