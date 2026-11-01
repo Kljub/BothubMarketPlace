@@ -19,6 +19,11 @@ Secret Santa for a server.
   so nobody draws themselves and everybody gets exactly one present. Every
   member gets a DM: whom they give a present to, the wish list, budget and
   date.
+- **Draw again** (host only, after a confirmation, at most once a minute): a
+  new draw where nobody keeps their old receiver. Everybody gets a new DM; wish
+  lists and addresses stay.
+- A round drawn by an older version gets the new buttons with the next click on
+  **Who do I give to?**.
 - Closed DMs: the host is told privately who got no DM; those members click
   **Who do I give to?** in the round's message and see their name privately.
 - **Cancel** (host only) ends the round before the draw.

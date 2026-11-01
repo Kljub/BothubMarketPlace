@@ -1,8 +1,9 @@
 // Buttons of a round: join, leave, wish list and address (members), draw and
 // cancel (only the member who started it), and after the draw "Who do I
 // give to?" (shows the own name privately, for closed DMs). Wish list and
-// address stay open after the draw: the giver gets the change by DM.
-import { deliver, drawPairs, eventMessage, getEvent, locked, MAX_ADDRESS, MAX_MEMBERS, MAX_WISH, MIN_MEMBERS, removeEvent, saveEvent, sendChange, t } from './wichteln.js';
+// address stay open after the draw: the giver gets the change by DM. The
+// member who started it can draw again, after a confirmation.
+import { deliver, drawPairs, eventMessage, getEvent, locked, MAX_ADDRESS, MAX_MEMBERS, MAX_WISH, MIN_MEMBERS, removeEvent, REROLL_WAIT_MS, rerollPairs, saveEvent, sendChange, t, UI } from './wichteln.js';
 
 const say = (ctx, ev, text) => ctx.interaction.reply(ev.handle, text, { ephemeral: true });
 
@@ -71,12 +72,46 @@ const handlers = {
     if (e.members.length < MIN_MEMBERS) return say(ctx, ev, t(ctx, 'too_few', { min: MIN_MEMBERS }));
     e.pairs = drawPairs(e.members, (min, max) => ctx.utils.random(min, max));
     e.drawn = true;
+    e.drawnAt = Date.now();
+    e.ui = UI;
     e.pending = [...e.members];
     e.failed = [];
     await saveEvent(ctx, e);
     await ctx.interaction.update(ev.handle, eventMessage(ctx, e));
     await deliver(ctx, e);
     // Closed DMs: the host learns it now; DMs the task sends later are not reported here.
+    if (e.failed.length) await ctx.interaction.followUp(ev.handle, t(ctx, 'no_dm', { list: e.failed.map((id) => `<@${id}>`).join(', ') }), { ephemeral: true });
+  },
+
+  async reroll(ctx, ev) {
+    const e = await eventOf(ctx, ev);
+    if (!e) return;
+    if (ev.user.id !== e.host) return say(ctx, ev, t(ctx, 'host_only', { host: `<@${e.host}>` }));
+    if (!e.drawn) return say(ctx, ev, t(ctx, 'over'));
+    await ctx.interaction.reply(ev.handle, {
+      content: t(ctx, 'reroll_ask', { count: e.members.length }),
+      components: [[{ key: 'reroll_yes', data: e.id, label: t(ctx, 'reroll_yes'), emoji: '🎲', style: 'danger' }]],
+    }, { ephemeral: true });
+  },
+
+  async reroll_yes(ctx, ev) {
+    const e = await eventOf(ctx, ev);
+    if (!e) return;
+    if (ev.user.id !== e.host) return say(ctx, ev, t(ctx, 'host_only', { host: `<@${e.host}>` }));
+    if (!e.drawn) return say(ctx, ev, t(ctx, 'over'));
+    if (Date.now() - (e.drawnAt ?? 0) < REROLL_WAIT_MS) {
+      return ctx.interaction.update(ev.handle, { content: t(ctx, 'reroll_wait'), components: [] });
+    }
+    e.pairs = rerollPairs(e.members, e.pairs, (min, max) => ctx.utils.random(min, max));
+    e.drawnAt = Date.now();
+    // DMs of the old draw still waiting must not go out any more.
+    e.pending = [...e.members];
+    e.rerolled = [...e.members];
+    e.updated = [];
+    e.failed = [];
+    await saveEvent(ctx, e);
+    await ctx.interaction.update(ev.handle, { content: t(ctx, 'reroll_done'), components: [] });
+    await deliver(ctx, e);
     if (e.failed.length) await ctx.interaction.followUp(ev.handle, t(ctx, 'no_dm', { list: e.failed.map((id) => `<@${id}>`).join(', ') }), { ephemeral: true });
   },
 
@@ -92,11 +127,19 @@ const handlers = {
   async reveal(ctx, ev) {
     const e = await eventOf(ctx, ev);
     if (!e) return;
+    // A round drawn by an older version: this click brings the new buttons.
+    const stale = e.drawn && e.ui !== UI;
+    if (stale) {
+      e.ui = UI;
+      await saveEvent(ctx, e);
+      await ctx.interaction.update(ev.handle, eventMessage(ctx, e));
+    }
+    const answer = (text) => (stale ? ctx.interaction.followUp(ev.handle, text, { ephemeral: true }) : say(ctx, ev, text));
     const receiver = e.drawn ? e.pairs[ev.user.id] : null;
-    if (!receiver) return say(ctx, ev, t(ctx, 'not_member'));
+    if (!receiver) return answer(t(ctx, 'not_member'));
     const wish = e.wishes[receiver];
     const address = e.addresses?.[receiver];
-    await say(ctx, ev, `${t(ctx, 'you_give', { name: `${e.names[receiver] ?? receiver} (<@${receiver}>)` })}${wish ? `\n📝 ${wish}` : ''}${address ? `\n📮 ${address}` : ''}`);
+    await answer(`${t(ctx, 'you_give', { name: `${e.names[receiver] ?? receiver} (<@${receiver}>)` })}${wish ? `\n📝 ${wish}` : ''}${address ? `\n📮 ${address}` : ''}`);
   },
 };
 

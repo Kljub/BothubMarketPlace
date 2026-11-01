@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createTestContext, runBlock, runComponent, runTask } from '#sdk-testing';
 import plugin from '../index.js';
-import { drawPairs } from '../services/wichteln.js';
+import { drawPairs, rerollPairs } from '../services/wichteln.js';
 
 const GUILD = '100000000000000001';
 const HOST = '200000000000000001';
@@ -143,7 +143,7 @@ test('address: only the giver gets it; a change after the draw goes to the giver
 
   await click(ctx, 'draw', id, HOST);
   const drawn = ctx.answers.filter((a) => a.kind === 'update').at(-1).message;
-  assert.deepEqual(drawn.components[0].map((b) => b.key), ['reveal', 'address', 'wish']);
+  assert.deepEqual(drawn.components[0].map((b) => b.key), ['reveal', 'address', 'wish', 'reroll']);
   const first = ctx.sent.filter((m) => m.channelId.startsWith('dm:'));
   const toGiver = first.find((m) => m.message.embeds[0].description.includes(`<@${users[0]}>`));
   assert.equal(toGiver.message.embeds[0].fields.at(-1).value, 'Musterstraße 1, 12345 Berlin');
@@ -173,4 +173,97 @@ test('address: only the giver gets it; a change after the draw goes to the giver
   const e = JSON.parse(await ctx.storage.get(`event:${id}`));
   assert.deepEqual(e.updated, []);
   assert.deepEqual(e.pending, []);
+});
+
+test('new draw: nobody keeps their receiver, also when chance does not help', () => {
+  const members = ['a', 'b', 'c', 'd', 'e'];
+  const anyRandom = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
+  const noChance = (min) => min;
+  for (const random of [anyRandom, noChance]) {
+    for (let n = 3; n <= members.length; n++) {
+      const group = members.slice(0, n);
+      const old = drawPairs(group, noChance);
+      const pairs = rerollPairs(group, old, random);
+      assert.deepEqual(Object.keys(pairs).sort(), [...group].sort());
+      assert.deepEqual(Object.values(pairs).sort(), [...group].sort());
+      for (const giver of group) {
+        assert.notEqual(pairs[giver], giver);
+        assert.notEqual(pairs[giver], old[giver]);
+      }
+    }
+  }
+});
+
+async function drawnRound(ctx) {
+  const id = await round(ctx);
+  for (const u of users) await click(ctx, 'join', id, u);
+  await click(ctx, 'draw', id, HOST);
+  return id;
+}
+
+const backdate = async (ctx, id, change) => {
+  const e = JSON.parse(await ctx.storage.get(`event:${id}`));
+  change(e);
+  await ctx.storage.set(`event:${id}`, JSON.stringify(e));
+};
+
+test('draw again: host only, confirmed, once a minute, a new DM for everybody', async () => {
+  const ctx = ctxWith();
+  const id = await drawnRound(ctx);
+  const before = JSON.parse(await ctx.storage.get(`event:${id}`));
+
+  await click(ctx, 'reroll', id, users[0]);
+  assert.match(last(ctx).message, /Nur <@/);
+  await click(ctx, 'reroll_yes', id, users[0]);
+  assert.match(last(ctx).message, /Nur <@/);
+
+  await click(ctx, 'reroll', id, HOST);
+  assert.equal(last(ctx).ephemeral, true);
+  assert.equal(last(ctx).message.components[0][0].key, 'reroll_yes');
+  const sentBefore = ctx.sent.length;
+
+  await click(ctx, 'reroll_yes', id, HOST);
+  assert.match(last(ctx).message.content, /gerade erst/);
+  assert.equal(ctx.sent.length, sentBefore, 'too soon: no DM');
+
+  await backdate(ctx, id, (e) => { e.drawnAt = Date.now() - 61_000; });
+  await click(ctx, 'reroll_yes', id, HOST);
+  assert.match(last(ctx).message.content, /Neu ausgelost/);
+  assert.deepEqual(last(ctx).message.components, []);
+
+  const dms = ctx.sent.slice(sentBefore);
+  assert.equal(dms.length, 4);
+  const after = JSON.parse(await ctx.storage.get(`event:${id}`));
+  for (const dm of dms) {
+    const giver = dm.channelId.slice(3);
+    assert.match(dm.message.embeds[0].description, /neu ausgelost/);
+    assert.ok(dm.message.embeds[0].description.includes(`<@${after.pairs[giver]}>`));
+    assert.notEqual(after.pairs[giver], before.pairs[giver]);
+  }
+  assert.deepEqual(after.rerolled, []);
+  assert.deepEqual(after.pending, []);
+
+  // A later change is a change again, not a new draw.
+  await addressModal(ctx, id, users[0], 'Weg 3');
+  const change = ctx.sent.at(-1);
+  assert.match(change.message.embeds[0].description, /geändert/);
+  assert.equal(change.channelId, `dm:${Object.keys(after.pairs).find((g) => after.pairs[g] === users[0])}`);
+});
+
+test('a round drawn by an older version gets the new buttons with the next reveal', async () => {
+  const ctx = ctxWith();
+  const id = await drawnRound(ctx);
+  await backdate(ctx, id, (e) => { delete e.ui; delete e.drawnAt; });
+
+  await click(ctx, 'reveal', id, users[1]);
+  const answers = ctx.answers.slice(-2);
+  assert.equal(answers[0].kind, 'update');
+  assert.deepEqual(answers[0].message.components[0].map((b) => b.key), ['reveal', 'address', 'wish', 'reroll']);
+  assert.equal(answers[1].kind, 'followUp');
+  assert.equal(answers[1].ephemeral, true);
+  assert.match(answers[1].message, /Du beschenkst/);
+
+  await click(ctx, 'reveal', id, users[1]);
+  assert.notEqual(last(ctx).kind, 'followUp', 'only once');
+  assert.match(last(ctx).message, /Du beschenkst/);
 });

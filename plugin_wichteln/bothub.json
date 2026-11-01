@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "plugin_wichteln",
   "name": "Wichteln",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Wichteln (Secret Santa): members join with a button, the bot draws the names and sends everybody by DM whom they give a present.",
   "developer": {
     "name": "BotHub"

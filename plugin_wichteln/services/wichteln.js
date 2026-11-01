@@ -2,8 +2,11 @@
 // A round lives in storage "event:<id>" = { id, guild, host, title, budget,
 // date, members: [id], names: {id: name}, wishes: {id: text},
 // addresses: {id: text}, drawn, cancelled, pairs: {giver: receiver},
-// pending: [giver], failed: [giver], updated: [giver], at }
+// pending: [giver], failed: [giver], updated: [giver], rerolled: [giver],
+// drawnAt, ui, at }
 // "updated": givers whose next DM is a change (new address or wish list).
+// "rerolled": givers whose next DM is the name of a new draw.
+// "ui": the version of the buttons in the round's message.
 // and in the list "events" (task "cleanup" removes old rounds).
 import { readJson, setting, writeJson } from './util.js';
 
@@ -11,6 +14,11 @@ export const MIN_MEMBERS = 3;
 export const MAX_MEMBERS = 100;
 export const MAX_WISH = 300;
 export const MAX_ADDRESS = 300;
+// A new draw sends a DM to everybody, so it waits this long after the last draw.
+export const REROLL_WAIT_MS = 60 * 1000;
+// Raise this when the buttons after the draw change: a drawn round gets the
+// new buttons with the next click on "Who do I give to?".
+export const UI = 2;
 // Rounds are kept this long after the start (then the task removes them).
 export const KEEP_MS = 90 * 24 * 60 * 60 * 1000;
 
@@ -30,6 +38,11 @@ const TEXT = {
     wish: 'Wunschzettel',
     address: 'Adresse',
     draw: 'Auslosen',
+    reroll: 'Neu auslosen',
+    reroll_ask: '⚠️ Wirklich neu auslosen? Alle {count} Teilnehmer bekommen per DM einen neuen Namen, der alte gilt nicht mehr. Wunschzettel und Adressen bleiben.',
+    reroll_yes: 'Ja, neu auslosen',
+    reroll_done: '🎲 Neu ausgelost. Alle bekommen ihren neuen Namen per DM.',
+    reroll_wait: '⏳ Die Namen wurden gerade erst gezogen. Versuch es in einer Minute noch einmal.',
     cancel: 'Abbrechen',
     reveal: 'Wen beschenke ich?',
     over: '⌛ Dieses Wichteln gibt es nicht mehr.',
@@ -57,6 +70,7 @@ const TEXT = {
     dm_wish: 'Wunschzettel',
     dm_no_wish: '{name} hat keinen Wunschzettel geschrieben.',
     dm_address: 'Adresse',
+    dm_rerolled: '🎲 **Es wurde neu ausgelost!** Dein alter Name gilt nicht mehr.',
     dm_updated: '✏️ **{name}** hat Adresse oder Wunschzettel geändert. Hier der aktuelle Stand:',
     dm_secret: 'Psst – nicht verraten!',
     you_give: '🎁 Du beschenkst **{name}**.',
@@ -79,6 +93,11 @@ const TEXT = {
     wish: 'Wish list',
     address: 'Address',
     draw: 'Draw names',
+    reroll: 'Draw again',
+    reroll_ask: '⚠️ Really draw again? All {count} members get a new name by DM, the old one no longer counts. Wish lists and addresses stay.',
+    reroll_yes: 'Yes, draw again',
+    reroll_done: '🎲 Drawn again. Everybody gets their new name by DM.',
+    reroll_wait: '⏳ The names were drawn just now. Try again in a minute.',
     cancel: 'Cancel',
     reveal: 'Who do I give to?',
     over: '⌛ This Secret Santa no longer exists.',
@@ -106,6 +125,7 @@ const TEXT = {
     dm_wish: 'Wish list',
     dm_no_wish: '{name} wrote no wish list.',
     dm_address: 'Address',
+    dm_rerolled: '🎲 **The names were drawn again!** Your old name no longer counts.',
     dm_updated: '✏️ **{name}** changed their address or wish list. This is the current state:',
     dm_secret: 'Psst – keep it secret!',
     you_give: '🎁 You give a present to **{name}**.',
@@ -173,6 +193,18 @@ export function drawPairs(members, random) {
   return pairs;
 }
 
+/**
+ * A new draw where nobody keeps their old receiver. Random circles first; the
+ * old circle backwards always qualifies (from 3 members).
+ */
+export function rerollPairs(members, old, random) {
+  for (let i = 0; i < 50; i++) {
+    const pairs = drawPairs(members, random);
+    if (members.every((giver) => pairs[giver] !== old[giver])) return pairs;
+  }
+  return Object.fromEntries(members.map((giver) => [old[giver], giver]));
+}
+
 /** The round's message: embed plus the buttons of its state. */
 export function eventMessage(ctx, e) {
   const fields = [];
@@ -189,6 +221,7 @@ export function eventMessage(ctx, e) {
           { key: 'reveal', data: e.id, label: t(ctx, 'reveal'), emoji: '🎁', style: 'primary' },
           { key: 'address', data: e.id, label: t(ctx, 'address'), emoji: '📮', style: 'secondary' },
           { key: 'wish', data: e.id, label: t(ctx, 'wish'), emoji: '📝', style: 'secondary' },
+          { key: 'reroll', data: e.id, label: t(ctx, 'reroll'), emoji: '🎲', style: 'danger' },
         ]]
       : [
           [
@@ -218,7 +251,9 @@ export function giftMessage(ctx, e, giver) {
   fields.push({ name: t(ctx, 'dm_wish'), value: e.wishes[receiver] || t(ctx, 'dm_no_wish', { name }) });
   const address = e.addresses?.[receiver];
   if (address) fields.push({ name: t(ctx, 'dm_address'), value: address });
-  const head = e.updated?.includes(giver) ? `${t(ctx, 'dm_updated', { name })}\n\n` : '';
+  const head = e.rerolled?.includes(giver)
+    ? `${t(ctx, 'dm_rerolled')}\n\n`
+    : e.updated?.includes(giver) ? `${t(ctx, 'dm_updated', { name })}\n\n` : '';
   return {
     embeds: [{
       color: color(ctx),
@@ -264,6 +299,7 @@ export async function deliver(ctx, e, budgetMs = 6000) {
     }
     e.pending.shift();
     if (e.updated) e.updated = e.updated.filter((id) => id !== giver);
+    if (e.rerolled) e.rerolled = e.rerolled.filter((id) => id !== giver);
   }
   await saveEvent(ctx, e);
   return e;
