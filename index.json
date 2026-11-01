@@ -1591,7 +1591,14 @@
       "version": "1.1.0",
       "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_wichteln-1.1.0/plugin_wichteln-1.1.0.zip",
       "sha256": "7408bc47456bfb0bcb5846a1bb9e90980ad88d547fd172053bfba4dc5b4f042a",
-      "size": 12474,
+      "size": 12474
+    },
+    {
+      "id": "plugin_wichteln",
+      "version": "1.2.0",
+      "url": "https://github.com/Kljub/BothubMarketPlace/releases/download/plugin_wichteln-1.2.0/plugin_wichteln-1.2.0.zip",
+      "sha256": "88a49cceb0c9d5708d18fa537974cd82327f56648d673a989c1a21e85fee31c3",
+      "size": 13573,
       "name": "Wichteln",
       "description": "Wichteln (Secret Santa): members join with a button, the bot draws the names and sends everybody by DM whom they give a present.",
       "developer": {
