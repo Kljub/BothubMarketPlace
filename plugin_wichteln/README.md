@@ -15,8 +15,9 @@ Secret Santa for a server.
 - After the draw, **Address** and **Wish list** stay open: a member who
   changes them gives their giver a new DM with the current state, marked as a
   change. The same text again sends nothing.
-- **Draw names** (host only, from 3 members): the bot draws a shuffled circle,
-  so nobody draws themselves and everybody gets exactly one present. Every
+- **Draw names** (host only, from 3 members): the bot draws at random: nobody draws
+  themselves, everybody gets exactly one present, and every such result is
+  equally likely. Every
   member gets a DM: whom they give a present to, the wish list, budget and
   date.
 - **Draw again** (host only, after a confirmation, at most once a minute): a

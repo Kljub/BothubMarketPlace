@@ -267,3 +267,31 @@ test('a round drawn by an older version gets the new buttons with the next revea
   assert.notEqual(last(ctx).kind, 'followUp', 'only once');
   assert.match(last(ctx).message, /Du beschenkst/);
 });
+
+test('draw: every allowed result is about equally likely', () => {
+  const random = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
+  const members = ['a', 'b', 'c', 'd'];
+  const runs = 18000;
+  const seen = new Map();
+  for (let i = 0; i < runs; i++) {
+    const key = JSON.stringify(drawPairs(members, random));
+    seen.set(key, (seen.get(key) ?? 0) + 1);
+  }
+  assert.equal(seen.size, 9, '4 members have 9 possible results, two members drawing each other included');
+  for (const count of seen.values()) assert.ok(Math.abs(count - runs / 9) < runs / 9 * 0.2, `count ${count}`);
+});
+
+test('new draw: also works when the old draw had members drawing each other', () => {
+  const noChance = (min) => min;
+  const random = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
+  const members = ['a', 'b', 'c', 'd'];
+  const old = { a: 'b', b: 'a', c: 'd', d: 'c' };
+  for (const r of [random, noChance]) {
+    const pairs = rerollPairs(members, old, r);
+    assert.deepEqual(Object.values(pairs).sort(), members);
+    for (const giver of members) {
+      assert.notEqual(pairs[giver], giver);
+      assert.notEqual(pairs[giver], old[giver]);
+    }
+  }
+});

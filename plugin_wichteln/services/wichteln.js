@@ -176,33 +176,56 @@ export async function removeEvent(ctx, id) {
   await writeJson(ctx, 'events', (await readJson(ctx, 'events', [])).filter((x) => x !== id));
 }
 
-/**
- * Gives each member another member: a shuffled circle, everybody gives to the
- * next one. Nobody draws themselves, and nobody is left without a present.
- */
-export function drawPairs(members, random) {
-  const order = [...members];
+const shuffled = (items, random) => {
+  const order = [...items];
   for (let i = order.length - 1; i > 0; i--) {
     const j = random(0, i);
     [order[i], order[j]] = [order[j], order[i]];
   }
+  return order;
+};
+
+// Shuffles until a result fits, so every allowed result is equally likely.
+// From 3 members at least 1 in 12 fits; the search below is only a safety net.
+const DRAW_TRIES = 1000;
+
+function assign(members, banned, random) {
+  const allowed = (giver, receiver) => giver !== receiver && banned[giver] !== receiver;
+  for (let i = 0; i < DRAW_TRIES; i++) {
+    const order = shuffled(members, random);
+    if (members.every((giver, k) => allowed(giver, order[k]))) {
+      return Object.fromEntries(members.map((giver, k) => [giver, order[k]]));
+    }
+  }
   const pairs = {};
-  order.forEach((giver, i) => {
-    pairs[giver] = order[(i + 1) % order.length];
-  });
+  const used = new Set();
+  const place = (k) => {
+    if (k === members.length) return true;
+    for (const receiver of shuffled(members, random)) {
+      if (used.has(receiver) || !allowed(members[k], receiver)) continue;
+      used.add(receiver);
+      pairs[members[k]] = receiver;
+      if (place(k + 1)) return true;
+      used.delete(receiver);
+    }
+    return false;
+  };
+  place(0);
   return pairs;
 }
 
 /**
- * A new draw where nobody keeps their old receiver. Random circles first; the
- * old circle backwards always qualifies (from 3 members).
+ * Gives each member another member: nobody draws themselves, and everybody
+ * gets exactly one present. Any such result is equally likely, so two members
+ * can draw each other and knowing one pair tells nothing about the others.
  */
+export function drawPairs(members, random) {
+  return assign(members, {}, random);
+}
+
+/** A new draw where nobody keeps their old receiver either. */
 export function rerollPairs(members, old, random) {
-  for (let i = 0; i < 50; i++) {
-    const pairs = drawPairs(members, random);
-    if (members.every((giver) => pairs[giver] !== old[giver])) return pairs;
-  }
-  return Object.fromEntries(members.map((giver) => [old[giver], giver]));
+  return assign(members, old, random);
 }
 
 /** The round's message: embed plus the buttons of its state. */
