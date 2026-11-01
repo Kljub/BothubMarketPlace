@@ -9,6 +9,12 @@ Secret Santa for a server.
   shows who is in (max. 100).
 - **Wish list**: a member writes what they would like (optional, max. 300
   characters); the giver gets it with the draw.
+- **Address**: a member enters where the present should go (optional, max.
+  300 characters). Only the giver gets it, in the draw DM and with
+  **Who do I give to?**.
+- After the draw, **Address** and **Wish list** stay open: a member who
+  changes them gives their giver a new DM with the current state, marked as a
+  change. The same text again sends nothing.
 - **Draw names** (host only, from 3 members): the bot draws a shuffled circle,
   so nobody draws themselves and everybody gets exactly one present. Every
   member gets a DM: whom they give a present to, the wish list, budget and

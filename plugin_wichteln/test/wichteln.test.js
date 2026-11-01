@@ -126,3 +126,51 @@ test('only as a command on a server', async () => {
   const out = await runBlock(plugin, 'start', ctx, { vars: {}, config: {} });
   assert.equal(out.port, 'failed');
 });
+
+const addressModal = (ctx, data, user, address) => runComponent(plugin, 'address', ctx, { data, handle: `a${Math.random()}`, user: { id: user, name: user, displayName: user }, guildId: GUILD, fields: { address } }, 'modal');
+
+test('address: only the giver gets it; a change after the draw goes to the giver by DM', async () => {
+  const ctx = ctxWith();
+  const id = await round(ctx);
+  for (const u of users) await click(ctx, 'join', id, u);
+
+  await click(ctx, 'address', id, '200000000000000009');
+  assert.match(last(ctx).message, /machst nicht mit/);
+  await click(ctx, 'address', id, users[0]);
+  assert.equal(last(ctx).kind, 'showModal');
+  await addressModal(ctx, id, users[0], 'Musterstraße 1, 12345 Berlin');
+  assert.match(last(ctx).message, /Adresse gespeichert/);
+
+  await click(ctx, 'draw', id, HOST);
+  const drawn = ctx.answers.filter((a) => a.kind === 'update').at(-1).message;
+  assert.deepEqual(drawn.components[0].map((b) => b.key), ['reveal', 'address', 'wish']);
+  const first = ctx.sent.filter((m) => m.channelId.startsWith('dm:'));
+  const toGiver = first.find((m) => m.message.embeds[0].description.includes(`<@${users[0]}>`));
+  assert.equal(toGiver.message.embeds[0].fields.at(-1).value, 'Musterstraße 1, 12345 Berlin');
+  const others = first.filter((m) => m !== toGiver);
+  for (const m of others) assert.ok(!JSON.stringify(m.message).includes('Musterstraße'), 'nobody else sees the address');
+
+  // Change after the draw: one DM, only to the giver, marked as a change.
+  const before = ctx.sent.length;
+  await addressModal(ctx, id, users[0], 'Neue Straße 2, 54321 Hamburg');
+  assert.match(last(ctx).message, /Adresse geändert/);
+  const change = ctx.sent.slice(before);
+  assert.equal(change.length, 1);
+  assert.equal(change[0].channelId, toGiver.channelId);
+  assert.match(change[0].message.embeds[0].description, /geändert/);
+  assert.equal(change[0].message.embeds[0].fields.at(-1).value, 'Neue Straße 2, 54321 Hamburg');
+
+  // The same text again sends nothing; reveal shows the new address.
+  await addressModal(ctx, id, users[0], 'Neue Straße 2, 54321 Hamburg');
+  assert.equal(ctx.sent.length, before + 1);
+  await click(ctx, 'reveal', id, toGiver.channelId.slice(3));
+  assert.match(last(ctx).message, /📮 Neue Straße 2/);
+
+  // The wish list can change after the draw too.
+  await modal(ctx, id, users[0], 'Tee');
+  assert.match(last(ctx).message, /Wunschzettel geändert/);
+  assert.equal(ctx.sent.length, before + 2);
+  const e = JSON.parse(await ctx.storage.get(`event:${id}`));
+  assert.deepEqual(e.updated, []);
+  assert.deepEqual(e.pending, []);
+});

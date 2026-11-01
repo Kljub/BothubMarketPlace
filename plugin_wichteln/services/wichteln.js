@@ -1,13 +1,16 @@
 // Service "wichteln": the state of a Wichteln round, the draw and the texts.
 // A round lives in storage "event:<id>" = { id, guild, host, title, budget,
-// date, members: [id], names: {id: name}, wishes: {id: text}, drawn,
-// cancelled, pairs: {giver: receiver}, pending: [giver], failed: [giver], at }
+// date, members: [id], names: {id: name}, wishes: {id: text},
+// addresses: {id: text}, drawn, cancelled, pairs: {giver: receiver},
+// pending: [giver], failed: [giver], updated: [giver], at }
+// "updated": givers whose next DM is a change (new address or wish list).
 // and in the list "events" (task "cleanup" removes old rounds).
 import { readJson, setting, writeJson } from './util.js';
 
 export const MIN_MEMBERS = 3;
 export const MAX_MEMBERS = 100;
 export const MAX_WISH = 300;
+export const MAX_ADDRESS = 300;
 // Rounds are kept this long after the start (then the task removes them).
 export const KEEP_MS = 90 * 24 * 60 * 60 * 1000;
 
@@ -20,11 +23,12 @@ const TEXT = {
     members: 'Teilnehmer ({count})',
     nobody: 'Noch niemand.',
     more: '… und {count} weitere',
-    drawn: 'Die Namen sind gezogen! Jeder hat per DM bekommen, wen er beschenkt. Keine DM bekommen? Klick auf **Wen beschenke ich?**.',
+    drawn: 'Die Namen sind gezogen! Jeder hat per DM bekommen, wen er beschenkt. Keine DM bekommen? Klick auf **Wen beschenke ich?**. Adresse oder Wunschzettel geändert? Dein Wichtel bekommt die Änderung per DM.',
     cancelled: 'Dieses Wichteln wurde abgebrochen.',
     join: 'Teilnehmen',
     leave: 'Austreten',
     wish: 'Wunschzettel',
+    address: 'Adresse',
     draw: 'Auslosen',
     cancel: 'Abbrechen',
     reveal: 'Wen beschenke ich?',
@@ -41,11 +45,19 @@ const TEXT = {
     wish_placeholder: 'Ideen für deinen Wichtel (optional)',
     wish_saved: '✅ Wunschzettel gespeichert. Dein Wichtel bekommt ihn mit der Auslosung.',
     wish_removed: '✅ Wunschzettel gelöscht.',
-    wish_too_late: '🔒 Die Namen sind schon gezogen, der Wunschzettel ist schon verschickt.',
+    wish_sent: '✅ Wunschzettel geändert. Dein Wichtel bekommt die Änderung per DM.',
+    address_title: 'Deine Adresse',
+    address_label: 'Wohin soll das Geschenk?',
+    address_placeholder: 'Name, Straße, PLZ, Ort (nur dein Wichtel sieht sie)',
+    address_saved: '✅ Adresse gespeichert. Nur dein Wichtel bekommt sie, mit der Auslosung.',
+    address_sent: '✅ Adresse geändert. Dein Wichtel bekommt die neue Adresse per DM.',
+    address_removed: '✅ Adresse gelöscht.',
     dm_title: '🎁 Wichteln: {title}',
     dm_text: 'Du beschenkst **{name}**!',
     dm_wish: 'Wunschzettel',
     dm_no_wish: '{name} hat keinen Wunschzettel geschrieben.',
+    dm_address: 'Adresse',
+    dm_updated: '✏️ **{name}** hat Adresse oder Wunschzettel geändert. Hier der aktuelle Stand:',
     dm_secret: 'Psst – nicht verraten!',
     you_give: '🎁 Du beschenkst **{name}**.',
     no_dm: '⚠️ Diese Teilnehmer haben keine DM bekommen (DMs geschlossen): {list}. Sie sehen ihren Namen über **Wen beschenke ich?**.',
@@ -60,11 +72,12 @@ const TEXT = {
     members: 'Members ({count})',
     nobody: 'Nobody yet.',
     more: '… and {count} more',
-    drawn: 'The names are drawn! Everybody got a DM with whom they give a present. No DM? Click **Who do I give to?**.',
+    drawn: 'The names are drawn! Everybody got a DM with whom they give a present. No DM? Click **Who do I give to?**. Changed your address or wish list? Your Secret Santa gets the change by DM.',
     cancelled: 'This Secret Santa was cancelled.',
     join: 'Join',
     leave: 'Leave',
     wish: 'Wish list',
+    address: 'Address',
     draw: 'Draw names',
     cancel: 'Cancel',
     reveal: 'Who do I give to?',
@@ -81,11 +94,19 @@ const TEXT = {
     wish_placeholder: 'Ideas for your Secret Santa (optional)',
     wish_saved: '✅ Wish list saved. Your Secret Santa gets it with the draw.',
     wish_removed: '✅ Wish list removed.',
-    wish_too_late: '🔒 The names are already drawn, the wish list was already sent.',
+    wish_sent: '✅ Wish list changed. Your Secret Santa gets the change by DM.',
+    address_title: 'Your address',
+    address_label: 'Where should the present go?',
+    address_placeholder: 'Name, street, postcode, city (only your Secret Santa sees it)',
+    address_saved: '✅ Address saved. Only your Secret Santa gets it, with the draw.',
+    address_sent: '✅ Address changed. Your Secret Santa gets the new address by DM.',
+    address_removed: '✅ Address removed.',
     dm_title: '🎁 Secret Santa: {title}',
     dm_text: 'You give a present to **{name}**!',
     dm_wish: 'Wish list',
     dm_no_wish: '{name} wrote no wish list.',
+    dm_address: 'Address',
+    dm_updated: '✏️ **{name}** changed their address or wish list. This is the current state:',
     dm_secret: 'Psst – keep it secret!',
     you_give: '🎁 You give a present to **{name}**.',
     no_dm: '⚠️ These members got no DM (DMs closed): {list}. They see their name with **Who do I give to?**.',
@@ -164,12 +185,17 @@ export function eventMessage(ctx, e) {
   const rows = e.cancelled
     ? []
     : e.drawn
-      ? [[{ key: 'reveal', data: e.id, label: t(ctx, 'reveal'), emoji: '🎁', style: 'primary' }]]
+      ? [[
+          { key: 'reveal', data: e.id, label: t(ctx, 'reveal'), emoji: '🎁', style: 'primary' },
+          { key: 'address', data: e.id, label: t(ctx, 'address'), emoji: '📮', style: 'secondary' },
+          { key: 'wish', data: e.id, label: t(ctx, 'wish'), emoji: '📝', style: 'secondary' },
+        ]]
       : [
           [
             { key: 'join', data: e.id, label: t(ctx, 'join'), emoji: '✅', style: 'success' },
             { key: 'leave', data: e.id, label: t(ctx, 'leave'), style: 'secondary' },
             { key: 'wish', data: e.id, label: t(ctx, 'wish'), emoji: '📝', style: 'secondary' },
+            { key: 'address', data: e.id, label: t(ctx, 'address'), emoji: '📮', style: 'secondary' },
           ],
           [
             { key: 'draw', data: e.id, label: t(ctx, 'draw'), emoji: '🎲', style: 'primary', disabled: e.members.length < MIN_MEMBERS },
@@ -190,14 +216,35 @@ export function giftMessage(ctx, e, giver) {
   if (e.budget) fields.push({ name: t(ctx, 'budget'), value: e.budget, inline: true });
   if (e.date) fields.push({ name: t(ctx, 'date'), value: e.date, inline: true });
   fields.push({ name: t(ctx, 'dm_wish'), value: e.wishes[receiver] || t(ctx, 'dm_no_wish', { name }) });
+  const address = e.addresses?.[receiver];
+  if (address) fields.push({ name: t(ctx, 'dm_address'), value: address });
+  const head = e.updated?.includes(giver) ? `${t(ctx, 'dm_updated', { name })}\n\n` : '';
   return {
     embeds: [{
       color: color(ctx),
       title: e.title ? t(ctx, 'dm_title', { title: e.title }) : t(ctx, 'title'),
-      description: `${t(ctx, 'dm_text', { name: `${name} (<@${receiver}>)` })}\n\n${t(ctx, 'dm_secret')}`,
+      description: `${head}${t(ctx, 'dm_text', { name: `${name} (<@${receiver}>)` })}\n\n${t(ctx, 'dm_secret')}`,
       fields,
     }],
   };
+}
+
+/** The member who gives a present to this member, or null. */
+export const giverOf = (e, receiver) => Object.keys(e.pairs ?? {}).find((giver) => e.pairs[giver] === receiver) ?? null;
+
+/**
+ * After the draw: the giver of this member gets the current address and wish
+ * list again, marked as a change. A DM still pending goes out with the new
+ * state anyway and needs no mark.
+ */
+export async function sendChange(ctx, e, receiver) {
+  const giver = giverOf(e, receiver);
+  if (!giver) return;
+  if (!e.pending.includes(giver)) {
+    e.updated = [...new Set([...(e.updated ?? []), giver])];
+    e.pending.push(giver);
+  }
+  await deliver(ctx, e, 3000);
 }
 
 /**
@@ -216,6 +263,7 @@ export async function deliver(ctx, e, budgetMs = 6000) {
       if (!e.failed.includes(giver)) e.failed.push(giver);
     }
     e.pending.shift();
+    if (e.updated) e.updated = e.updated.filter((id) => id !== giver);
   }
   await saveEvent(ctx, e);
   return e;
